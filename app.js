@@ -39,6 +39,11 @@ const __dirname = path.dirname(__filename);
 app.use(cors());
 
 
+
+console.log("DATABASE_URL:", process.env.DATABASE_URL);
+
+
+
 //Configuración del motor de plantilla ejs
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
