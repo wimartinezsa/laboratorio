@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Software Laboratorio Clinico</title>
+
+  
+
+
+  <%- include ('../parts/script_superior.ejs')%>
+
+ <!-- DataTables -->
+ <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+ <link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+ <link rel="stylesheet" href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+ <!-- Theme style -->
+ <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+
+
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+  </div>
+
+  <!-- Navbar -->
+  <%- include ('../parts/navbar.ejs')%>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+ 
+  <%- include ('../parts/menu.ejs')%>
+
+
+
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+           <h4>Toma de Muestras Pendientes</h4>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+              <li class="breadcrumb-item active">Examenes</li>
+              <li class="breadcrumb-item active">Muestras</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+   
+    <div class="container-fluid">
+
+      <table class="table table-striped "  id="tabla_prestaciones_confirmadas" style="font-size: 12px">
+        <thead>
+            <tr class="line-head">
+                <th>Codigo</th>
+                <th>identificacion</th>
+                <th>Nombres</th>
+                <th>Autorización</th>
+                <th>Examen</th>
+                <th>Observación</th>
+                <th>Estado</th>
+                <th>Admin.</th>
+            </tr>
+        </thead>
+        <tbody >
+        </tbody>
+      </table>
+
+
+    </div>
+
+      
+
+
+    </div>
+
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+
+
+  <div class="modal fade" id="Frm_procedimientos">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar asistencia de Muestra</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="number" id='id_factura' readonly="true" hidden="true">
+        
+        
+        
+          <div class="row">
+                  <div class="col-12">
+
+                    <table class="table" >
+                      <thead>
+                        <tr>
+                          <th scope="col">codigo</th>
+                          <th scope="col">Servicio</th>
+                          <th scope="col">Examen</th>
+                          <th scope="col">Estado</th>
+                          <th scope="col">Confirmar Asistencia</th>
+                        </tr>
+                      </thead>
+                      <tbody id="tabla_procedimiento_facturado">
+                       
+                       
+                       
+                      </tbody>
+                    </table>
+                      
+                </div>  
+   
+        </div>
+
+
+
+        </div>
+       
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+
+
+
+  <div class="modal fade" id="Frm_muestras">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Registrar Toma de Muestras</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="number" id='id_prestacion' readonly="true" hidden="true">
+        
+        
+        
+          <div class="row">
+            <div class="col-12">
+              <label for="message-text" class="col-form-label">Fecha de Muestra:</label>
+              <input type="datetime-local" id="fecha_muestra" class="form-control"/>
+          </div>  
+    </div>
+          <div class="row">
+              <div class="col-12">
+                <label for="message-text" class="col-form-label">Observación:</label>
+                <textarea id="observacion"  rows="4" cols="35" placeholder="Digitar una Observación"></textarea>
+            </div>  
+        </div>
+
+
+        </div>
+
+        <div class="modal-footer justify-content-center">
+          <button type="button" id="btn_registrar" class="btn btn-primary" onclick="gestionarTomaMuestra()">Confirmar Toma de Muestra</button>
+        </div>
+       
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+
+
+
+
+
+
+  <%- include ('../parts/footer.ejs')%>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<%- include ('../parts/script_inferior.ejs')%>
+
+
+<!-- SweetAlert2 -->
+<script src="/plugins/sweetalert2/sweetalert2@11.js"></script>
+
+<!-- DataTables  & Plugins -->
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="/plugins/jszip/jszip.min.js"></script>
+<script src="/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="/js/muestras.js"></script>
+</body>
+</html>

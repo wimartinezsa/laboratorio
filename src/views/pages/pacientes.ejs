@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Software Laboratorio Clinico</title>
+
+  
+
+
+  <%- include ('../parts/script_superior.ejs')%>
+
+ <!-- DataTables -->
+ <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+ <link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+ <link rel="stylesheet" href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+ <!-- Theme style -->
+ <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+
+
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+  </div>
+
+  <!-- Navbar -->
+  <%- include ('../parts/navbar.ejs')%>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+ 
+  <%- include ('../parts/menu.ejs')%>
+
+
+
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <button type="button" class="btn btn-primary" onclick="gestionarPaciente();">Nuevo Paciente</button>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+              <li class="breadcrumb-item active">Pacientes</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+   
+    <div class="container-fluid"> 
+
+          <table class="table table-striped" id="tabla_pacientes" style="font-size: 12px;">
+              <thead>
+                  <tr class="line-head">
+                    <th>Identificación</th>
+                      <th>tipo ident.</th>
+                      <th>Nombres</th>
+                      <th>email</th>
+                      <th>Telefono</th>
+                      <th>Tipo Usuario</th>
+                      <th>Eps</th>
+                      <th>Municipio</th>
+                      <th>Admin.</th>
+                  </tr>
+              </thead>
+              <tbody >
+              </tbody>
+          </table>
+    </div>
+
+    </div>
+
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <div class="modal fade" id="Frm_pacientes">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Registrar Paciente</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="number" id='id_paciente' readonly="true" hidden="true">
+      
+      <div class="container"> 
+            
+        <div class="row">
+                    <div class="col-4">
+                      <label for="message-text" class="col-form-label">Identificación:</label>
+                      <input type="text" class="form-control" id='identificacion'
+                          style="border: 1px solid rgb(208, 205, 205)"
+                          placeholder="Digite la identificación"  required>    
+                  </div>
+
+                    <div class="col-4">
+                      <label for="message-text" class="col-form-label">Tipo de Identificación:</label>
+                      <select class="form-control" id='tipo_identificacion' required >
+                          <option value='' selected disabled>Seleccione una opción</option>
+                          <option value='Cedula_ciudadania'>Cédula ciudadanía</option>
+                          <option value='Cedula_de_extranjeria'>Cédula de extranjería</option>
+                          <option value='Carne_diplomatico'>Carné diplomático</option>
+                          <option value='Pasaporte'>Pasaporte</option>
+                          <option value='Salvoconducto'>Salvoconducto</option>
+                          <option value='Permiso_Especial_de_Permanencia'>Permiso Especial de Permanencia</option>
+                          <option value='Registro_civil'>Registro civil</option>
+                          <option value='Tarjeta_de_identidad'>Tarjeta de identidad</option>
+                          <option value='Certificado_de_nacido_vivo'>Certificado de nacido vivo</option>
+                          <option value='Adulto_sin_identificar'>Adulto sin identificar</option>
+                          <option value='Menor_sin_identificar'>Menor sin identificar</option>
+                        
+                      </select>
+                  </div>
+
+                  <div class="col-4">
+                    <label for="message-text" class="col-form-label">Nombres:</label>
+                    <input type="text" class="form-control" id='nombres'
+                        style="border: 1px solid rgb(208, 205, 205)"
+                        placeholder="Digite nombres y apellidos"  required>    
+                  </div>
+            </div>
+
+            <div class="row">
+                
+                    <div class="col-4">
+                      <label for="message-text" class="col-form-label">Genero:</label>
+                      <select class="form-control" id='sexo' required >
+                          <option value='' selected disabled>Seleccione una Genero</option>
+                          <option value='Hombre'>Hombre</option>
+                          <option value='Indeterminado_o_Intersexual'>Indeterminado o Intersexual</option>
+                          <option value='Mujer'>Mujer</option>
+                      </select>
+                  </div>
+
+                  <div class="col-4">
+                    <label for="message-text" class="col-form-label">Fecha de Nacimiento:</label>
+                    <input type="date" class="form-control" id='fecha_nacimiento'
+                        style="border: 1px solid rgb(208, 205, 205)"
+                        required>
+                  </div>
+
+                    <div class="col-4">
+                      <label for="message-text" class="col-form-label">Correo:</label>
+                      <input type="email" class="form-control" id='email'
+                          style="border: 1px solid rgb(208, 205, 205)"
+                          placeholder="Digite el correo electronico" >
+                  </div>
+
+            </div>
+
+            <div class="row">
+                  
+                  
+
+                  <div class="col-4">
+                    <label for="message-text" class="col-form-label">Telefono:</label>
+                    <input type="text" class="form-control" id='telefono'
+                        style="border: 1px solid rgb(208, 205, 205)"
+                        placeholder="Digite el telefono" >
+                </div>
+
+                <div class="col-4">
+                  <label for="message-text" class="col-form-label">Dirección:</label>
+                  <input type="tet" class="form-control" id='direccion'
+                      style="border: 1px solid rgb(208, 205, 205)"
+                      placeholder="Digite la Dirección" 
+                      required>
+              </div>
+
+              <div class="col-4">
+                <label for="message-text" class="col-form-label">Zona:</label>
+                <select class="form-control" id='zona' required>
+                  <option value=''  disabled='true' selected='true'>Seleccione una opción</option>
+                  <option value="Rural">Rural</option>
+                  <option value="Urbano">Urbano</option>
+                </select>
+                
+            </div>
+
+            </div>
+
+            <div class="row">
+
+                  <div class="col-4">
+                    <label for="message-text" class="col-form-label">Pais de Residencia:</label>
+                    <select class="form-control" id='paises' required onchange="listarDepartamentos(this.value)" >
+                    </select>
+                  </div>
+                  <div class="col-4">
+                    <label for="message-text" class="col-form-label">Departamento de Residencia:</label>
+                    <select class="form-control" id='departamentos' required onchange="listarMunicipios(this.value)">
+                    </select>
+                  </div>
+    
+                  <div class="col-4">
+                    <label for="message-text" class="col-form-label">Municipio de Residencia:</label>
+                    <select class="form-control" id='municipios' required >
+                    </select>
+                  </div>
+
+            </div>
+
+
+            <div class="row">
+
+              
+
+              <div class="col-4">
+                <label for="message-text" class="col-form-label">Pais de Origien:</label>
+                <select class="form-control" id='pais_origen' required >
+                </select>
+              </div>
+              <div class="col-4">
+                <label for="message-text" class="col-form-label">Tipo de Paciente:</label>
+                <select value='' class="form-control" id='tipo_paciente' required >
+                    <option  disabled='true' selected='true'>Seleccione un tipo de Paciente</option>
+                    <option value='Contributivo_Cotizante'>Contributivo Cotizante</option>
+                    <option value='Contributivo_Beneficiario'>Contributivo Beneficiario</option>
+                    <option value='Contributivo_Adicional'>Contributivo Adicional</option>
+                    <option value='Subsidiado'>Subsidiado</option>
+                    <option value='No_Afiliado'>No Afiliado</option>
+                    <option value='Especial_o_Excepcion_Cotizante'>No Especial o Excepcion Cotizante</option>
+                    <option value='Especial_o_Excepcion_Beneficiario'>Especial o Excepcion Beneficiario</option>
+                    <option value='Personas_privadas_de_la_libertad_a_cargo_del_Fondo_Nacional_de_Salud'>Personas privadas de la libertad a cargo del Fondo Nacional de Salud</option>
+                    <option value='Tomador_Amparado_ARL'>Tomador Amparado ARL</option>
+                    <option value='Tomador_Amparado_SOAT'>Tomador Amparado SOAT</option>
+                    <option value='Tomador_Amparado_Planes_voluntarios_de_salud'>Tomador Amparado Planes voluntarios de salud</option>
+                    <option value='Particular'>Particular</option>
+                    <option value='Especial_o_Exepcion_no_cotizante_Ley_352_de_1997'>Especial o Exepcion no cotizante Ley 352 de 1997</option>
+                </select>
+            </div> 
+
+              <div class="col-4">
+                <label for="message-text" class="col-form-label">Eps:</label>
+                <select class="form-control" id='eps' required >
+                </select>
+            </div>
+              
+
+              
+            </div>
+
+            <div class="row">
+            <div class="col-4">
+              <label for="message-text" class="col-form-label">Incapacidad:</label>
+              <select  class ="form-control" id='incapacidad' required >
+                <option value='' selected disabled>Seleccione una opción</option>
+                <option value='SI'>SI</option>
+                <option value='NO'>NO</option>
+
+              </select>
+          </div>
+
+
+            </div>
+      </div>
+
+
+
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" id="btn_registrar" class="btn btn-primary" onclick="registrarPaciente()">Registrar</button>
+          <button type="button" id="btn_actualizar" class="btn btn-primary" onclick="actualizarPaciente()">Actualziar</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+
+
+
+
+
+
+
+
+  <%- include ('../parts/footer.ejs')%>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<%- include ('../parts/script_inferior.ejs')%>
+
+
+
+
+<!-- DataTables  & Plugins -->
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="/plugins/jszip/jszip.min.js"></script>
+<script src="/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="/plugins/sweetalert2/sweetalert2@11.js"></script>
+
+
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="/js/pacientes.js"></script>
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Software Laboratorio Clinico</title>
+
+  
+
+
+  <%- include ('../parts/script_superior.ejs')%>
+
+ <!-- DataTables -->
+ <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+ <link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+ <link rel="stylesheet" href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+ <!-- Theme style -->
+ <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+
+
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+  </div>
+
+  <!-- Navbar -->
+  <%- include ('../parts/navbar.ejs')%>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+ 
+  <%- include ('../parts/menu.ejs')%>
+
+
+
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+
+            <div class="row">
+              <div class="col-6">
+                <select class="form-control" id='Servicios' onchange="listarProcedimientosServicioId(this.value)" required >
+                </select>
+              </div>
+      
+                <div class="col-6"> 
+                  <button type="button" class="btn btn-primary" onclick="gestionaProcedimiento();">Nuevo Examen</button>
+                </div> 
+               
+            </div>
+
+
+
+
+         </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+              <li class="breadcrumb-item active">Servicios</li>
+              <li class="breadcrumb-item active">Examenes</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+   
+    <div class="container-fluid">
+    
+
+      <div class="row">
+        <div class="col-12"> 
+          <table class="table table-striped" id="tabla_procedimientos" style="font-size: 12px;">
+          <thead>
+              <tr class="line-head">
+              
+                  <th>#</th>
+                  <th>Servicio</th>
+                  <th>Cups</th>
+                  <th>Examen</th>
+                  <th>Tecnica</th>
+                  <th>Finalidad</th>
+                  <th>Area</th>
+                  <th>Estado</th>
+                  <th>Admin.</th>
+                 
+              </tr>
+          </thead>
+          <tbody >
+          </tbody>
+          </table>
+        </div>
+      </div>
+
+
+    </div>
+
+      
+  </div>
+
+    <div class="modal fade" id="Frm_procedimiento">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Registrar Examenes</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+           
+            <input type="number" id='id_procedimiento' readonly="true" hidden="true">
+          <div class="row">
+                  <div class="col-12">
+                    <label for="message-text" class="col-form-label">Cups :</label>
+                    <select class="form-control" id='cups' required >
+                    </select> 
+                </div>
+          </div>
+
+
+          <div class="row">
+
+            <div class="col-12">
+              <label for="message-text" class="col-form-label">Finalidad:</label>
+              <select class="form-control" id='finalidad' required >
+              </select>
+            </div>
+
+          </div>
+
+         
+          <div class="row">
+            <div class="col-12">
+              <label for="message-text" class="col-form-label">Tecnica :</label>
+              <input type="text" class="form-control"  id="tecnica" placeholder="Digite la tecnica o el método">
+              </select> 
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+              <label for="message-text" class="col-form-label">Área que Atiende :</label>
+              <select class="form-control" id='areas' required >
+              </select> 
+          </div>
+        </div>
+        
+  
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" id="btn_registrar" class="btn btn-primary" onclick="registrarProcedimiento()">Registrar</button>
+            <button type="button" id="btn_actualizar" class="btn btn-primary" onclick="actualizarProcedimiento()">Actualziar</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+
+
+
+    <div class="modal fade" id="Frm_parametros">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Registrar Parametros</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+           
+            <input type="number" id='procedimiento' readonly="true" hidden="true">
+
+
+              <div class="accordion" id="accordionExample">
+                <div class="card">
+                  <div class="card-header" id="headingOne">
+                    <h2 class="mb-0">
+                      <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        Nuevo Parámetro
+                      </button>
+                    </h2>
+                  </div>
+              
+                  <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <div class="card-body">
+                    
+                          <div class="row">
+                            <div class="col-12">
+                              <label for="message-text" class="col-form-label">Nombre del Parametro:</label>
+                              <input class="form-control" id='parametro' placeholder="Digite el nombre del parametro">
+                            </div>
+                          </div>
+
+                            <div class="row">
+                                  
+                          
+                                <div class="col-6">
+                                    <label for="message-text" class="col-form-label">Unidad de medida:</label>
+                                    <input type="text" class="form-control" id='unidad'
+                                        style="border: 1px solid rgb(208, 205, 205)"
+                                        placeholder="Digite la unidad de medida" >
+                                </div>
+
+                                <div class="col-6">
+                                  <label for="message-text" class="col-form-label">Metodo de Analisis:</label>
+                                  <select id='metodo' class="form-control" required>
+                                    <option value="" disabled="true" selected="true">Seleccione un Método</option>
+                                    <option value="Manual">Manual</option>
+                                    <option value="Automatico">Automático</option>
+                                  </select>
+                                </div>
+                                  
+                            </div>
+
+                            <div class="row">
+                            
+                              <div class="col-12">
+                                <label for="message-text" class="col-form-label">Rango Biologico:</label>
+                                <textarea  id='valor_referencia' class="form-control" cols="50" rows="4"  placeholder="Digite el rango biologico"
+                                style="border: 1px solid rgb(208, 205, 205)" ></textarea>
+                              </div>
+                            </div>
+              <div class="row mt-2">
+                <div class="col-12 d-flex justify-content-center">
+                    <button type="button" id="btn_registrar" class="btn btn-primary" onclick="registrarParametro()">Registrar</button>
+                </div>
+              </div>
+
+
+                    </div>
+                  </div>
+                </div>
+
+               
+              
+              </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              
+
+
+              
+
+
+
+
+              <div class="row mt-3">
+                <div class="col-12">
+                  <table class="table table-striped"  style="font-size: 12px;">
+                    <thead>
+                        <tr class="line-head">
+                            <th>#</th>
+                            <th>Parametro</th>
+                            <th>Unidad</th>
+                            <th>Rango Biologico</th>
+                            <th>Metodo</th>
+                            <th>Respuestas</th>
+                            <th>Admin.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla_parametros">
+                    </tbody>
+                    </table>
+                </div>
+              </div>
+          </div>
+
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+
+
+
+    
+    <div class="modal fade" id="Frm_tipo_resultado">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Registrar tipo de resultados</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+           
+            <input type="number" id='id_parametro' readonly="true" hidden="true">
+          <div class="row">
+            <div class="col-10">
+              <input type="text" id="tipo_resultado" class="form-control">
+            </div>
+            <div class="col-2">
+              <button class="btn btn-primary" onclick="registrarTipoResultado()">Agregar</button>
+            </div>
+
+          </div>
+          
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+
+
+
+
+
+
+<%- include ('../parts/script_inferior.ejs')%>
+
+
+<!-- SweetAlert2 -->
+<script src="/plugins/sweetalert2/sweetalert2@11.js"></script>
+
+<!-- DataTables  & Plugins -->
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="/plugins/jszip/jszip.min.js"></script>
+<script src="/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="/js/procedimientos.js"></script>
+</body>
+</html>

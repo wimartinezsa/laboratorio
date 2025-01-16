@@ -1,0 +1,516 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum Tipo_Ident {
+  Cedula_ciudadania  @map("CC")
+  Cedula_de_extranjeria  @map("CE")
+  Carne_diplomatico  @map("CD")
+  Pasaporte  @map("PA")
+  Salvoconducto @map("SC")
+  Permiso_Especial_de_Permanencia @map("PE")
+  Registro_civil @map("RC")
+  Tarjeta_de_identidad @map("TI")
+  Certificado_de_nacido_vivo @map("CN")
+  Adulto_sin_identificar @map("AS")
+  Menor_sin_identificar @map("MS")
+}
+
+
+
+enum Genero {
+Hombre  @map("H")
+Indeterminado_o_Intersexual  @map("I")
+Mujer  @map("M")
+}
+
+
+
+
+enum Tipo_Paciente {
+  Contributivo_Cotizante  @map("01")
+  Contributivo_Beneficiario @map("02")
+  Contributivo_Adicional @map("03")
+  Subsidiado @map("04")
+  No_Afiliado @map("05")
+  Especial_o_Excepcion_Cotizante @map("06")
+  Especial_o_Excepcion_Beneficiario @map("07")
+  Personas_privadas_de_la_libertad_a_cargo_del_Fondo_Nacional_de_Salud @map("08")
+  Tomador_Amparado_ARL @map("09")
+  Tomador_Amparado_SOAT @map("10")
+  Tomador_Amparado_Planes_voluntarios_de_salud @map("11")
+  Particular @map("12")
+  Especial_o_Exepcion_no_cotizante_Ley_352_de_1997 @map("13")
+}
+
+enum Zona {
+  Rural @map("01")
+  Urbano @map("02")
+}
+
+enum Incapacidad {
+  SI
+  NO
+}
+
+model Paciente{
+id_paciente Int @id @default(autoincrement())
+tipo_identificacion Tipo_Ident
+identificacion String @db.VarChar(30)  @unique
+nombres String @db.VarChar(50)
+fecha_nacimiento DateTime? @db.Date
+sexo Genero
+email String? @unique
+telefono String?
+direccion String? @db.VarChar(50)
+estado Estado @default(Activo)
+factura Factura[]
+tipo_paciente Tipo_Paciente
+incapacidad Incapacidad @default(NO)
+zona Zona?
+pais  Pais? @relation(fields: [paisId], references: [id_pais])
+paisId Int?
+municipio  Municipio? @relation(fields: [municipioId], references: [id_municipio])
+municipioId Int?
+eps Eps? @relation(fields: [epsId],references: [id_eps])
+epsId Int?
+@@map("Pacientes")
+
+}
+
+
+
+
+enum Estado {
+ Activo
+ Inactivo
+}
+model Eps{
+id_eps Int @id @default(autoincrement())
+codigo String @db.VarChar(20)
+nombre String @db.VarChar(50)
+estado Estado @default(Activo)
+paciente Paciente[]
+@@map("eps")
+}
+
+model Tipo_Servicio{
+id_tipo_servicio Int @id @default(autoincrement())
+codigo String @db.VarChar(10)
+nombre String @db.VarChar(50)
+
+servicio Servicio[]
+
+
+@@map("Tipo_Servicio")
+}
+
+
+
+enum Estado_Factura {
+ Pendiente_Emision
+ Factura_Emitida
+ Pendiente_Pago
+ Pagado
+ Anulado
+}
+
+
+enum Via_Ingreso {
+  DEMANDA_ESPONTANEA @map("01")
+  DERIVADO_DE_CONSULTA_EXTERNA @map("02")
+  DERIVADO_DE_URGENCIAS @map("03")
+  DERIVADO_DE_HOSPITALZACION @map("04")
+  DERIVADO_DE_SALA_DE_CIRUGIA @map("05")
+  DERIVADO_DE_SALA_DE_PARTOS @map("06")
+  RECIEN_NACIDO_EN_LA_INSTITUCION @map("07")
+  RECIEN_NACIDO_EN_OTRA_INSTITUCION @map("08")
+  DERIVADO_O_REFERIDO_DE_HOSPITALIZACION_DOMICILIARIA @map("09")
+  DERIVADO_DE_ATENCION_DOMICILIARIA @map("10")
+  DERIVADO_DE_TELEMEDICINA @map("11")
+  DERIVADO_DE_JORNADA_DE_SALUD @map("12")
+  REFERIDO_DE_OTRA_INSTITUCION @map("13")
+  CONTRAREFERIDO_DE_OTRA_INSTITUCION @map("14")
+}
+
+
+
+
+
+
+model Factura{
+id_factura Int @id @default(autoincrement())
+autorizacion String? @db.VarChar(30)
+via_ingreso Via_Ingreso
+fecha DateTime 
+total Decimal @db.Decimal(10,2)
+
+estado Estado_Factura @default(Pendiente_Emision)
+examen Examen[]
+contrato Contrato @relation(fields: [contratoId],references: [id_contrato])
+contratoId Int
+
+paciente Paciente @relation(fields: [pacienteId], references: [id_paciente])
+pacienteId Int
+
+@@map("facturas")
+}
+
+
+enum Estado_Examen {
+ Solicitado
+ En_Toma_de_Muestra
+ Muestra_Recibida
+ En_Proceso_de_Analisis
+ Analisis_Completo
+ Resultados_Listos
+ Resultados_Entregados
+}
+
+enum Estado_Resultado {
+  Pendiente
+  Finalizado
+}
+
+model Resultado {
+  id_resultado Int       @id @default(autoincrement())
+  resultado     String?  @db.VarChar(200)
+  estado Estado_Resultado
+  examen        Examen   @relation(fields: [examenId], references: [id_examen], onDelete: Cascade) // Eliminación en cascada
+  examenId      Int
+  parametro     Parametro @relation(fields: [parametroId], references: [id_parametro], onDelete: Cascade) // Eliminación en cascada
+  parametroId   Int
+
+  @@unique([examenId, parametroId]) // Índice único para la combinación de examenId y parametroId
+  @@map("resultados")
+}
+
+
+model Examen{
+id_examen Int @id @default(autoincrement())
+cantidad Int
+precio Decimal @db.Decimal(10,2)
+fecha_muestra DateTime?
+fecha_analisis DateTime?
+fecha_resultado DateTime?
+estado Estado_Examen  @default(Solicitado)
+
+observacion String? @db.VarChar(200)
+
+resultado Resultado[]
+
+procedimiento Procedimiento @relation(fields: [procedimientoId], references: [id_procedimiento])
+procedimientoId Int
+
+factura Factura @relation(fields: [facturaId], references: [id_factura])
+facturaId Int
+
+
+@@map("examenes")
+}
+
+model Pais {
+id_pais Int @id @default(autoincrement())
+codigo String @db.VarChar(10) 
+nombre String @db.VarChar(50) 
+departamento Departamento[]
+paciente Paciente[]
+ @@map("paises")
+}
+
+model Departamento{
+id_departamento Int @id @default(autoincrement())
+codigo String @db.VarChar(10)
+nombre String @db.VarChar(50)
+municipio Municipio[]
+
+pais  Pais @relation(fields: [paisId], references: [id_pais])
+paisId Int
+
+@@map("departamentos")
+}
+
+
+model Municipio{
+id_municipio Int @id @default(autoincrement())
+codigo String @db.VarChar(10)
+nombre String @db.VarChar(50)
+
+departamento  Departamento @relation(fields: [departamentoId], references: [id_departamento])
+departamentoId Int
+
+paciente Paciente[]
+empresa Empresa[]
+
+@@map("Municipios")
+}
+
+// es la misma tabla de protocolo
+
+
+enum Modalidad_Atencion {
+  Intramural @map("01")
+  Extramural_unidad_movil @map("02")
+  Extramural_domiciliaria @map("03")
+  Extramural_jornada_de_salud @map("04")
+  Telemedicina_interactiva @map("06")
+  Telemedicina_no_interactiva @map("07")
+  Telemedicina_telexperticia @map("08")
+  Telemedicina_telemonitoreo @map("09")
+}
+
+
+enum Grupo_Servicio {
+  Consulta_externa @map("01")
+  Apoyo_diagnostico_y_complementacion_terapeutica @map("02")
+  Internacion @map("03")
+  Quirurgico @map("04")
+  Atencion_inmediata @map("05")
+}
+
+model Servicio{
+id_servicio Int @id @default(autoincrement())
+nombre String @db.VarChar(50)
+precio Decimal @db.Decimal(10,2)
+estado Estado @default(Activo)
+grupo_servicio Grupo_Servicio
+modalidad_atencion Modalidad_Atencion
+
+
+procedimiento Procedimiento[]
+
+prestador  Prestador @relation(fields: [prestadorId],references: [id_prestador])
+prestadorId Int
+
+tipo_servicio Tipo_Servicio @relation(fields: [tipo_servicioId],references: [id_tipo_servicio])
+tipo_servicioId Int
+
+
+
+
+
+@@map("Servicios")
+}
+
+
+
+model Finalidad{
+id_finalidad Int @id @default(autoincrement())
+codigo String @db.VarChar(10)
+nombre String @db.VarChar(50) 
+estado Estado @default(Activo)
+
+procedimiento Procedimiento[]
+
+@@map("finalidad")
+}
+
+
+
+
+
+
+
+
+model Cups{
+id_cups Int @id @default(autoincrement())
+codigo String @db.VarChar(30)
+nombre String @db.VarChar(100)
+descripcion String @db.VarChar(100)
+procedimiento Procedimiento[]
+@@map("cups")
+}
+
+
+
+model Tipo_Resultado{
+id_tipo_resultado Int @id @default(autoincrement())
+nombre String @db.VarChar(50)
+
+parametro Parametro@relation(fields: [parametroId],references: [id_parametro])
+parametroId Int
+@@map("Tipo_Resultados")
+}
+
+
+
+
+model Parametro{
+id_parametro Int @id @default(autoincrement())
+nombre String @db.VarChar(50)
+metodo  String @db.VarChar(30)
+unidad  String? @db.VarChar(30)
+valor_referencia String? @db.VarChar(300)
+resultado Resultado[]
+tipo_resultado Tipo_Resultado[]
+procedimiento Procedimiento@relation(fields: [procedimientoId],references: [id_procedimiento])
+procedimientoId Int
+@@map("Parametros")
+}
+
+model Procedimiento{
+id_procedimiento Int @id @default(autoincrement())
+estado Estado @default(Activo)
+tecnica String? @db.VarChar(50)
+examen Examen[]
+acuerdo Acuerdo[]
+parametro Parametro[]
+servicio Servicio @relation(fields: [servicioId],references: [id_servicio])
+servicioId Int
+
+
+finalidad  Finalidad @relation(fields: [finalidadId],references: [id_finalidad])
+finalidadId Int
+
+
+cups Cups @relation(fields: [cupsId],references: [id_cups])
+cupsId Int
+
+area Area? @relation(fields: [areaId],references: [id_area])
+areaId Int?
+
+
+@@map("procedimientos")
+}
+
+
+
+model Area{
+id_area Int @id @default(autoincrement())
+nombre String @db.VarChar(30)
+
+prestador Prestador? @relation(fields: [prestadorId], references: [id_prestador])
+prestadorId Int?
+usuario Usuario[]
+procedimiento Procedimiento[]
+
+@@map("areas")
+}
+
+
+
+model Prestador{
+id_prestador Int @id @default(autoincrement())
+codigo String @db.VarChar(12)  @unique
+nit String @db.VarChar(30)
+razon_social String @db.VarChar(50)
+servicio Servicio[]
+area Area[]
+@@map("Prestadores")
+}
+
+
+enum Rol {
+Administrador
+Facturacion
+Bacteriologo
+Auxiliar
+}
+
+
+model Usuario{
+id_usuario Int @id @default(autoincrement())
+tipo_identificacion Tipo_Ident
+identificacion String @db.VarChar(30)  @unique
+nombre String @db.VarChar(30)
+cargo String @db.VarChar(50)
+firma String? @db.VarChar(100)
+rol Rol
+email String @db.VarChar(50)
+password String @db.VarChar(100)
+estado Estado @default(Activo)
+token String? @db.VarChar(500)
+area Area @relation(fields: [areaId],references: [id_area])
+areaId Int
+
+
+@@map("usuarios")
+}
+
+
+
+
+
+
+
+
+enum Tipo_Empresa{
+  Particular
+  Empresa
+  Eps
+  Esess
+}
+
+
+model Empresa{
+id_empresa Int @id @default(autoincrement())
+nit String @db.VarChar(530)  @unique
+codigo String @db.VarChar(20)
+nombre String @db.VarChar(50)
+sigla String @db.VarChar(50)
+tipo Tipo_Empresa
+estado Estado @default(Activo)
+
+
+municipio Municipio @relation(fields: [municipioId],references: [id_municipio])
+municipioId Int
+
+contrato Contrato[]
+@@map("Empresas")
+}
+
+
+model Contrato{
+id_contrato Int @id @default(autoincrement())
+nombre String @db.VarChar(50)
+fecha_inicio DateTime @db.Date
+fecha_fin DateTime @db.Date
+estado Estado @default(Activo)
+
+
+acuerdo Acuerdo[]
+
+factura Factura[]
+
+empresa Empresa @relation(fields: [empresaId],references: [id_empresa])
+empresaId Int
+
+
+
+
+
+@@map("Contratos")
+}
+
+
+model Acuerdo{
+id_acuerdo Int @id @default(autoincrement())
+estado Estado @default(Activo)
+precio Decimal @db.Decimal(10,2)
+iva Decimal @db.Decimal(10,2)
+
+procedimiento Procedimiento @relation(fields: [procedimientoId],references: [id_procedimiento])
+procedimientoId Int
+
+
+contrato Contrato @relation(fields: [contratoId],references: [id_contrato])
+contratoId Int
+
+
+
+
+@@map("Acuerdos")
+}
+

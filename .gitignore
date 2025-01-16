@@ -1,0 +1,6 @@
+# Ignorar archivos de entorno
+.env
+
+
+# Ignorar carpetas específicas
+/node_modules/
