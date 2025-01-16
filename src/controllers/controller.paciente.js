@@ -13,6 +13,7 @@ export  const listarPacientes=async(req,resp)=>{
                 }
             }
         );
+        console.log(pacientes);
         return resp.status(200).json(pacientes);
     }catch(error){
         console.log("Error en controller.paciente.js :"+error);

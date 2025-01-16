@@ -14,6 +14,8 @@ datasource db {
 }
 
 
+
+
 enum Tipo_Ident {
   Cedula_ciudadania  @map("CC")
   Cedula_de_extranjeria  @map("CE")
@@ -341,6 +343,8 @@ nombre String @db.VarChar(50)
 
 parametro Parametro@relation(fields: [parametroId],references: [id_parametro])
 parametroId Int
+
+
 @@map("Tipo_Resultados")
 }
 
@@ -510,7 +514,8 @@ contratoId Int
 
 
 
-
 @@map("Acuerdos")
 }
+
+
 

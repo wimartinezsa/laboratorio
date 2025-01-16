@@ -43,6 +43,9 @@ function listarPacientes(){
         }
     })
     .then(data => {
+
+        console.log(data);
+
         let accionBTN='';
         let arrayDatos=[];
 
