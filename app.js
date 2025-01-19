@@ -5,6 +5,10 @@ import body_parser from 'body-parser'
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import dotenv from 'dotenv';
+
+dotenv.config({path:'./.env'});
+
 
 import { swaggerUi, swaggerSetup }  from "./src/views/swagger.js"
 import vistas from './src/routes/route.vistas.js'
