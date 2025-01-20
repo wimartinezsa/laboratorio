@@ -12,6 +12,8 @@ export  const listarProcedimientos=async(req,resp)=>{
                 }
             }
         );
+        
+
         if(procedimientos.length>0)
             return resp.status(200).json({"status":200,procedimientos});
         else{

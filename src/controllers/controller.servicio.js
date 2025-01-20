@@ -42,6 +42,8 @@ export  const listarServiciosActivos=async(req,resp)=>{
                 
             }
         );
+
+        console.log(servicios);
         if(servicios.length >0){
             return resp.status(200).json({"status":200,servicios});  
         }else{
