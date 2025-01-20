@@ -1,151 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the `Acuerdos` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Areas` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Contratos` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Departamentos` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Empresas` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Examenes` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Facturas` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Municipios` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Pacientes` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Paises` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Parametros` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Prestadores` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Procedimientos` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Resultados` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Servicios` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Tipo_Resultados` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Usuarios` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropForeignKey
-ALTER TABLE `Acuerdos` DROP FOREIGN KEY `Acuerdos_contratoId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Acuerdos` DROP FOREIGN KEY `Acuerdos_procedimientoId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Areas` DROP FOREIGN KEY `Areas_prestadorId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Contratos` DROP FOREIGN KEY `Contratos_empresaId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Departamentos` DROP FOREIGN KEY `Departamentos_paisId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Empresas` DROP FOREIGN KEY `Empresas_municipioId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Examenes` DROP FOREIGN KEY `Examenes_facturaId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Examenes` DROP FOREIGN KEY `Examenes_procedimientoId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Facturas` DROP FOREIGN KEY `Facturas_contratoId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Facturas` DROP FOREIGN KEY `Facturas_pacienteId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Municipios` DROP FOREIGN KEY `Municipios_departamentoId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Pacientes` DROP FOREIGN KEY `Pacientes_epsId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Pacientes` DROP FOREIGN KEY `Pacientes_municipioId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Pacientes` DROP FOREIGN KEY `Pacientes_paisId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Parametros` DROP FOREIGN KEY `Parametros_procedimientoId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Procedimientos` DROP FOREIGN KEY `Procedimientos_areaId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Procedimientos` DROP FOREIGN KEY `Procedimientos_cupsId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Procedimientos` DROP FOREIGN KEY `Procedimientos_finalidadId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Procedimientos` DROP FOREIGN KEY `Procedimientos_servicioId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Resultados` DROP FOREIGN KEY `Resultados_examenId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Resultados` DROP FOREIGN KEY `Resultados_parametroId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Servicios` DROP FOREIGN KEY `Servicios_prestadorId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Servicios` DROP FOREIGN KEY `Servicios_tipo_servicioId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Tipo_Resultados` DROP FOREIGN KEY `Tipo_Resultados_parametroId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Usuarios` DROP FOREIGN KEY `Usuarios_areaId_fkey`;
-
--- DropTable
-DROP TABLE `Acuerdos`;
-
--- DropTable
-DROP TABLE `Areas`;
-
--- DropTable
-DROP TABLE `Contratos`;
-
--- DropTable
-DROP TABLE `Departamentos`;
-
--- DropTable
-DROP TABLE `Empresas`;
-
--- DropTable
-DROP TABLE `Examenes`;
-
--- DropTable
-DROP TABLE `Facturas`;
-
--- DropTable
-DROP TABLE `Municipios`;
-
--- DropTable
-DROP TABLE `Pacientes`;
-
--- DropTable
-DROP TABLE `Paises`;
-
--- DropTable
-DROP TABLE `Parametros`;
-
--- DropTable
-DROP TABLE `Prestadores`;
-
--- DropTable
-DROP TABLE `Procedimientos`;
-
--- DropTable
-DROP TABLE `Resultados`;
-
--- DropTable
-DROP TABLE `Servicios`;
-
--- DropTable
-DROP TABLE `Tipo_Resultados`;
-
--- DropTable
-DROP TABLE `Usuarios`;
-
 -- CreateTable
 CREATE TABLE `Paciente` (
     `id_paciente` INTEGER NOT NULL AUTO_INCREMENT,
@@ -168,6 +20,25 @@ CREATE TABLE `Paciente` (
     UNIQUE INDEX `Paciente_identificacion_key`(`identificacion`),
     UNIQUE INDEX `Paciente_email_key`(`email`),
     PRIMARY KEY (`id_paciente`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Eps` (
+    `id_eps` INTEGER NOT NULL AUTO_INCREMENT,
+    `codigo` VARCHAR(20) NOT NULL,
+    `nombre` VARCHAR(50) NOT NULL,
+    `estado` ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
+
+    PRIMARY KEY (`id_eps`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Tipo_Servicio` (
+    `id_tipo_servicio` INTEGER NOT NULL AUTO_INCREMENT,
+    `codigo` VARCHAR(10) NOT NULL,
+    `nombre` VARCHAR(50) NOT NULL,
+
+    PRIMARY KEY (`id_tipo_servicio`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -253,6 +124,26 @@ CREATE TABLE `Servicio` (
     `tipo_servicioId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id_servicio`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Finalidad` (
+    `id_finalidad` INTEGER NOT NULL AUTO_INCREMENT,
+    `codigo` VARCHAR(10) NOT NULL,
+    `nombre` VARCHAR(50) NOT NULL,
+    `estado` ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
+
+    PRIMARY KEY (`id_finalidad`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Cups` (
+    `id_cups` INTEGER NOT NULL AUTO_INCREMENT,
+    `codigo` VARCHAR(30) NOT NULL,
+    `nombre` VARCHAR(100) NOT NULL,
+    `descripcion` VARCHAR(100) NOT NULL,
+
+    PRIMARY KEY (`id_cups`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
