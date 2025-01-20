@@ -13,6 +13,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+
 enum Tipo_Ident {
   Cedula_ciudadania  @map("CC")
   Cedula_de_extranjeria  @map("CE")
