@@ -89,7 +89,7 @@ municipio  Municipio? @relation(fields: [municipioId], references: [id_municipio
 municipioId Int?
 eps Eps? @relation(fields: [epsId],references: [id_eps])
 epsId Int?
-@@map("Pacientes")
+@@map("pacientes")
 
 }
 
@@ -117,7 +117,7 @@ nombre String @db.VarChar(50)
 servicio Servicio[]
 
 
-@@map("Tipo_Servicio")
+@@map("tipo_servicio")
 }
 
 
@@ -257,7 +257,7 @@ departamentoId Int
 paciente Paciente[]
 empresa Empresa[]
 
-@@map("Municipios")
+@@map("municipios")
 }
 
 // es la misma tabla de protocolo
@@ -304,7 +304,7 @@ tipo_servicioId Int
 
 
 
-@@map("Servicios")
+@@map("servicios")
 }
 
 
@@ -346,7 +346,7 @@ parametro Parametro@relation(fields: [parametroId],references: [id_parametro])
 parametroId Int
 
 
-@@map("Tipo_Resultados")
+@@map("tipo_resultados")
 }
 
 
@@ -362,7 +362,7 @@ resultado Resultado[]
 tipo_resultado Tipo_Resultado[]
 procedimiento Procedimiento@relation(fields: [procedimientoId],references: [id_procedimiento])
 procedimientoId Int
-@@map("Parametros")
+@@map("parametros")
 }
 
 model Procedimiento{
@@ -413,7 +413,7 @@ nit String @db.VarChar(30)
 razon_social String @db.VarChar(50)
 servicio Servicio[]
 area Area[]
-@@map("Prestadores")
+@@map("prestadores")
 }
 
 
@@ -473,7 +473,7 @@ municipio Municipio @relation(fields: [municipioId],references: [id_municipio])
 municipioId Int
 
 contrato Contrato[]
-@@map("Empresas")
+@@map("empresas")
 }
 
 
@@ -496,7 +496,7 @@ empresaId Int
 
 
 
-@@map("Contratos")
+@@map("contratos")
 }
 
 
@@ -515,7 +515,7 @@ contratoId Int
 
 
 
-@@map("Acuerdos")
+@@map("acuerdos")
 }
 
 
