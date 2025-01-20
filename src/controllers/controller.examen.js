@@ -7,7 +7,7 @@ export  const agregarExamenesFactura=async(req,resp)=>{
         const datos= await req.body;
   
        // console.log(datos)
-        const examen = await prisma.examen.create(
+        const examen = await prisma.Examen.create(
             {
                 data: {
                 
@@ -85,7 +85,7 @@ export  const listarExamenesFactura=async(req,resp)=>{
 export  const eliminarExamenFactura=async(req,resp)=>{
     try{
         const id= await req.params.id_examen;
-        const existencia = await prisma.examen.findUnique({
+        const existencia = await prisma.Examen.findUnique({
             where: { id_examen: Number(id)}
           });
 
@@ -93,7 +93,7 @@ export  const eliminarExamenFactura=async(req,resp)=>{
             return resp.status(404).json({"status":404,"message":"No existe examen en la factura"});
           }
           else{
-            const examen = await prisma.examen.delete(
+            const examen = await prisma.Examen.delete(
                 {
                     where:{id_examen:Number(existencia.id_examen)}
             
@@ -115,7 +115,7 @@ export  const cambiarEstadoExamen=async(req,resp)=>{
     try{
         const id= await req.params.id_examen;
         const datos= await req.body;
-        const existencia = await prisma.examen.findUnique({
+        const existencia = await prisma.Examen.findUnique({
             where: { id_examen: Number(id)}
           });
 
@@ -124,7 +124,7 @@ export  const cambiarEstadoExamen=async(req,resp)=>{
           }
           else{
             
-            const examen = await prisma.examen.update(
+            const examen = await prisma.Examen.update(
                 {
                     where:{id_examen: Number(id)},
                     data:{

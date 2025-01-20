@@ -51,7 +51,7 @@ export  const listarContratosActivos=async(req,resp)=>{
 export  const buscarContratoId=async(req,resp)=>{
     try{
         const id= await req.params.id_contrato;
-        const contratos = await prisma.contrato.findFirst(
+        const contratos = await prisma.Contrato.findFirst(
             {
                 where: { id_contrato: Number(id) },
                     include:
@@ -77,7 +77,7 @@ export  const buscarContratoId=async(req,resp)=>{
 export  const registrarContrato=async(req,resp)=>{
     try{
         const datos= await req.body;
-        const contrato = await prisma.contrato.create(
+        const contrato = await prisma.Contrato.create(
             {
                 data: {
                     nombre:datos.nombre,
@@ -101,7 +101,7 @@ export  const actualizarContratoId=async(req,resp)=>{
     try{
         const datos= await req.body;
         const id= await req.params.id_contrato;
-        const existencia = await prisma.contrato.findUnique({
+        const existencia = await prisma.Contrato.findUnique({
             where: { id_contrato: Number(id)},
           });
           if (!existencia) {
@@ -109,7 +109,7 @@ export  const actualizarContratoId=async(req,resp)=>{
           }
           else{
 
-            const contrato = await prisma.contrato.update(
+            const contrato = await prisma.Contrato.update(
                 {
                     where:{id_contrato:Number(id)},
                     data:{
@@ -134,7 +134,7 @@ export  const activarContrato=async(req,resp)=>{
     try{
         const id= await req.params.id_contrato;
         const {estado} = req.body;
-        const existencia = await prisma.contrato.findUnique({
+        const existencia = await prisma.Contrato.findUnique({
             where: { id_contrato: Number(id)}
           });
 
@@ -142,7 +142,7 @@ export  const activarContrato=async(req,resp)=>{
             return resp.status(404).json({"status":404,"message":"El contrato no existe en el sistema"});
           }
           else{
-            const contrato= await prisma.contrato.update(
+            const contrato= await prisma.Contrato.update(
                 {
                     where:{id_contrato:Number(id)},
                     data:{estado: estado}  

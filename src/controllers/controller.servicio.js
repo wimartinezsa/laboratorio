@@ -6,7 +6,7 @@ import prisma from '../libs/prisma.js'
 export  const listarServicios=async(req,resp)=>{
     try{
 
-        const servicios = await prisma.servicio.findMany(
+        const servicios = await prisma.Servicio.findMany(
             {
                  include: { 
                     prestador: true,
@@ -30,7 +30,7 @@ export  const listarServicios=async(req,resp)=>{
 export  const listarServiciosActivos=async(req,resp)=>{
     try{
 
-        const servicios = await prisma.servicio.findMany(
+        const servicios = await prisma.Servicio.findMany(
             {   where:{estado:'Activo'},
                  include: { 
                     prestador: true,
@@ -77,7 +77,7 @@ export  const buscarServicioId=async(req,resp)=>{
 export  const registrarServicio=async(req,resp)=>{
     try{
         const datos= await req.body;
-        const servicio = await prisma.servicio.create(
+        const servicio = await prisma.Servicio.create(
             {
                 data: {
                     nombre:datos.nombre,

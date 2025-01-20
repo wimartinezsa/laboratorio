@@ -8,7 +8,7 @@ export  const registrarConfirmarMuestraRecibida=async(req,resp)=>{
     try{
         const id= await req.params.id_examen;
         const datos= await req.body;
-        const existencia = await prisma.examen.findUnique({
+        const existencia = await prisma.Examen.findUnique({
             where: { id_examen: Number(id)}
           });
 
@@ -17,7 +17,7 @@ export  const registrarConfirmarMuestraRecibida=async(req,resp)=>{
           }
           else{
             
-            const prestacion = await prisma.examen.update(
+            const prestacion = await prisma.Examen.update(
                 {
                     where:{id_examen: Number(id)},
                     data:{
@@ -40,7 +40,7 @@ export  const iniciarProcesoAnalisis=async(req,resp)=>{
     try{
         const id= await req.params.id_examen;
 
-        const existencia = await prisma.examen.findUnique({
+        const existencia = await prisma.Examen.findUnique({
             where: { id_examen: Number(id)}
           });
 
@@ -48,7 +48,7 @@ export  const iniciarProcesoAnalisis=async(req,resp)=>{
             return resp.status(404).json({"status":404,"message":"No existe examen en la factura"});
           }
           else{
-            const prestacion = await prisma.examen.update(
+            const prestacion = await prisma.Examen.update(
                 {
                     where:{id_examen: Number(id)},
                     data:{
@@ -74,7 +74,7 @@ export  const listarMuestrasArea=async(req,resp)=>{
        
         if(rol==='Administrador' ||  rol==='Bacteriologo'){
  
-         const examenes = await prisma.examen.findMany(
+         const examenes = await prisma.Examen.findMany(
              { 
                  where: {
                      estado: { 
@@ -110,7 +110,7 @@ export  const listarMuestrasArea=async(req,resp)=>{
  
         }else{
  
-         const examenes = await prisma.examen.findMany(
+         const examenes = await prisma.Examen.findMany(
              { 
                  where: {
                      estado:'Muestra_Recibida'             

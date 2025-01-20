@@ -22,7 +22,7 @@ export const cargarImagen=upload.single('img');
 export  const listarUsuarios=async(req,resp)=>{
     try{
         const id= await req.params.id_usuario;
-        const usuarios = await prisma.usuario.findMany({
+        const usuarios = await prisma.Usuario.findMany({
             select: {
               id_usuario: true,
               identificacion: true,
@@ -63,7 +63,7 @@ export  const registrarUsuario=async(req,resp)=>{
         }
 */
 
-        const existenciaUsuario = await prisma.usuario.findFirst(
+        const existenciaUsuario = await prisma.Usuario.findFirst(
             {where: {
                 OR:[{email: email},
                     {identificacion:identificacion }
@@ -77,7 +77,7 @@ export  const registrarUsuario=async(req,resp)=>{
         if (!existenciaUsuario) {
 
             const encriptPassword = bcrypt.hashSync(String(identificacion), 12)
-            const usuario=await  prisma.usuario.create({
+            const usuario=await  prisma.Usuario.create({
                 data: {
                     identificacion:String(identificacion),
                     tipo_identificacion: tipo_identificacion,
@@ -120,7 +120,7 @@ export  const actualizarUsuarioId=async(req,resp)=>{
         const id= await req.params.id_usuario;
       
 
-        const existencia = await prisma.usuario.findUnique({
+        const existencia = await prisma.Usuario.findUnique({
             where: {id_usuario: Number(id)},
           });
           //console.log(existencia);
@@ -132,7 +132,7 @@ export  const actualizarUsuarioId=async(req,resp)=>{
            
             const encriptPassword = bcrypt.hashSync(String(datos.identificacion), 12);
          
-            const usuario = await prisma.usuario.update(
+            const usuario = await prisma.Usuario.update(
                 {
                     where:{id_usuario:Number(id)},
                     data:{
@@ -167,7 +167,7 @@ export  const actualizarUsuarioId=async(req,resp)=>{
 export  const buscarUsuarioId=async(req,resp)=>{
     try{
         const id= await req.params.id_usuario;
-        const usuario = await prisma.usuario.findUnique({
+        const usuario = await prisma.Usuario.findUnique({
             where: {id_usuario: Number(id)},
             select: {
                 id_usuario: true,
@@ -202,7 +202,7 @@ export  const registrarFirma=async(req,resp)=>{
         const id= await req.params.id_usuario;
         let img= req.file.originalname;
         console.log(img);
-            const usuario = await prisma.usuario.update(
+            const usuario = await prisma.Usuario.update(
                 {
                     where:{id_usuario:Number(id)},
                     data:{
@@ -224,7 +224,7 @@ export  const estadoUsuarioId=async(req,resp)=>{
     try{
         const id= await req.params.id_usuario;
         const {estado} = req.body;
-        const usuario = await prisma.usuario.findUnique({
+        const usuario = await prisma.Usuario.findUnique({
             where: { id_usuario: Number(id)}
           });
 
@@ -232,7 +232,7 @@ export  const estadoUsuarioId=async(req,resp)=>{
             return resp.status(404).json({"status":404,"message":"El usuario no existe en el sistema"});
           }
           else{
-            const user= await prisma.usuario.update(
+            const user= await prisma.Usuario.update(
                 {
                     where:{id_usuario:Number(id)},
                     data:{estado: estado}  

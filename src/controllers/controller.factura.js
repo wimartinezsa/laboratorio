@@ -30,7 +30,7 @@ export  const buscarFactura=async(req,resp)=>{
     try{
        
         let id_factura=req.params.id_factura;
-        const factura = await prisma.factura.findMany( 
+        const factura = await prisma.Factura.findMany( 
                 {
                     where:{
                             id_factura:Number(id_factura)
@@ -59,7 +59,7 @@ export  const actualizarFactura=async(req,resp)=>{
     try{
         const datos= await req.body;
         const id_factura=await req.params.id_factura;
-        const factura = await prisma.factura.update(
+        const factura = await prisma.Factura.update(
             {    where:{id_factura:Number(id_factura)},
                 data: {
                     via_ingreso:datos.via_ingreso,
@@ -106,7 +106,7 @@ export  const registrarFactura=async(req,resp)=>{
     try{
         const datos= await req.body;
         //console.log(datos);
-        const contrato = await prisma.factura.create(
+        const contrato = await prisma.Factura.create(
             {
                 data: {
                 
@@ -134,7 +134,7 @@ export  const emitirFactura=async(req,resp)=>{
         const id_factura= await req.params.id_factura;
         let estado_pago='';
 
-        const tipo_empresa = await prisma.factura.findFirst(
+        const tipo_empresa = await prisma.Factura.findFirst(
             { 
                 where:{id_factura:Number(id_factura)},
                 include: {
@@ -162,7 +162,7 @@ export  const emitirFactura=async(req,resp)=>{
 
     
 
-        const factura = await prisma.factura.update(
+        const factura = await prisma.Factura.update(
             { 
                 where:{id_factura:Number(id_factura)},
                 data: {
@@ -231,7 +231,7 @@ export  const generarFactura=async(req,resp)=>{
     try{
        
         const id_factura= await req.params.id_factura;
-        const factura = await prisma.factura.findFirst(
+        const factura = await prisma.Factura.findFirst(
             { 
                 where:{id_factura:Number(id_factura)},
                 include: {
@@ -266,7 +266,7 @@ export  const anularFactura=async(req,resp)=>{
     try{
         const id_factura= await req.params.id_factura;
       
-        const factura = await prisma.factura.update(
+        const factura = await prisma.Factura.update(
             { 
                 where:{id_factura:Number(id_factura)},
                 data: {

@@ -5,7 +5,7 @@ import prisma from '../libs/prisma.js'
 export  const listarPacientes=async(req,resp)=>{
 
     try{
-        const pacientes = await prisma.paciente.findMany(
+        const pacientes = await prisma.Paciente.findMany(
             {
                 include:{
                     eps:true,
@@ -25,7 +25,7 @@ export  const listarPacientes=async(req,resp)=>{
 export  const buscarPacienteId=async(req,resp)=>{
     try{
         const id= await req.params.id_paciente;
-        const paciente = await prisma.paciente.findFirst(
+        const paciente = await prisma.Paciente.findFirst(
             {
                 where: { id_paciente: Number(id) },
                 include:{
@@ -55,7 +55,7 @@ export  const buscarPacienteIdent=async(req,resp)=>{
     try{
         const identificacion= await req.params.identificacion;
        
-        const paciente = await prisma.paciente.findFirst({
+        const paciente = await prisma.Paciente.findFirst({
             where: { identificacion: identificacion },
             include: {
                 eps: true,
@@ -84,7 +84,7 @@ export  const registrarPaciente=async(req,resp)=>{
     try{
         const datos= await req.body;
       // console.log(datos);
-        const paciente = await prisma.paciente.create(
+        const paciente = await prisma.Paciente.create(
             {
                 data: {
                     tipo_identificacion: datos.tipo_identificacion,
@@ -118,7 +118,7 @@ export  const actualizarPacienteId=async(req,resp)=>{
     try{
         const datos= await req.body;
         const id= await req.params.id_paciente;
-        const existencia = await prisma.paciente.findUnique({
+        const existencia = await prisma.Paciente.findUnique({
             where: { id_paciente: Number(id)},
           });
           if (!existencia) {
@@ -126,7 +126,7 @@ export  const actualizarPacienteId=async(req,resp)=>{
           }
           else{
 
-            const paciente = await prisma.paciente.update(
+            const paciente = await prisma.Paciente.update(
                 {
                     where:{id_paciente:Number(id)},
                     data:{
@@ -161,7 +161,7 @@ export  const actualizarPacienteId=async(req,resp)=>{
 export  const desactivarPacienteId=async(req,resp)=>{
     try{
         const id= await req.params.id_paciente;
-        const existencia = await prisma.paciente.findUnique({
+        const existencia = await prisma.Paciente.findUnique({
             where: { id_paciente: Number(id)}
           });
 
@@ -169,7 +169,7 @@ export  const desactivarPacienteId=async(req,resp)=>{
             return resp.status(404).json({"status":404,"message":"El usuario no existe en el sistema"});
           }
           else{
-            const paciente = await prisma.paciente.update(
+            const paciente = await prisma.Paciente.update(
                 {
                     where:{id_paciente:Number(id)},
                     data:{estado: 'Inactivo'}  

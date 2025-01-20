@@ -4,7 +4,7 @@ import prisma from '../libs/prisma.js'
 
 export  const listarTipoServicio=async(req,resp)=>{
     try{
-        const tipos_servicios = await prisma.tipo_Servicio.findMany();
+        const tipos_servicios = await prisma.Tipo_Servicio.findMany();
         return resp.status(200).json(tipos_servicios);
     }catch(error){
         console.log("Error en controller.tipo.servicio.js :"+error);

@@ -24,7 +24,7 @@ export  const listarMunicipios=async(req,resp)=>{
 export  const listarMunicipiosDepartementoId=async(req,resp)=>{
     try{
         let id_departamento = req.params.id_departamento;
-        const municipios = await prisma.municipio.findMany(
+        const municipios = await prisma.Municipio.findMany(
             {where: { 
                 departamentoId: Number(id_departamento)
                         

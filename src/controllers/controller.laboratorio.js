@@ -69,7 +69,7 @@ export  const generarLaboratorio=async(req,resp)=>{
     try{
        
         const autorizacion= await req.params.autorizacion;
-        const examenes = await prisma.factura.findMany(
+        const examenes = await prisma.Factura.findMany(
             { 
                 where:{autorizacion:autorizacion},
                         include:{
@@ -121,7 +121,7 @@ export  const generarLaboratorio=async(req,resp)=>{
 
 export  const firmaLaboratorio=async(req,resp)=>{
     try{
-        const bacteriologo = await prisma.usuario.findFirst(
+        const bacteriologo = await prisma.Usuario.findFirst(
             { 
                 where:{rol:'Bacteriologo'}             
             } 
@@ -141,7 +141,7 @@ export const confirmarEntregaExamen = async (req, resp) => {
     try {
        
         let id_examen= req.params.id_examen;
-        await prisma.examen.update({
+        await prisma.Examen.update({
             where: {
                 id_examen: Number(id_examen)
             },

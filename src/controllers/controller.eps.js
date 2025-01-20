@@ -4,7 +4,7 @@ import prisma from '../libs/prisma.js'
 
 export  const listarEps=async(req,resp)=>{
     try{
-        const eps = await prisma.eps.findMany();
+        const eps = await prisma.Eps.findMany();
         return resp.status(200).json(eps);
     }catch(error){
         console.log("Error en controller.eps.js :"+error);
@@ -15,7 +15,7 @@ export  const listarEps=async(req,resp)=>{
 export  const buscarEpsId=async(req,resp)=>{
     try{
         const id= await req.params.id_eps;
-        const eps = await prisma.eps.findFirst(
+        const eps = await prisma.Eps.findFirst(
             {
                 where: { id_eps: Number(id) }
             }
@@ -30,7 +30,7 @@ export  const buscarEpsId=async(req,resp)=>{
 export  const registrarEps=async(req,resp)=>{
     try{
         const datos= await req.body;
-        const eps = await prisma.eps.create(
+        const eps = await prisma.Eps.create(
             {
                 data: {
                     codigo: datos.codigo,
@@ -50,14 +50,14 @@ export  const actualizarEpsId=async(req,resp)=>{
     try{
         const datos= await req.body;
         const id= await req.params.id_eps;
-        const existencia = await prisma.eps.findUnique({
+        const existencia = await prisma.Eps.findUnique({
             where: { id_eps: Number(id)},
           });
           if (!existencia) {
             return resp.status(501).json({"status":200,"message":"La Eps no existe en el sistema"});
           }
           else{
-            const eps = await prisma.eps.update(
+            const eps = await prisma.Eps.update(
                 {
                     where:{id_eps:Number(id)},
                     data:{
@@ -79,7 +79,7 @@ export  const actualizarEpsId=async(req,resp)=>{
 export  const desactivarEpsId=async(req,resp)=>{
     try{
         const id= await req.params.id_eps;
-        const existencia = await prisma.eps.findUnique({
+        const existencia = await prisma.Eps.findUnique({
             where: { id_eps: Number(id)}
           });
 
@@ -87,7 +87,7 @@ export  const desactivarEpsId=async(req,resp)=>{
             return resp.status(501).json({"status":501,"message":"La Eps no existe en el sistema"});
           }
           else{
-            const eps= await prisma.eps.update(
+            const eps= await prisma.Eps.update(
                 {
                     where:{id_eps:Number(id)},
                     data:{estado: 'Inactivo'}  

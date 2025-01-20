@@ -4,7 +4,7 @@ import prisma from '../libs/prisma.js'
 
 export  const listarProcedimientos=async(req,resp)=>{
     try{
-        const procedimientos = await prisma.procedimiento.findMany(
+        const procedimientos = await prisma.Procedimiento.findMany(
             {
                 include:{
                     cups:true,
@@ -30,7 +30,7 @@ export  const listarProcedimientos=async(req,resp)=>{
 export  const buscarProcedimientoId=async(req,resp)=>{
     try{
         const id= await req.params.id_procedimiento;
-        const procedimientos = await prisma.procedimiento.findFirst(
+        const procedimientos = await prisma.Procedimiento.findFirst(
             {
                 where: { id_procedimiento: Number(id) },
                 include:{
@@ -56,7 +56,7 @@ export  const buscarProcedimientoId=async(req,resp)=>{
 export  const registrarProcedimiento=async(req,resp)=>{
     try{
         const datos= await req.body;
-        const procedimientos = await prisma.procedimiento.create(
+        const procedimientos = await prisma.Procedimiento.create(
             {
                 data: {
                     cupsId: Number(datos.cupsId),
@@ -83,14 +83,14 @@ export  const actualizarProcedimientoId=async(req,resp)=>{
         const id= await req.params.id_procedimiento;
 
 
-        const procedimientos = await prisma.procedimiento.findUnique({
+        const procedimientos = await prisma.Procedimiento.findUnique({
             where: { id_procedimiento: Number(id)},
           });
           if (!procedimientos) {
             return resp.status(404).json({"status":200,"message":"El procedimiento no existe en el sistema"});
           }
           else{
-            const procedimiento = await prisma.procedimiento.update(
+            const procedimiento = await prisma.Procedimiento.update(
                 {
                     where:{id_procedimiento:Number(id)},
                     data:{
@@ -117,7 +117,7 @@ export  const estadoProcedimientoId=async(req,resp)=>{
     try{
         const id= await req.params.id_procedimiento;
         const {estado} = req.body;
-        const procedimientos = await prisma.procedimiento.findUnique({
+        const procedimientos = await prisma.Procedimiento.findUnique({
             where: { id_procedimiento: Number(id)}
           });
 
@@ -125,7 +125,7 @@ export  const estadoProcedimientoId=async(req,resp)=>{
             return resp.status(404).json({"status":404,"message":"El procedimiento no existe en el sistema"});
           }
           else{
-            const proced= await prisma.procedimiento.update(
+            const proced= await prisma.Procedimiento.update(
                 {
                     where:{id_procedimiento:Number(id)},
                     data:{estado: estado}  
@@ -147,7 +147,7 @@ export  const procedimientoServicioId=async(req,resp)=>{
     try{
         const id_servicio= req.params.id_servicio;
        
-        const procedimientos = await prisma.procedimiento.findMany(
+        const procedimientos = await prisma.Procedimiento.findMany(
             {
                 where:{servicioId:Number(id_servicio)},
                 include:{
@@ -177,7 +177,7 @@ export  const procedimientoActivoServicioId=async(req,resp)=>{
     try{
         const id_servicio= req.params.id_servicio;
        
-        const procedimientos = await prisma.procedimiento.findMany(
+        const procedimientos = await prisma.Procedimiento.findMany(
             {
                 where:{servicioId:Number(id_servicio),estado:'Activo'},
                 include:{
@@ -205,7 +205,7 @@ export  const procedimientoActivoServicioId=async(req,resp)=>{
 export  const listarAreas=async(req,resp)=>{
     try{
     
-        const areas = await prisma.area.findMany();
+        const areas = await prisma.Area.findMany();
          
      
         return resp.status(200).json({"status":200,areas});      
@@ -224,7 +224,7 @@ export  const listarAreas=async(req,resp)=>{
 export  const registrarParametro=async(req,resp)=>{
     try{
         const datos= await req.body;
-        const parametro = await prisma.parametro.create(
+        const parametro = await prisma.Parametro.create(
             {
                 data: {
                     nombre: datos.parametro,
@@ -248,7 +248,7 @@ export  const listarParametroId=async(req,resp)=>{
     try{
         const id_procedimiento= req.params.id_procedimiento;
        
-        const parametros = await prisma.parametro.findMany(
+        const parametros = await prisma.Parametro.findMany(
             {
                 where:{procedimientoId:Number(id_procedimiento)},
                 include:{
@@ -270,7 +270,7 @@ export  const eliminarParametro=async(req,resp)=>{
     try{
         const id_parametro= req.params.id_parametro;
        
-        const parametros = await prisma.parametro.delete(
+        const parametros = await prisma.Parametro.delete(
             {
                 where:{id_parametro:Number(id_parametro)}
             }
@@ -289,7 +289,7 @@ export  const eliminarParametro=async(req,resp)=>{
 export  const registrarTipoResultado=async(req,resp)=>{
     try{
         const datos= await req.body;
-        const tipo_resultado = await prisma.tipo_Resultado.create(
+        const tipo_resultado = await prisma.Tipo_Resultado.create(
             {
                 data: {
                     parametroId:Number(datos.id_parametro),
@@ -312,7 +312,7 @@ export  const eliminarTipoResultado=async(req,resp)=>{
     try{
         const id_tipo_resultado= req.params.id_tipo_resultado;
        
-        const tipo_resultado = await prisma.tipo_Resultado.delete(
+        const tipo_resultado = await prisma.Tipo_Resultado.delete(
             {
                 where:{id_tipo_resultado:Number(id_tipo_resultado)}
             }

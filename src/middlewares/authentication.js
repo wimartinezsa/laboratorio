@@ -12,7 +12,7 @@ export  const validarUsuario=async(req,resp)=>{
             return resp.status(400).json({"status":400,"message":"El login y password son obligatorio"});
         }
 
-        const existenciaLogin = await prisma.usuario.findFirst(
+        const existenciaLogin = await prisma.Usuario.findFirst(
             {where: { email: login },
             include:{
                 area:true
@@ -34,7 +34,7 @@ export  const validarUsuario=async(req,resp)=>{
                 );
 
 
-                const usuario = await prisma.usuario.update(
+                const usuario = await prisma.Usuario.update(
                     {
                         where:{id_usuario: Number(existenciaLogin.id_usuario)},
                         data:{
@@ -124,7 +124,7 @@ export  const cerrrar_sesion=async(req,resp)=>{
    
     try{
         const id= await req.params.id_usuario;
-            const eps = await prisma.usuario.update(
+            const eps = await prisma.Usuario.update(
                 {
                     where:{id_usuario:Number(id)},
                     data:{

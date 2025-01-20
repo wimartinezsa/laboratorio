@@ -12,7 +12,7 @@ export  const listarMuestrasArea=async(req,resp)=>{
       
        if(rol==='Administrador' ||  rol==='Bacteriologo'){
 
-        const examenes = await prisma.examen.findMany(
+        const examenes = await prisma.Examen.findMany(
             { 
                 where: {
                     estado: { 
@@ -48,7 +48,7 @@ export  const listarMuestrasArea=async(req,resp)=>{
 
        }else{
 
-        const examenes = await prisma.examen.findMany(
+        const examenes = await prisma.Examen.findMany(
             { 
                 where: {
                     estado:'En_Proceso_de_Analisis'             
@@ -103,7 +103,7 @@ export const registrarResultado = async (req, resp) => {
      
         let id_resultado= req.params.id_resultado;
     
-        await prisma.resultado.updateMany({
+        await prisma.Resultado.updateMany({
             where: {
                 id_resultado: Number(id_resultado)
             },
@@ -130,7 +130,7 @@ export const finzalizarAnalisis = async (req, resp) => {
        
         let id_examen= req.params.id_examen;
        // console.log('examen',id_examen);
-        await prisma.examen.update({
+        await prisma.Examen.update({
             where: {
                 id_examen: Number(id_examen)
             },
@@ -182,7 +182,7 @@ export const registrarResulatadosAutomaticos = async (req, resp) => {
 
                     for (const resultado of resultados) {
                         //console.log(' se inserta : ' +resultado);
-                        await prisma.resultado.updateMany({
+                        await prisma.Resultado.updateMany({
                             where: {
                                 id_resultado: resultado.id_resultado,
                                 estado: 'Pendiente'
@@ -229,7 +229,7 @@ export  const listarParametrosId=async(req,resp)=>{
     try{
        let id_parametro = req.params.id_parametro;
       
-        const tipos_resultado = await prisma.tipo_Resultado.findMany(
+        const tipos_resultado = await prisma.Tipo_Resultado.findMany(
             { 
                 where:{
                     parametroId: Number(id_parametro)

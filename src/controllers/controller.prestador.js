@@ -10,7 +10,7 @@ export  const buscarPrestadorId=async(req,resp)=>{
     try{
         const id= await req.params.id_prestador;
         
-        const prestadores = await prisma.prestador.findFirst(
+        const prestadores = await prisma.Prestador.findFirst(
             {
                 where: {id_prestador:Number(id)}
             }

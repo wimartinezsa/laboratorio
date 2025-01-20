@@ -5,7 +5,7 @@ import prisma from '../libs/prisma.js'
 export  const listarDepartamentos=async(req,resp)=>{
     try{
         let id_pais= req.params.id_pais;
-        const departamentos = await prisma.departamento.findMany(
+        const departamentos = await prisma.Departamento.findMany(
             {
                 where:{
                     paisId:Number(id_pais)
