@@ -1,99 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the `Acuerdos` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Contratos` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Empresas` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Municipios` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Pacientes` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Parametros` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Prestadores` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Servicios` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Tipo_Resultados` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Tipo_Servicio` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropForeignKey
-ALTER TABLE `Acuerdos` DROP FOREIGN KEY `Acuerdos_contratoId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Acuerdos` DROP FOREIGN KEY `Acuerdos_procedimientoId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Contratos` DROP FOREIGN KEY `Contratos_empresaId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Empresas` DROP FOREIGN KEY `Empresas_municipioId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Municipios` DROP FOREIGN KEY `Municipios_departamentoId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Pacientes` DROP FOREIGN KEY `Pacientes_epsId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Pacientes` DROP FOREIGN KEY `Pacientes_municipioId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Pacientes` DROP FOREIGN KEY `Pacientes_paisId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Parametros` DROP FOREIGN KEY `Parametros_procedimientoId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Servicios` DROP FOREIGN KEY `Servicios_prestadorId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Servicios` DROP FOREIGN KEY `Servicios_tipo_servicioId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Tipo_Resultados` DROP FOREIGN KEY `Tipo_Resultados_parametroId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `areas` DROP FOREIGN KEY `areas_prestadorId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `facturas` DROP FOREIGN KEY `facturas_contratoId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `facturas` DROP FOREIGN KEY `facturas_pacienteId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `procedimientos` DROP FOREIGN KEY `procedimientos_servicioId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `resultados` DROP FOREIGN KEY `resultados_parametroId_fkey`;
-
--- DropTable
-DROP TABLE `Acuerdos`;
-
--- DropTable
-DROP TABLE `Contratos`;
-
--- DropTable
-DROP TABLE `Empresas`;
-
--- DropTable
-DROP TABLE `Municipios`;
-
--- DropTable
-DROP TABLE `Pacientes`;
-
--- DropTable
-DROP TABLE `Parametros`;
-
--- DropTable
-DROP TABLE `Prestadores`;
-
--- DropTable
-DROP TABLE `Servicios`;
-
--- DropTable
-DROP TABLE `Tipo_Resultados`;
-
--- DropTable
-DROP TABLE `Tipo_Servicio`;
-
 -- CreateTable
 CREATE TABLE `pacientes` (
     `id_paciente` INTEGER NOT NULL AUTO_INCREMENT,
@@ -119,12 +23,83 @@ CREATE TABLE `pacientes` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `eps` (
+    `id_eps` INTEGER NOT NULL AUTO_INCREMENT,
+    `codigo` VARCHAR(20) NOT NULL,
+    `nombre` VARCHAR(50) NOT NULL,
+    `estado` ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
+
+    PRIMARY KEY (`id_eps`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `tipo_servicio` (
     `id_tipo_servicio` INTEGER NOT NULL AUTO_INCREMENT,
     `codigo` VARCHAR(10) NOT NULL,
     `nombre` VARCHAR(50) NOT NULL,
 
     PRIMARY KEY (`id_tipo_servicio`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `facturas` (
+    `id_factura` INTEGER NOT NULL AUTO_INCREMENT,
+    `autorizacion` VARCHAR(30) NULL,
+    `via_ingreso` ENUM('01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14') NOT NULL,
+    `fecha` DATETIME(3) NOT NULL,
+    `total` DECIMAL(10, 2) NOT NULL,
+    `estado` ENUM('Pendiente_Emision', 'Factura_Emitida', 'Pendiente_Pago', 'Pagado', 'Anulado') NOT NULL DEFAULT 'Pendiente_Emision',
+    `contratoId` INTEGER NOT NULL,
+    `pacienteId` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id_factura`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `resultados` (
+    `id_resultado` INTEGER NOT NULL AUTO_INCREMENT,
+    `resultado` VARCHAR(200) NULL,
+    `estado` ENUM('Pendiente', 'Finalizado') NOT NULL,
+    `examenId` INTEGER NOT NULL,
+    `parametroId` INTEGER NOT NULL,
+
+    UNIQUE INDEX `resultados_examenId_parametroId_key`(`examenId`, `parametroId`),
+    PRIMARY KEY (`id_resultado`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `examenes` (
+    `id_examen` INTEGER NOT NULL AUTO_INCREMENT,
+    `cantidad` INTEGER NOT NULL,
+    `precio` DECIMAL(10, 2) NOT NULL,
+    `fecha_muestra` DATETIME(3) NULL,
+    `fecha_analisis` DATETIME(3) NULL,
+    `fecha_resultado` DATETIME(3) NULL,
+    `estado` ENUM('Solicitado', 'En_Toma_de_Muestra', 'Muestra_Recibida', 'En_Proceso_de_Analisis', 'Analisis_Completo', 'Resultados_Listos', 'Resultados_Entregados') NOT NULL DEFAULT 'Solicitado',
+    `observacion` VARCHAR(200) NULL,
+    `procedimientoId` INTEGER NOT NULL,
+    `facturaId` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id_examen`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `paises` (
+    `id_pais` INTEGER NOT NULL AUTO_INCREMENT,
+    `codigo` VARCHAR(10) NOT NULL,
+    `nombre` VARCHAR(50) NOT NULL,
+
+    PRIMARY KEY (`id_pais`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `departamentos` (
+    `id_departamento` INTEGER NOT NULL AUTO_INCREMENT,
+    `codigo` VARCHAR(10) NOT NULL,
+    `nombre` VARCHAR(50) NOT NULL,
+    `paisId` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id_departamento`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -152,6 +127,26 @@ CREATE TABLE `servicios` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `finalidad` (
+    `id_finalidad` INTEGER NOT NULL AUTO_INCREMENT,
+    `codigo` VARCHAR(10) NOT NULL,
+    `nombre` VARCHAR(50) NOT NULL,
+    `estado` ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
+
+    PRIMARY KEY (`id_finalidad`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `cups` (
+    `id_cups` INTEGER NOT NULL AUTO_INCREMENT,
+    `codigo` VARCHAR(30) NOT NULL,
+    `nombre` VARCHAR(100) NOT NULL,
+    `descripcion` VARCHAR(100) NOT NULL,
+
+    PRIMARY KEY (`id_cups`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `tipo_resultados` (
     `id_tipo_resultado` INTEGER NOT NULL AUTO_INCREMENT,
     `nombre` VARCHAR(50) NOT NULL,
@@ -173,6 +168,28 @@ CREATE TABLE `parametros` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `procedimientos` (
+    `id_procedimiento` INTEGER NOT NULL AUTO_INCREMENT,
+    `estado` ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
+    `tecnica` VARCHAR(50) NULL,
+    `servicioId` INTEGER NOT NULL,
+    `finalidadId` INTEGER NOT NULL,
+    `cupsId` INTEGER NOT NULL,
+    `areaId` INTEGER NULL,
+
+    PRIMARY KEY (`id_procedimiento`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `areas` (
+    `id_area` INTEGER NOT NULL AUTO_INCREMENT,
+    `nombre` VARCHAR(30) NOT NULL,
+    `prestadorId` INTEGER NULL,
+
+    PRIMARY KEY (`id_area`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `prestadores` (
     `id_prestador` INTEGER NOT NULL AUTO_INCREMENT,
     `codigo` VARCHAR(12) NOT NULL,
@@ -181,6 +198,25 @@ CREATE TABLE `prestadores` (
 
     UNIQUE INDEX `prestadores_codigo_key`(`codigo`),
     PRIMARY KEY (`id_prestador`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `usuarios` (
+    `id_usuario` INTEGER NOT NULL AUTO_INCREMENT,
+    `tipo_identificacion` ENUM('CC', 'CE', 'CD', 'PA', 'SC', 'PE', 'RC', 'TI', 'CN', 'AS', 'MS') NOT NULL,
+    `identificacion` VARCHAR(30) NOT NULL,
+    `nombre` VARCHAR(30) NOT NULL,
+    `cargo` VARCHAR(50) NOT NULL,
+    `firma` VARCHAR(100) NULL,
+    `rol` ENUM('Administrador', 'Facturacion', 'Bacteriologo', 'Auxiliar') NOT NULL,
+    `email` VARCHAR(50) NOT NULL,
+    `password` VARCHAR(100) NOT NULL,
+    `estado` ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
+    `token` VARCHAR(500) NULL,
+    `areaId` INTEGER NOT NULL,
+
+    UNIQUE INDEX `usuarios_identificacion_key`(`identificacion`),
+    PRIMARY KEY (`id_usuario`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -238,7 +274,19 @@ ALTER TABLE `facturas` ADD CONSTRAINT `facturas_contratoId_fkey` FOREIGN KEY (`c
 ALTER TABLE `facturas` ADD CONSTRAINT `facturas_pacienteId_fkey` FOREIGN KEY (`pacienteId`) REFERENCES `pacientes`(`id_paciente`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `resultados` ADD CONSTRAINT `resultados_examenId_fkey` FOREIGN KEY (`examenId`) REFERENCES `examenes`(`id_examen`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `resultados` ADD CONSTRAINT `resultados_parametroId_fkey` FOREIGN KEY (`parametroId`) REFERENCES `parametros`(`id_parametro`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `examenes` ADD CONSTRAINT `examenes_procedimientoId_fkey` FOREIGN KEY (`procedimientoId`) REFERENCES `procedimientos`(`id_procedimiento`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `examenes` ADD CONSTRAINT `examenes_facturaId_fkey` FOREIGN KEY (`facturaId`) REFERENCES `facturas`(`id_factura`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `departamentos` ADD CONSTRAINT `departamentos_paisId_fkey` FOREIGN KEY (`paisId`) REFERENCES `paises`(`id_pais`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `municipios` ADD CONSTRAINT `municipios_departamentoId_fkey` FOREIGN KEY (`departamentoId`) REFERENCES `departamentos`(`id_departamento`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -259,7 +307,19 @@ ALTER TABLE `parametros` ADD CONSTRAINT `parametros_procedimientoId_fkey` FOREIG
 ALTER TABLE `procedimientos` ADD CONSTRAINT `procedimientos_servicioId_fkey` FOREIGN KEY (`servicioId`) REFERENCES `servicios`(`id_servicio`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `procedimientos` ADD CONSTRAINT `procedimientos_finalidadId_fkey` FOREIGN KEY (`finalidadId`) REFERENCES `finalidad`(`id_finalidad`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `procedimientos` ADD CONSTRAINT `procedimientos_cupsId_fkey` FOREIGN KEY (`cupsId`) REFERENCES `cups`(`id_cups`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `procedimientos` ADD CONSTRAINT `procedimientos_areaId_fkey` FOREIGN KEY (`areaId`) REFERENCES `areas`(`id_area`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `areas` ADD CONSTRAINT `areas_prestadorId_fkey` FOREIGN KEY (`prestadorId`) REFERENCES `prestadores`(`id_prestador`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `usuarios` ADD CONSTRAINT `usuarios_areaId_fkey` FOREIGN KEY (`areaId`) REFERENCES `areas`(`id_area`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `empresas` ADD CONSTRAINT `empresas_municipioId_fkey` FOREIGN KEY (`municipioId`) REFERENCES `municipios`(`id_municipio`) ON DELETE RESTRICT ON UPDATE CASCADE;
