@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE `Paciente` (
+CREATE TABLE `pacientes` (
     `id_paciente` INTEGER NOT NULL AUTO_INCREMENT,
     `tipo_identificacion` ENUM('CC', 'CE', 'CD', 'PA', 'SC', 'PE', 'RC', 'TI', 'CN', 'AS', 'MS') NOT NULL,
     `identificacion` VARCHAR(30) NOT NULL,
@@ -17,13 +17,13 @@ CREATE TABLE `Paciente` (
     `municipioId` INTEGER NULL,
     `epsId` INTEGER NULL,
 
-    UNIQUE INDEX `Paciente_identificacion_key`(`identificacion`),
-    UNIQUE INDEX `Paciente_email_key`(`email`),
+    UNIQUE INDEX `pacientes_identificacion_key`(`identificacion`),
+    UNIQUE INDEX `pacientes_email_key`(`email`),
     PRIMARY KEY (`id_paciente`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Eps` (
+CREATE TABLE `eps` (
     `id_eps` INTEGER NOT NULL AUTO_INCREMENT,
     `codigo` VARCHAR(20) NOT NULL,
     `nombre` VARCHAR(50) NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE `Eps` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Tipo_Servicio` (
+CREATE TABLE `tipo_servicio` (
     `id_tipo_servicio` INTEGER NOT NULL AUTO_INCREMENT,
     `codigo` VARCHAR(10) NOT NULL,
     `nombre` VARCHAR(50) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE `Tipo_Servicio` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Factura` (
+CREATE TABLE `facturas` (
     `id_factura` INTEGER NOT NULL AUTO_INCREMENT,
     `autorizacion` VARCHAR(30) NULL,
     `via_ingreso` ENUM('01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14') NOT NULL,
@@ -56,19 +56,19 @@ CREATE TABLE `Factura` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Resultado` (
+CREATE TABLE `resultados` (
     `id_resultado` INTEGER NOT NULL AUTO_INCREMENT,
     `resultado` VARCHAR(200) NULL,
     `estado` ENUM('Pendiente', 'Finalizado') NOT NULL,
     `examenId` INTEGER NOT NULL,
     `parametroId` INTEGER NOT NULL,
 
-    UNIQUE INDEX `Resultado_examenId_parametroId_key`(`examenId`, `parametroId`),
+    UNIQUE INDEX `resultados_examenId_parametroId_key`(`examenId`, `parametroId`),
     PRIMARY KEY (`id_resultado`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Examen` (
+CREATE TABLE `examenes` (
     `id_examen` INTEGER NOT NULL AUTO_INCREMENT,
     `cantidad` INTEGER NOT NULL,
     `precio` DECIMAL(10, 2) NOT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE `Examen` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Pais` (
+CREATE TABLE `paises` (
     `id_pais` INTEGER NOT NULL AUTO_INCREMENT,
     `codigo` VARCHAR(10) NOT NULL,
     `nombre` VARCHAR(50) NOT NULL,
@@ -93,7 +93,7 @@ CREATE TABLE `Pais` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Departamento` (
+CREATE TABLE `departamentos` (
     `id_departamento` INTEGER NOT NULL AUTO_INCREMENT,
     `codigo` VARCHAR(10) NOT NULL,
     `nombre` VARCHAR(50) NOT NULL,
@@ -103,7 +103,7 @@ CREATE TABLE `Departamento` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Municipio` (
+CREATE TABLE `municipios` (
     `id_municipio` INTEGER NOT NULL AUTO_INCREMENT,
     `codigo` VARCHAR(10) NOT NULL,
     `nombre` VARCHAR(50) NOT NULL,
@@ -113,7 +113,7 @@ CREATE TABLE `Municipio` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Servicio` (
+CREATE TABLE `servicios` (
     `id_servicio` INTEGER NOT NULL AUTO_INCREMENT,
     `nombre` VARCHAR(50) NOT NULL,
     `precio` DECIMAL(10, 2) NOT NULL,
@@ -127,7 +127,7 @@ CREATE TABLE `Servicio` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Finalidad` (
+CREATE TABLE `finalidad` (
     `id_finalidad` INTEGER NOT NULL AUTO_INCREMENT,
     `codigo` VARCHAR(10) NOT NULL,
     `nombre` VARCHAR(50) NOT NULL,
@@ -137,7 +137,7 @@ CREATE TABLE `Finalidad` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Cups` (
+CREATE TABLE `cups` (
     `id_cups` INTEGER NOT NULL AUTO_INCREMENT,
     `codigo` VARCHAR(30) NOT NULL,
     `nombre` VARCHAR(100) NOT NULL,
@@ -147,7 +147,7 @@ CREATE TABLE `Cups` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Tipo_Resultado` (
+CREATE TABLE `tipo_resultados` (
     `id_tipo_resultado` INTEGER NOT NULL AUTO_INCREMENT,
     `nombre` VARCHAR(50) NOT NULL,
     `parametroId` INTEGER NOT NULL,
@@ -156,7 +156,7 @@ CREATE TABLE `Tipo_Resultado` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Parametro` (
+CREATE TABLE `parametros` (
     `id_parametro` INTEGER NOT NULL AUTO_INCREMENT,
     `nombre` VARCHAR(50) NOT NULL,
     `metodo` VARCHAR(30) NOT NULL,
@@ -168,7 +168,7 @@ CREATE TABLE `Parametro` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Procedimiento` (
+CREATE TABLE `procedimientos` (
     `id_procedimiento` INTEGER NOT NULL AUTO_INCREMENT,
     `estado` ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
     `tecnica` VARCHAR(50) NULL,
@@ -181,7 +181,7 @@ CREATE TABLE `Procedimiento` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Area` (
+CREATE TABLE `areas` (
     `id_area` INTEGER NOT NULL AUTO_INCREMENT,
     `nombre` VARCHAR(30) NOT NULL,
     `prestadorId` INTEGER NULL,
@@ -190,18 +190,18 @@ CREATE TABLE `Area` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Prestador` (
+CREATE TABLE `prestadores` (
     `id_prestador` INTEGER NOT NULL AUTO_INCREMENT,
     `codigo` VARCHAR(12) NOT NULL,
     `nit` VARCHAR(30) NOT NULL,
     `razon_social` VARCHAR(50) NOT NULL,
 
-    UNIQUE INDEX `Prestador_codigo_key`(`codigo`),
+    UNIQUE INDEX `prestadores_codigo_key`(`codigo`),
     PRIMARY KEY (`id_prestador`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Usuario` (
+CREATE TABLE `usuarios` (
     `id_usuario` INTEGER NOT NULL AUTO_INCREMENT,
     `tipo_identificacion` ENUM('CC', 'CE', 'CD', 'PA', 'SC', 'PE', 'RC', 'TI', 'CN', 'AS', 'MS') NOT NULL,
     `identificacion` VARCHAR(30) NOT NULL,
@@ -215,12 +215,12 @@ CREATE TABLE `Usuario` (
     `token` VARCHAR(500) NULL,
     `areaId` INTEGER NOT NULL,
 
-    UNIQUE INDEX `Usuario_identificacion_key`(`identificacion`),
+    UNIQUE INDEX `usuarios_identificacion_key`(`identificacion`),
     PRIMARY KEY (`id_usuario`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Empresa` (
+CREATE TABLE `empresas` (
     `id_empresa` INTEGER NOT NULL AUTO_INCREMENT,
     `nit` VARCHAR(530) NOT NULL,
     `codigo` VARCHAR(20) NOT NULL,
@@ -230,12 +230,12 @@ CREATE TABLE `Empresa` (
     `estado` ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
     `municipioId` INTEGER NOT NULL,
 
-    UNIQUE INDEX `Empresa_nit_key`(`nit`),
+    UNIQUE INDEX `empresas_nit_key`(`nit`),
     PRIMARY KEY (`id_empresa`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Contrato` (
+CREATE TABLE `contratos` (
     `id_contrato` INTEGER NOT NULL AUTO_INCREMENT,
     `nombre` VARCHAR(50) NOT NULL,
     `fecha_inicio` DATE NOT NULL,
@@ -247,7 +247,7 @@ CREATE TABLE `Contrato` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Acuerdo` (
+CREATE TABLE `acuerdos` (
     `id_acuerdo` INTEGER NOT NULL AUTO_INCREMENT,
     `estado` ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
     `precio` DECIMAL(10, 2) NOT NULL,
@@ -259,76 +259,76 @@ CREATE TABLE `Acuerdo` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `Paciente` ADD CONSTRAINT `Paciente_paisId_fkey` FOREIGN KEY (`paisId`) REFERENCES `Pais`(`id_pais`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `pacientes` ADD CONSTRAINT `pacientes_paisId_fkey` FOREIGN KEY (`paisId`) REFERENCES `paises`(`id_pais`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Paciente` ADD CONSTRAINT `Paciente_municipioId_fkey` FOREIGN KEY (`municipioId`) REFERENCES `Municipio`(`id_municipio`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `pacientes` ADD CONSTRAINT `pacientes_municipioId_fkey` FOREIGN KEY (`municipioId`) REFERENCES `municipios`(`id_municipio`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Paciente` ADD CONSTRAINT `Paciente_epsId_fkey` FOREIGN KEY (`epsId`) REFERENCES `Eps`(`id_eps`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `pacientes` ADD CONSTRAINT `pacientes_epsId_fkey` FOREIGN KEY (`epsId`) REFERENCES `eps`(`id_eps`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Factura` ADD CONSTRAINT `Factura_contratoId_fkey` FOREIGN KEY (`contratoId`) REFERENCES `Contrato`(`id_contrato`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `facturas` ADD CONSTRAINT `facturas_contratoId_fkey` FOREIGN KEY (`contratoId`) REFERENCES `contratos`(`id_contrato`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Factura` ADD CONSTRAINT `Factura_pacienteId_fkey` FOREIGN KEY (`pacienteId`) REFERENCES `Paciente`(`id_paciente`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `facturas` ADD CONSTRAINT `facturas_pacienteId_fkey` FOREIGN KEY (`pacienteId`) REFERENCES `pacientes`(`id_paciente`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Resultado` ADD CONSTRAINT `Resultado_examenId_fkey` FOREIGN KEY (`examenId`) REFERENCES `Examen`(`id_examen`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `resultados` ADD CONSTRAINT `resultados_examenId_fkey` FOREIGN KEY (`examenId`) REFERENCES `examenes`(`id_examen`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Resultado` ADD CONSTRAINT `Resultado_parametroId_fkey` FOREIGN KEY (`parametroId`) REFERENCES `Parametro`(`id_parametro`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `resultados` ADD CONSTRAINT `resultados_parametroId_fkey` FOREIGN KEY (`parametroId`) REFERENCES `parametros`(`id_parametro`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Examen` ADD CONSTRAINT `Examen_procedimientoId_fkey` FOREIGN KEY (`procedimientoId`) REFERENCES `Procedimiento`(`id_procedimiento`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `examenes` ADD CONSTRAINT `examenes_procedimientoId_fkey` FOREIGN KEY (`procedimientoId`) REFERENCES `procedimientos`(`id_procedimiento`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Examen` ADD CONSTRAINT `Examen_facturaId_fkey` FOREIGN KEY (`facturaId`) REFERENCES `Factura`(`id_factura`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `examenes` ADD CONSTRAINT `examenes_facturaId_fkey` FOREIGN KEY (`facturaId`) REFERENCES `facturas`(`id_factura`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Departamento` ADD CONSTRAINT `Departamento_paisId_fkey` FOREIGN KEY (`paisId`) REFERENCES `Pais`(`id_pais`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `departamentos` ADD CONSTRAINT `departamentos_paisId_fkey` FOREIGN KEY (`paisId`) REFERENCES `paises`(`id_pais`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Municipio` ADD CONSTRAINT `Municipio_departamentoId_fkey` FOREIGN KEY (`departamentoId`) REFERENCES `Departamento`(`id_departamento`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `municipios` ADD CONSTRAINT `municipios_departamentoId_fkey` FOREIGN KEY (`departamentoId`) REFERENCES `departamentos`(`id_departamento`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Servicio` ADD CONSTRAINT `Servicio_prestadorId_fkey` FOREIGN KEY (`prestadorId`) REFERENCES `Prestador`(`id_prestador`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `servicios` ADD CONSTRAINT `servicios_prestadorId_fkey` FOREIGN KEY (`prestadorId`) REFERENCES `prestadores`(`id_prestador`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Servicio` ADD CONSTRAINT `Servicio_tipo_servicioId_fkey` FOREIGN KEY (`tipo_servicioId`) REFERENCES `Tipo_Servicio`(`id_tipo_servicio`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `servicios` ADD CONSTRAINT `servicios_tipo_servicioId_fkey` FOREIGN KEY (`tipo_servicioId`) REFERENCES `tipo_servicio`(`id_tipo_servicio`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Tipo_Resultado` ADD CONSTRAINT `Tipo_Resultado_parametroId_fkey` FOREIGN KEY (`parametroId`) REFERENCES `Parametro`(`id_parametro`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `tipo_resultados` ADD CONSTRAINT `tipo_resultados_parametroId_fkey` FOREIGN KEY (`parametroId`) REFERENCES `parametros`(`id_parametro`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Parametro` ADD CONSTRAINT `Parametro_procedimientoId_fkey` FOREIGN KEY (`procedimientoId`) REFERENCES `Procedimiento`(`id_procedimiento`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `parametros` ADD CONSTRAINT `parametros_procedimientoId_fkey` FOREIGN KEY (`procedimientoId`) REFERENCES `procedimientos`(`id_procedimiento`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Procedimiento` ADD CONSTRAINT `Procedimiento_servicioId_fkey` FOREIGN KEY (`servicioId`) REFERENCES `Servicio`(`id_servicio`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `procedimientos` ADD CONSTRAINT `procedimientos_servicioId_fkey` FOREIGN KEY (`servicioId`) REFERENCES `servicios`(`id_servicio`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Procedimiento` ADD CONSTRAINT `Procedimiento_finalidadId_fkey` FOREIGN KEY (`finalidadId`) REFERENCES `Finalidad`(`id_finalidad`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `procedimientos` ADD CONSTRAINT `procedimientos_finalidadId_fkey` FOREIGN KEY (`finalidadId`) REFERENCES `finalidad`(`id_finalidad`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Procedimiento` ADD CONSTRAINT `Procedimiento_cupsId_fkey` FOREIGN KEY (`cupsId`) REFERENCES `Cups`(`id_cups`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `procedimientos` ADD CONSTRAINT `procedimientos_cupsId_fkey` FOREIGN KEY (`cupsId`) REFERENCES `cups`(`id_cups`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Procedimiento` ADD CONSTRAINT `Procedimiento_areaId_fkey` FOREIGN KEY (`areaId`) REFERENCES `Area`(`id_area`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `procedimientos` ADD CONSTRAINT `procedimientos_areaId_fkey` FOREIGN KEY (`areaId`) REFERENCES `areas`(`id_area`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Area` ADD CONSTRAINT `Area_prestadorId_fkey` FOREIGN KEY (`prestadorId`) REFERENCES `Prestador`(`id_prestador`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `areas` ADD CONSTRAINT `areas_prestadorId_fkey` FOREIGN KEY (`prestadorId`) REFERENCES `prestadores`(`id_prestador`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Usuario` ADD CONSTRAINT `Usuario_areaId_fkey` FOREIGN KEY (`areaId`) REFERENCES `Area`(`id_area`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `usuarios` ADD CONSTRAINT `usuarios_areaId_fkey` FOREIGN KEY (`areaId`) REFERENCES `areas`(`id_area`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Empresa` ADD CONSTRAINT `Empresa_municipioId_fkey` FOREIGN KEY (`municipioId`) REFERENCES `Municipio`(`id_municipio`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `empresas` ADD CONSTRAINT `empresas_municipioId_fkey` FOREIGN KEY (`municipioId`) REFERENCES `municipios`(`id_municipio`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Contrato` ADD CONSTRAINT `Contrato_empresaId_fkey` FOREIGN KEY (`empresaId`) REFERENCES `Empresa`(`id_empresa`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `contratos` ADD CONSTRAINT `contratos_empresaId_fkey` FOREIGN KEY (`empresaId`) REFERENCES `empresas`(`id_empresa`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Acuerdo` ADD CONSTRAINT `Acuerdo_procedimientoId_fkey` FOREIGN KEY (`procedimientoId`) REFERENCES `Procedimiento`(`id_procedimiento`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `acuerdos` ADD CONSTRAINT `acuerdos_procedimientoId_fkey` FOREIGN KEY (`procedimientoId`) REFERENCES `procedimientos`(`id_procedimiento`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Acuerdo` ADD CONSTRAINT `Acuerdo_contratoId_fkey` FOREIGN KEY (`contratoId`) REFERENCES `Contrato`(`id_contrato`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `acuerdos` ADD CONSTRAINT `acuerdos_contratoId_fkey` FOREIGN KEY (`contratoId`) REFERENCES `contratos`(`id_contrato`) ON DELETE RESTRICT ON UPDATE CASCADE;
