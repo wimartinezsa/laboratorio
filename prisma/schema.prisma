@@ -284,23 +284,16 @@ enum Grupo_Servicio {
 model Servicio{
 id_servicio Int @id @default(autoincrement())
 nombre String @db.VarChar(50)
-precio Decimal @db.Decimal(10,2)
 estado Estado @default(Activo)
 grupo_servicio Grupo_Servicio
 modalidad_atencion Modalidad_Atencion
 
-
 procedimiento Procedimiento[]
-
 prestador  Prestador @relation(fields: [prestadorId],references: [id_prestador])
 prestadorId Int
 
 tipo_servicio Tipo_Servicio @relation(fields: [tipo_servicioId],references: [id_tipo_servicio])
 tipo_servicioId Int
-
-
-
-
 
 @@map("servicios")
 }
@@ -367,23 +360,21 @@ model Procedimiento{
 id_procedimiento Int @id @default(autoincrement())
 estado Estado @default(Activo)
 tecnica String? @db.VarChar(50)
+precio Decimal? @db.Decimal(10,2) @default(0)
 examen Examen[]
 acuerdo Acuerdo[]
 parametro Parametro[]
 servicio Servicio @relation(fields: [servicioId],references: [id_servicio])
 servicioId Int
 
-
 finalidad  Finalidad @relation(fields: [finalidadId],references: [id_finalidad])
 finalidadId Int
-
 
 cups Cups @relation(fields: [cupsId],references: [id_cups])
 cupsId Int
 
 area Area? @relation(fields: [areaId],references: [id_area])
 areaId Int?
-
 
 @@map("procedimientos")
 }

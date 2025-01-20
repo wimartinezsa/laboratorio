@@ -89,13 +89,13 @@ moment.defineLocale('es', {
                         doc.text(10,y,'Identificación :');
                         doc.text(35,y,element.paciente.identificacion);
                         doc.text(80,y,'Email :');
-                        doc.text(95,y,element.paciente.email);
+                        doc.text(95,y,element.paciente.email.slice(0, 23));
                         doc.text(150,y,'Fecha :');
                         doc.text(170,y,moment(element.fecha).format('DD-MM-YYYY HH:mm:ss'));
                         y += 5;
                         //segundo fila del encabezado
                         doc.text(10,y,'Nombres :');    
-                        doc.text(35,y, element.paciente.nombres);
+                        doc.text(35,y, element.paciente.nombres.slice(0,22));
 
                         doc.text(80,y,'Edad :');    
                         let edad= calcularEdad(element.paciente.fecha_nacimiento);
@@ -118,7 +118,7 @@ moment.defineLocale('es', {
                         y += 5;
                         //cuarta fila del encabezado
                         doc.text(10,y,'Dirección :');
-                        doc.text(35,y, element.paciente.direccion);
+                        doc.text(35,y, element.paciente.direccion.slice(0, 22));
          
                         doc.text(80,y,'Eps :');
                         doc.text(95,y,element.paciente.eps.nombre);

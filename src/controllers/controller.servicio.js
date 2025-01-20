@@ -34,7 +34,7 @@ export  const listarServiciosActivos=async(req,resp)=>{
             {   where:{estado:'Activo'},
                  include: { 
                     prestador: true,
-                    tipo_servicio:true       
+                    tipo_servicio:true 
                     }
                 
             }
@@ -85,7 +85,6 @@ export  const registrarServicio=async(req,resp)=>{
                     tipo_servicioId:Number(datos.tipo_servicioId),
                     grupo_servicio:datos.grupo,
                     modalidad_atencion:datos.modalidad,
-                    precio: parseFloat(datos.precio),
                     estado:'Activo'
                 }
             } 
@@ -119,8 +118,7 @@ export  const actualizarServicioId=async(req,resp)=>{
                         prestadorId:Number(1),
                         tipo_servicioId:Number(datos.tipo_servicioId),
                         grupo_servicio:datos.grupo,
-                        modalidad_atencion:datos.modalidad,
-                        precio: parseFloat(datos.precio)
+                        modalidad_atencion:datos.modalidad
                     }
                 }  
             );

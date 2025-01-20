@@ -86,7 +86,7 @@ function listarFacturasContrato(){
             <a class="btn btn-primary" href="javascript:gestionarAnulacionFactura(${element.id_factura})" title='Anular Factura'><i class="nav-icon fas fa-trash-alt"></i></a>`;
         }
       
-        if(element.estado==="Factura_Emitida" || element.estado==="Pendiente_Pago"){
+        if(element.estado==="Factura_Emitida" || element.estado==="Pendiente_Pago" || element.estado==="Pagado"){
             accionBTN =`<a class="btn btn-primary" href="javascript:editarFactura(${element.id_factura})" title='Editar Factura'><i class="nav-icon fas fa-microscope"></i></a>
                         <a class="btn btn-primary" href="javascript:imprimirFactura(${element.id_factura})" title='Imprimir Factura'><i class="nav-icon fas fa-file-pdf"></i></a>
             `;

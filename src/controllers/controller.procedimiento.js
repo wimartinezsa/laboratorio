@@ -64,6 +64,7 @@ export  const registrarProcedimiento=async(req,resp)=>{
                     areaId: Number(datos.areaId),
                     tecnica:datos.tecnica,
                     finalidadId:Number(datos.finalidadId),
+                    precio: parseFloat(datos.precio),
                     estado: "Activo"
                 }
             } 
@@ -99,6 +100,7 @@ export  const actualizarProcedimientoId=async(req,resp)=>{
                         areaId: Number(datos.areaId),
                         tecnica:datos.tecnica,
                         finalidadId:Number(datos.finalidadId),
+                        precio: parseFloat(datos.precio),
                         estado: "Activo"
 
                     }

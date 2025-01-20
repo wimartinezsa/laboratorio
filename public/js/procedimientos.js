@@ -82,6 +82,7 @@ function listarProcedimientosServicioId(id_servicio){
                     tecnica :element.tecnica,
                     finalidad :element.finalidad.nombre,
                     area :element.area.nombre,
+                    precio :element.precio,
                     estado :estadoBTN,
                     Accion :accionBTN
         }
@@ -104,6 +105,7 @@ function listarProcedimientosServicioId(id_servicio){
                            {"data": "tecnica"},
                            {"data": "finalidad"},
                            {"data": "area"},
+                           {"data": "precio"},  
                            {"data": "estado"},        
                            {"data": "Accion"}
                        ]
@@ -276,7 +278,7 @@ function registrarProcedimiento(){
     datos.append('servicioId',document.getElementById('Servicios').value);
     datos.append('areaId',document.getElementById('areas').value);
     datos.append('tecnica',document.getElementById('tecnica').value);
-
+    datos.append('precio',document.getElementById('precio').value);
     
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
@@ -371,6 +373,7 @@ function buscarProcedimientoId(id_procedimiento){
         document.getElementById('cups').value=data.cupsId;
         document.getElementById('areas').value=data.areaId;
         document.getElementById('tecnica').value=data.tecnica;
+        document.getElementById('precio').value=data.precio;
     });
 
 
@@ -390,6 +393,7 @@ function actualizarProcedimiento(){
     datos.append('servicioId',document.getElementById('Servicios').value);
     datos.append('areaId',document.getElementById('areas').value);
     datos.append('tecnica',document.getElementById('tecnica').value);
+    datos.append('precio',document.getElementById('precio').value);
 
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 

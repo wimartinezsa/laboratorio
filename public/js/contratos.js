@@ -490,7 +490,7 @@ function listarProcedimientos(id_servicio){
            .then(data => {
               let html=`<option value='0'>Seleccione una opción</option>`;
                data.procedimientos.forEach(element => {
-               html+=`<option value='${element.id_procedimiento}'> ${element.cups.nombre}</option>`;
+               html+=`<option value='${element.id_procedimiento}'> ${element.cups.nombre} => $${element.precio}</option>`;
                });   
                document.getElementById('procedimientos').innerHTML = html;  
            });
@@ -522,7 +522,7 @@ function listarServicios(){
              
               let html=`<option value='0'>Seleccione una opción</option>`;
                data.servicios.forEach(element => {
-               html+=`<option value='${element.id_servicio}'> ${element.nombre} => $${element.precio}</option>`;
+               html+=`<option value='${element.id_servicio}'> ${element.nombre}</option>`;
                });   
                document.getElementById('servicios').innerHTML = html;  
            });

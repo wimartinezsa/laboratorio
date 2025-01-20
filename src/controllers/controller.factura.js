@@ -190,7 +190,7 @@ export  const listarServiciosContrato=async(req,resp)=>{
        let id_contrato=req.params.id_contrato;
         const contratos = await prisma.$queryRaw`
 
-        SELECT 
+        SELECT DISTINCT
         se.id_servicio,se.nombre AS servicio
         FROM acuerdos ac
         JOIN procedimientos pro ON pro.id_procedimiento= ac.procedimientoId

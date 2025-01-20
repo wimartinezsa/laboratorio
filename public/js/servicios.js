@@ -72,7 +72,6 @@ function listarServicios(){
         tipo_servicio :element.tipo_servicio.nombre,
         grupo_servicio :element.grupo_servicio.replace(/_/g, " "),
         modalidad_atencion :element.modalidad_atencion.replace(/_/g, " "),
-        precio :element.precio,
         estado: estadoBTN,
         Accion :accionBTN
    }
@@ -94,7 +93,6 @@ function listarServicios(){
                            {"data": "tipo_servicio"},
                            {"data": "grupo_servicio"},
                            {"data": "modalidad_atencion"},
-                           {"data": "precio"},
                            {"data": "estado"},
                             
                            {"data": "Accion"}
@@ -201,8 +199,7 @@ function registrarServcio(){
     datos.append('tipo_servicioId',document.getElementById('tipo_servicio').value);
     datos.append('grupo',document.getElementById('grupo').value);
     datos.append('modalidad',document.getElementById('modalidad').value);
-    datos.append('precio',document.getElementById('precio').value);
-
+   
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
 
@@ -243,7 +240,7 @@ function limpiarFormularioServicio(){
     
   document.getElementById('nombre_servicio').value='';
   document.getElementById('tipo_servicio').value='';
-  document.getElementById('precio').value='';
+
 
 
 }
@@ -288,7 +285,7 @@ function buscarServicioId(id_servicio){
         document.getElementById('tipo_servicio').value=data.tipo_servicioId;
         document.getElementById('modalidad').value=data.modalidad_atencion;
         document.getElementById('grupo').value=data.grupo_servicio;
-        document.getElementById('precio').value=data.precio;
+       
 
     });
 
@@ -306,7 +303,7 @@ function actualizarServicio(){
     datos.append('tipo_servicioId',document.getElementById('tipo_servicio').value);
     datos.append('grupo',document.getElementById('grupo').value);
     datos.append('modalidad',document.getElementById('modalidad').value);
-    datos.append('precio',document.getElementById('precio').value);
+  
 
   
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
