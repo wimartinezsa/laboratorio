@@ -15,8 +15,6 @@ datasource db {
 
 
 
-
-
 enum Tipo_Ident {
   Cedula_ciudadania  @map("CC")
   Cedula_de_extranjeria  @map("CE")
@@ -517,6 +515,5 @@ contratoId Int
 
 @@map("acuerdos")
 }
-
 
 
