@@ -14,7 +14,6 @@ datasource db {
 }
 
 
-
 model Paciente {
   id_paciente         Int           @id @default(autoincrement())
   tipo_identificacion Tipo_Ident
