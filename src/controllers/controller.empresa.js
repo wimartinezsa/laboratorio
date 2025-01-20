@@ -4,7 +4,7 @@ import prisma from '../libs/prisma.js'
 
 export  const listarEmpresas=async(req,resp)=>{
     try{
-        const empresas = await prisma.Empresa.findMany(
+        const empresas = await prisma.empresa.findMany(
             {
                 include:{
                     municipio: true,
@@ -53,7 +53,7 @@ export  const listarEmpresasActivas=async(req,resp)=>{
 export  const buscarEmpresaId=async(req,resp)=>{
     try{
         const id= await req.params.id_empresa;
-        const empresa = await prisma.Empresa.findFirst(
+        const empresa = await prisma.empresa.findFirst(
             {
                 where: { id_empresa: Number(id) },
                 include:{
@@ -78,7 +78,7 @@ export  const buscarEmpresaId=async(req,resp)=>{
 export  const registrarEmpresa=async(req,resp)=>{
     try{
         const datos= await req.body;
-        const empresa = await prisma.Empresa.create(
+        const empresa = await prisma.empresa.create(
             {
                 data: {
                     nit:datos.nit,
@@ -102,14 +102,14 @@ export  const actualizarEmpresaId=async(req,resp)=>{
     try{
         const datos= await req.body;
         const id= await req.params.id_empresa;
-        const existencia = await prisma.Empresa.findUnique({
+        const existencia = await prisma.empresa.findUnique({
             where: { id_empresa: Number(id)},
           });
           if (!existencia) {
             return resp.status(501).json({"status":205,"message":"La empresa no existe en el sistema"});
           }
           else{
-            const empresa = await prisma.Empresa.update(
+            const empresa = await prisma.empresa.update(
                 {
                     where:{id_empresa:Number(id)},
                     data:{
@@ -141,7 +141,7 @@ export  const desactivarEmpresaId=async(req,resp)=>{
             return resp.status(404).json({"status":404,"message":"La empresa no existe en el sistema"});
           }
           else{
-            const empresa = await prisma.Empresa.update(
+            const empresa = await prisma.empresa.update(
                 {
                     where:{id_empresa:Number(id)},
                     data:{estado: 'Inactivo'}  
