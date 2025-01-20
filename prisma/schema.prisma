@@ -287,11 +287,10 @@ nombre String @db.VarChar(50)
 estado Estado @default(Activo)
 grupo_servicio Grupo_Servicio
 modalidad_atencion Modalidad_Atencion
-
 procedimiento Procedimiento[]
+
 prestador  Prestador @relation(fields: [prestadorId],references: [id_prestador])
 prestadorId Int
-
 tipo_servicio Tipo_Servicio @relation(fields: [tipo_servicioId],references: [id_tipo_servicio])
 tipo_servicioId Int
 
