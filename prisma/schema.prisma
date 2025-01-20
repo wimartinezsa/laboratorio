@@ -87,7 +87,7 @@ municipio  Municipio? @relation(fields: [municipioId], references: [id_municipio
 municipioId Int?
 eps Eps? @relation(fields: [epsId],references: [id_eps])
 epsId Int?
-@@map("pacientes")
+@@map("Pacientes")
 
 }
 
@@ -104,7 +104,7 @@ codigo String @db.VarChar(20)
 nombre String @db.VarChar(50)
 estado Estado @default(Activo)
 paciente Paciente[]
-@@map("eps")
+@@map("Eps")
 }
 
 model Tipo_Servicio{
@@ -115,7 +115,7 @@ nombre String @db.VarChar(50)
 servicio Servicio[]
 
 
-@@map("tipo_servicio")
+@@map("Tipo_Servicio")
 }
 
 
@@ -166,7 +166,7 @@ contratoId Int
 paciente Paciente @relation(fields: [pacienteId], references: [id_paciente])
 pacienteId Int
 
-@@map("facturas")
+@@map("Facturas")
 }
 
 
@@ -195,7 +195,7 @@ model Resultado {
   parametroId   Int
 
   @@unique([examenId, parametroId]) // Índice único para la combinación de examenId y parametroId
-  @@map("resultados")
+  @@map("Resultados")
 }
 
 
@@ -219,7 +219,7 @@ factura Factura @relation(fields: [facturaId], references: [id_factura])
 facturaId Int
 
 
-@@map("examenes")
+@@map("Examenes")
 }
 
 model Pais {
@@ -228,7 +228,7 @@ codigo String @db.VarChar(10)
 nombre String @db.VarChar(50) 
 departamento Departamento[]
 paciente Paciente[]
- @@map("paises")
+ @@map("Paises")
 }
 
 model Departamento{
@@ -240,7 +240,7 @@ municipio Municipio[]
 pais  Pais @relation(fields: [paisId], references: [id_pais])
 paisId Int
 
-@@map("departamentos")
+@@map("Departamentos")
 }
 
 
@@ -255,7 +255,7 @@ departamentoId Int
 paciente Paciente[]
 empresa Empresa[]
 
-@@map("municipios")
+@@map("Municipios")
 }
 
 // es la misma tabla de protocolo
@@ -302,7 +302,7 @@ tipo_servicioId Int
 
 
 
-@@map("servicios")
+@@map("Servicios")
 }
 
 
@@ -315,7 +315,7 @@ estado Estado @default(Activo)
 
 procedimiento Procedimiento[]
 
-@@map("finalidad")
+@@map("Finalidad")
 }
 
 
@@ -331,7 +331,7 @@ codigo String @db.VarChar(30)
 nombre String @db.VarChar(100)
 descripcion String @db.VarChar(100)
 procedimiento Procedimiento[]
-@@map("cups")
+@@map("Cups")
 }
 
 
@@ -344,7 +344,7 @@ parametro Parametro@relation(fields: [parametroId],references: [id_parametro])
 parametroId Int
 
 
-@@map("tipo_resultados")
+@@map("Tipo_Resultados")
 }
 
 
@@ -360,7 +360,7 @@ resultado Resultado[]
 tipo_resultado Tipo_Resultado[]
 procedimiento Procedimiento@relation(fields: [procedimientoId],references: [id_procedimiento])
 procedimientoId Int
-@@map("parametros")
+@@map("Parametros")
 }
 
 model Procedimiento{
@@ -385,7 +385,7 @@ area Area? @relation(fields: [areaId],references: [id_area])
 areaId Int?
 
 
-@@map("procedimientos")
+@@map("Procedimientos")
 }
 
 
@@ -399,7 +399,7 @@ prestadorId Int?
 usuario Usuario[]
 procedimiento Procedimiento[]
 
-@@map("areas")
+@@map("Areas")
 }
 
 
@@ -411,7 +411,7 @@ nit String @db.VarChar(30)
 razon_social String @db.VarChar(50)
 servicio Servicio[]
 area Area[]
-@@map("prestadores")
+@@map("Prestadores")
 }
 
 
@@ -439,7 +439,7 @@ area Area @relation(fields: [areaId],references: [id_area])
 areaId Int
 
 
-@@map("usuarios")
+@@map("Usuarios")
 }
 
 
@@ -471,7 +471,7 @@ municipio Municipio @relation(fields: [municipioId],references: [id_municipio])
 municipioId Int
 
 contrato Contrato[]
-@@map("empresas")
+@@map("Empresas")
 }
 
 
@@ -494,7 +494,7 @@ empresaId Int
 
 
 
-@@map("contratos")
+@@map("Contratos")
 }
 
 
@@ -513,7 +513,8 @@ contratoId Int
 
 
 
-@@map("acuerdos")
+@@map("Acuerdos")
 }
+
 
 
