@@ -90,7 +90,7 @@ export const validarToken = async (req, res, next) => {
             }
 
             // Busca el usuario por el ID del token decodificado
-            const existe_token = await prisma.usuario.findUnique({
+            const existe_token = await prisma.Usuario.findUnique({
                 where: { id_usuario: Number(decoded.id) },
             });
 
