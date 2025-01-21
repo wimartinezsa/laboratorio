@@ -49,6 +49,8 @@ function listarUsuarios(){
         }
       })
     .then(data => {
+
+        //console.log(data);
         let accionBTN='';
         let firmaBTN='';
         let arrayDatos=[];
@@ -61,20 +63,39 @@ function listarUsuarios(){
         //Mensaje.fire({icon: 'success',title:"Se Listaron todas las empresas"})
         data.usuarios.forEach(element => {
         accionBTN =` <a class="btn btn-primary" href="javascript:editarUsuario(${element.id_usuario})" title='Editar Usuario'><i class='fas fa-edit'></i></a>`;
+        
+        
         if(element.rol==='Bacteriologo'){
             firmaBTN=` <a class="btn btn-primary" href="javascript:gestionarFirma(${element.id_usuario})" title='Cargar Firma'><i class='fas fa-id-card'></i></a>`
-        }
-        if(element.firma===null){
-            imagen= "";
-        }else{
             
-            imagen= `<img src="/img/firmas/${element.firma}" style="width: 80px; height: 60px;">`;
+            
+            if(element.firma===null){
+                imagen= "";
+            }else{
+                
+                imagen= `<img src="/img/firmas/${element.firma}" style="width: 80px; height: 60px;">`;
+            }
+        
+        }else{
+            firmaBTN='';
+            imagen= "";
         }
+        
        
         estadoBTN =  element.estado=='Activo' ? 
                 ` <a class="btn btn-success" href="javascript:activarUsuario(${element.id_usuario},'Inactivo')" title='Desactivar Acuerdo'><i class="nav-icon fas fa-times-circle"></i></a>`
               :
               `<a class="btn btn-danger" href="javascript:activarUsuario(${element.id_usuario},'Activo')" title='Activar Acuerdo'><i class="nav-icon fas fa-check-circle"></i></a>`;
+       let lista_areas='<ul>'
+           
+       element.vinculacion.forEach(item => {
+       
+            lista_areas +=`
+                           ${item.area.nombre} <a  href="javascript:eliminarViculacion(${item.id_vinculacion})" title='Activar Acuerdo'><i  class='fas fa-trash-alt' style='font-size:12px'></i></a><br>
+                        `
+       });
+       lista_areas +=`</ul>`;
+
 
         let dato = {
         identificacion : element.identificacion,
@@ -83,13 +104,13 @@ function listarUsuarios(){
         rol :element.rol,
         firma: imagen,
         email :element.email,
-        area :element.area.nombre,
+        area :lista_areas,
         estado:estadoBTN,
         Accion :accionBTN + firmaBTN,
                         }
         arrayDatos.push(dato)
                         });
-       console.log(arrayDatos);
+       //console.log(arrayDatos);
                         var table = $('#tabla_usuario').DataTable({
                "bInfo" : false,
                searching: true,
@@ -120,6 +141,124 @@ function listarUsuarios(){
 }
 
 
+function listarViculacionUsuario(){
+
+    const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+    let id_usuario= document.getElementById('id_usuario').value;
+    
+    fetch(`/vinculacion/${id_usuario}`, {
+        method:'get',
+        headers: {
+            'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+            'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
+        }
+    })
+    .then(response => {
+        // Verificar si la respuesta es JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+               //window.location.href = "/";
+            }
+      })
+    .then(data => {
+
+        
+                let html='';
+
+                data.forEach(element => {
+                    html+=`<tr>`;
+                    html+=`<td>${element.id_vinculacion}</td>`;
+                    html+=`<td>${element.area.nombre}</td>`;
+                    html+=`<td><a class="btn btn-danger" href="javascript:eliminarViculacion(${element.id_vinculacion})" title='Eliminar Vinculación'>Eliminar</a></td>`;
+                    html+=`</tr>`;
+                });
+               
+            document.getElementById('tabla_vinculacion').innerHTML=html;
+    })
+}
+
+
+function eliminarViculacion(id_vinculacion){
+
+    const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+    
+        fetch(`/vinculacion/${id_vinculacion}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+                    'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
+                }
+            })
+            .then(response => {
+                // Verificar si la respuesta es JSON
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json();
+                } else {
+                    window.location.href = "/";
+                }
+              })
+        .then(data=>{
+        
+            if(data.status==200){
+                Mensaje.fire({icon: 'success',title: data.message});
+                listarUsuarios();
+                Frm_usuario.hide();
+            }
+
+            if(data.status==404){Mensaje.fire({icon: 'warning',title: data.message});}
+    
+            if(data.status==500){Mensaje.fire({icon: 'error',title: data.message});}
+
+        });
+}
+
+
+function agregarVinculacionUsuario(){
+
+
+    let datos= new URLSearchParams();
+
+    datos.append('areaId',document.getElementById("areas").value);
+    datos.append('usuarioId',document.getElementById('id_usuario').value);
+
+    const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+
+    fetch('/vinculacion',
+        {
+            method: 'POST',
+            body:datos,
+            headers: {
+                'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+                'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
+            }
+        })
+    .then(resp =>resp.json())
+    .then(data=>{
+      
+        if(data.status==403){window.location.href = "/";}
+        if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
+        listarUsuarios();
+        Frm_usuario.hide();
+        }
+        if(data.status==500){Mensaje.fire({icon: 'error',title: data.message});}
+    });
+
+
+
+
+
+
+    
+}
+
+
+
+
+
 function listarAreas(){
   
     fetch(`/area`, {
@@ -136,7 +275,7 @@ function listarAreas(){
           })
            .then(data => {
              
-              let html=`<option value='0'>Seleccione una opción</option>`;
+              let html=`<option value='0' selected='true' disabled='true'>Seleccione un Área</option>`;
                data.areas.forEach(element => {
                html+=`<option value='${element.id_area}'> ${element.nombre}</option>`;
                });   
@@ -172,9 +311,6 @@ function registrarUsuario(){
     datos.append('email',document.getElementById('email').value);
     datos.append('cargo',document.getElementById('cargo').value);
     datos.append('rol',document.getElementById('rol').value);
-    datos.append('area',document.getElementById('areas').value);
-
-    
     
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
@@ -223,10 +359,11 @@ async function editarUsuario(id_usuario){
     await limpiarFormularioUsuario();
     await listarAreas();
     await buscarUsaurioId(id_usuario);
+    
     document.getElementById('id_usuario').value=id_usuario;
     document.getElementById('btn_registrar').style.display = 'none';
     document.getElementById('btn_actualizar').style.display = 'block';
-  
+    await listarViculacionUsuario();
     await Frm_usuario.show();
 }
 
@@ -254,8 +391,17 @@ function buscarUsaurioId(id_usuario){
             }
           })
     .then(data=>{
- 
-     //data = Array.isArray(data) ? data : [data];
+
+   //console.log(data);
+
+        const nombreDeArea = data.vinculacion.map((area) => {
+            if (area.length > 0) {
+            return area.nombre;
+            } else {
+                
+                return null;
+            }
+        });
    
         document.getElementById('identificacion').value= data.identificacion;
         document.getElementById('tipo_identificacion').value= data.tipo_identificacion;
@@ -263,7 +409,7 @@ function buscarUsaurioId(id_usuario){
         document.getElementById('email').value=data.email;
         document.getElementById('cargo').value=data.cargo;
         document.getElementById('rol').value= data.rol;
-        document.getElementById('areas').value= data.area.id_area;
+        document.getElementById('areas').value= nombreDeArea;
    
     });
 
@@ -364,12 +510,6 @@ function registrarFirma(){
         if(data.status==500){Mensaje.fire({icon: 'error',title: data.message});}
     });
     
-
-
-
-
-
-
 
 }
 

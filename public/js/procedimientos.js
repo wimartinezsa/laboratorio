@@ -483,6 +483,7 @@ function registrarParametro(){
 
         if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
             let id_procedimiento= document.getElementById('procedimiento').value;
+            limpiarFormularioParametro();
             listarParametroId(id_procedimiento);
         }
         if(data.status==500){Mensaje.fire({icon: 'error',title: data.message});}

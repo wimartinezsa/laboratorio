@@ -95,9 +95,16 @@ export  const generarLaboratorio=async(req,resp)=>{
                                     cups:true,
                                     area:{
                                         include:{
-                                            usuario:{
-                                                where: { estado: "Activo" }
+                                            vinculacion:{
+                                                include:{
+                                                    usuario:{
+                                                        where: { estado: "Activo" }
+                                                    }
+
+                                                }
+                                                
                                             }
+                                            
                                         }
                                     }
 

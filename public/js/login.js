@@ -41,6 +41,7 @@ document.getElementById('frmValidar').addEventListener('submit', function(event)
       })
       .then(data => {
           // Reiniciar el almacenamiento local
+          console.log(data);
           localStorage.setItem('token', '');
           localStorage.setItem('nombre', '');
           localStorage.setItem('rol', '');

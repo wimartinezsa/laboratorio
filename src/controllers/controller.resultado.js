@@ -7,8 +7,9 @@ import prisma from '../libs/prisma.js'
 
 export  const listarMuestrasArea=async(req,resp)=>{
     try{
-       let rol = req.params.rol;
-       let rea = req.params.area;
+       
+        let id_usuario=req.user.id;
+        let rol=req.user.rol;
       
        if(rol==='Administrador' ||  rol==='Bacteriologo'){
 
@@ -48,40 +49,50 @@ export  const listarMuestrasArea=async(req,resp)=>{
 
        }else{
 
-        const examenes = await prisma.Examen.findMany(
-            { 
-                where: {
-                    estado:'En_Proceso_de_Analisis'             
-                   ,
-                    procedimiento: {
-                      area: {
-                        nombre: rea // Filtro por nombre del área
-                      }
-                    }
-                  },
-                include:{
-                    factura:{
-                        include:{
-                            paciente:true
-                        }
+        
+        const examenes = await prisma.Examen.findMany({
+            where: {
+            estado: 'En_Proceso_de_Analisis',
+            procedimiento: {
+                area: {
+                vinculacion: {
+                    some: {
+                    usuario: {
+                        id_usuario: id_usuario, // Filtra por el ID del usuario
                     },
-                    resultado:{
-                        include:{
-                            parametro:true
-                        }
                     },
-                    procedimiento:{
-                        include:{
-                            cups:true,
-                            area:true
-                        }
-                    }
-                    
-                }         
-            } 
-        );
+                },
+                },
+            },
+            },
+            include: {
+            factura: {
+                include: {
+                paciente: true,
+                },
+            },
+            resultado: {
+                include: {
+                parametro: true,
+                },
+            },
+            procedimiento: {
+                include: {
+                cups: true,
+                area: {
+                    include: {
+                    vinculacion: {
+                        include: {
+                        usuario: true,
+                        },
+                    },
+                    },
+                },
+                },
+            },
+            },
+        });
        
-        console.log(examenes);
         return resp.status(200).json({"status":200,examenes});
 
        }

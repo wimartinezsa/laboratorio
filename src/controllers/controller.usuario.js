@@ -32,23 +32,32 @@ export  const listarUsuarios=async(req,resp)=>{
               email: true,
               estado: true,
               firma: true,
-              estado:true,
-              area: {
-                select: {
-                
-                  nombre: true,
+              vinculacion: { // Carga la relación vinculacion
+                select:
+                 {
+                 id_vinculacion:true,
+                  area: { // Dentro de vinculacion, selecciona el área
+                    select: {
+                      nombre: true, // Selecciona solo el campo 'nombre' del área
+                    },
+                  },
                 },
               },
             },
           });
+          
+          
           //console.log(usuarios);
           return resp.status(200).json({"status":200,usuarios}); 
           
     }catch(error){
         console.log("Error en controller.usuario.js :"+error);
-        resp.status(500).json({ error: 'Error al buscar el Usuario' });
+        resp.status(500).json({ error: 'Error al listar los Usuario' });
     }  
 }
+
+
+
 
 
 
@@ -85,9 +94,7 @@ export  const registrarUsuario=async(req,resp)=>{
                     email: email,
                     password: encriptPassword,
                     rol: rol,
-                    cargo:cargo,
-                    areaId:Number(area)
-             
+                    cargo:cargo
                 }
             })
             
@@ -142,7 +149,6 @@ export  const actualizarUsuarioId=async(req,resp)=>{
                         email: datos.email,
                         password: encriptPassword,
                         rol: datos.rol,
-                        areaId:Number(datos.area),
                         cargo:datos.cargo
                     }
                 }  
@@ -178,12 +184,15 @@ export  const buscarUsuarioId=async(req,resp)=>{
                 rol: true,
                 email: true,
                 estado: true,
-                area: {
-                  select: {
-                    id_area:true,
-                    nombre: true,
-                  },
-                },
+                vinculacion: { // Carga la relación vinculacion
+                    select: {
+                      area: { // Dentro de vinculacion, selecciona el área
+                        select: {
+                          nombre: true, // Selecciona solo el campo 'nombre' del área
+                        },
+                      },
+                    },
+                  }
               },
           });
        resp.status(200).json(usuario);
@@ -201,7 +210,7 @@ export  const registrarFirma=async(req,resp)=>{
     try{
         const id= await req.params.id_usuario;
         let img= req.file.originalname;
-        console.log(img);
+       // console.log(img);
             const usuario = await prisma.Usuario.update(
                 {
                     where:{id_usuario:Number(id)},
@@ -210,7 +219,7 @@ export  const registrarFirma=async(req,resp)=>{
                     }
                 }  
             );
-            console.log(usuario);
+            //console.log(usuario);
             return resp.status(200).json({"status":200,"message":"Firma registrada en el sistema"});
     }catch(error){
         console.log("Error en controller.usuario.js :"+error);

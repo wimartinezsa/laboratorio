@@ -234,17 +234,7 @@ model Procedimiento {
   @@map("procedimientos")
 }
 
-model Area {
-  id_area       Int             @id @default(autoincrement())
-  nombre        String          @db.VarChar(30)
-  prestadorId   Int?
-  prestador     Prestador?      @relation(fields: [prestadorId], references: [id_prestador])
-  procedimiento Procedimiento[]
-  usuario       Usuario[]
 
-  @@index([prestadorId], map: "areas_prestadorId_fkey")
-  @@map("areas")
-}
 
 model Prestador {
   id_prestador Int        @id @default(autoincrement())
@@ -256,6 +246,29 @@ model Prestador {
 
   @@map("prestadores")
 }
+
+model Area {
+  id_area       Int             @id @default(autoincrement())
+  nombre        String          @db.VarChar(30)
+  prestadorId   Int?
+  prestador     Prestador?      @relation(fields: [prestadorId], references: [id_prestador])
+  procedimiento Procedimiento[]
+  vinculacion Vinculacion[]
+  @@map("areas")
+}
+
+model Vinculacion {
+  id_vinculacion       Int             @id @default(autoincrement())
+
+   usuario                Usuario?      @relation(fields: [usuarioId], references: [id_usuario])
+   usuarioId              Int
+
+   area                Area?      @relation(fields: [areaId], references: [id_area])
+   areaId              Int
+
+  @@map("vinculaciones")
+}
+
 
 model Usuario {
   id_usuario          Int        @id @default(autoincrement())
@@ -269,10 +282,9 @@ model Usuario {
   password            String     @db.VarChar(100)
   estado              Estado     @default(Activo)
   token               String?    @db.VarChar(500)
-  areaId              Int
-  area                Area       @relation(fields: [areaId], references: [id_area])
-
-  @@index([areaId], map: "usuarios_areaId_fkey")
+ 
+  vinculacion Vinculacion[]
+ 
   @@map("usuarios")
 }
 

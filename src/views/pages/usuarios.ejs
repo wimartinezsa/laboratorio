@@ -105,102 +105,149 @@
         </div>
         <div class="modal-body">
           <input type="number" id='id_usuario' readonly="true" hidden="true">
-          <div class="row">
 
 
+          <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Datos Básicos</button>
+              <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Vinculación</button>
+            </div>
+          </nav>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
             
-            <div class="col-6">
-              <label for="message-text" class="col-form-label">Tipo de Identificación:</label>
-              <select class="form-control" id='tipo_identificacion' required >
-                  <option value='' selected disabled>Seleccione una opción</option>
-                  <option value='Cedula_ciudadania'>Cédula ciudadanía</option>
-                  <option value='Cedula_de_extranjeria'>Cédula de extranjería</option>
-                  <option value='Carne_diplomatico'>Carné diplomático</option>
-                  <option value='Pasaporte'>Pasaporte</option>
-                  <option value='Salvoconducto'>Salvoconducto</option>
-                  <option value='Permiso_Especial_de_Permanencia'>Permiso Especial de Permanencia</option>
-                  <option value='Registro_civil'>Registro civil</option>
-                  <option value='Tarjeta_de_identidad'>Tarjeta de identidad</option>
-                  <option value='Certificado_de_nacido_vivo'>Certificado de nacido vivo</option>
-                  <option value='Adulto_sin_identificar'>Adulto sin identificar</option>
-                  <option value='Menor_sin_identificar'>Menor sin identificar</option>
-                
-              </select>
-          </div>
-
-
-                  <div class="col-6">
-                    <label for="message-text" class="col-form-label">Identificacion:</label>
-                    <input type="text" class="form-control" id='identificacion'
-                        style="border: 1px solid rgb(208, 205, 205)"
-                        placeholder="Digite la identificación"  required>    
+              <div class="row">
+ 
+                <div class="col-6">
+                    <label for="message-text" class="col-form-label">Tipo de Identificación:</label>
+                    <select class="form-control" id='tipo_identificacion' required >
+                        <option value='' selected disabled>Seleccione una opción</option>
+                        <option value='Cedula_ciudadania'>Cédula ciudadanía</option>
+                        <option value='Cedula_de_extranjeria'>Cédula de extranjería</option>
+                        <option value='Carne_diplomatico'>Carné diplomático</option>
+                        <option value='Pasaporte'>Pasaporte</option>
+                        <option value='Salvoconducto'>Salvoconducto</option>
+                        <option value='Permiso_Especial_de_Permanencia'>Permiso Especial de Permanencia</option>
+                        <option value='Registro_civil'>Registro civil</option>
+                        <option value='Tarjeta_de_identidad'>Tarjeta de identidad</option>
+                        <option value='Certificado_de_nacido_vivo'>Certificado de nacido vivo</option>
+                        <option value='Adulto_sin_identificar'>Adulto sin identificar</option>
+                        <option value='Menor_sin_identificar'>Menor sin identificar</option>
+                      
+                    </select>
                 </div>
-
-   
-          </div>
-
-
-        
-        <div class="row">
-
-          <div class="col-6">
-            <label for="message-text" class="col-form-label">Nombres:</label>
-            <input type="text" class="form-control" id='nombres'
-                style="border: 1px solid rgb(208, 205, 205)"
-                placeholder="Digite el nombre de usuario"  required>    
-          </div>
-         
-          <div class="col-6">
-            <label for="message-text" class="col-form-label">Email:</label>
-            <input type="text" class="form-control" id="email"
-                style="border: 1px solid rgb(208, 205, 205)"
-                placeholder="Digite email del usuario"  required>    
-          </div>
-
-        </div>
-
-      <div class="row">
-
-        <div class="col-6">
-          <label for="message-text" class="col-form-label">Cargo:</label>
-          <input type="text" class="form-control" id='cargo'
-              style="border: 1px solid rgb(208, 205, 205)"
-              placeholder="Digite el cargo" > 
-        </div>
-         
-          <div class="col-6">
-            <label for="message-text" class="col-form-label">Rol del Sistema:</label>
-            <select class="form-control" id='rol' required >
-                <option selected disabled>Seleccione un Rol</option>
-                <option value='Administrador'>Administrador</option>
-                <option value='Facturacion'>Facturación</option>
-                <option value='Bacteriologo'>Bacteriologo</option>
-                <option value='Auxiliar'>Auxiliar</option>      
-            </select>
-        </div>
-       
-
-      </div>
-
-
-      <div class="row">
-          <div class="col-6">
-              <label for="message-text" class="col-form-label">Areas:</label>
-              <select class="form-control" id='areas' required >
-                        
-              </select>
-          </div>
-      </div>
     
+                <div class="col-6">
+                          <label for="message-text" class="col-form-label">Identificacion:</label>
+                          <input type="text" class="form-control" id='identificacion'
+                              style="border: 1px solid rgb(208, 205, 205)"
+                              placeholder="Digite la identificación"  required>    
+                </div>
+    
+              </div>
+    
+              <div class="row">
+    
+              <div class="col-6">
+                <label for="message-text" class="col-form-label">Nombres:</label>
+                <input type="text" class="form-control" id='nombres'
+                    style="border: 1px solid rgb(208, 205, 205)"
+                    placeholder="Digite el nombre de usuario"  required>    
+              </div>
+             
+              <div class="col-6">
+                <label for="message-text" class="col-form-label">Email:</label>
+                <input type="text" class="form-control" id="email"
+                    style="border: 1px solid rgb(208, 205, 205)"
+                    placeholder="Digite email del usuario"  required>    
+              </div>
+    
+              </div>
+    
+            <div class="row">
+    
+            <div class="col-6">
+              <label for="message-text" class="col-form-label">Cargo:</label>
+              <input type="text" class="form-control" id='cargo'
+                  style="border: 1px solid rgb(208, 205, 205)"
+                  placeholder="Digite el cargo" > 
+            </div>
+             
+            <div class="col-6">
+                <label for="message-text" class="col-form-label">Rol del Sistema:</label>
+                <select class="form-control" id='rol' required >
+                    <option selected disabled>Seleccione un Rol</option>
+                    <option value='Administrador'>Administrador</option>
+                    <option value='Facturacion'>Facturación</option>
+                    <option value='Bacteriologo'>Bacteriologo</option>
+                    <option value='Auxiliar'>Auxiliar</option>      
+                </select>
+            </div>
+
+
+           
+            </div>
+    
+            <div class="row justify-content-center mt-3">
+              <div class="col-auto">
+                <button type="button" id="btn_registrar" class="btn btn-primary me-2" onclick="registrarUsuario()">Registrar</button>
+                <button type="button" id="btn_actualizar" class="btn btn-primary" onclick="actualizarUsuario()">Actualizar</button>
+              </div>
+            </div>
+        
+
+            </div>
+
+
+
+
+
+            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+
+              <div class="row mt-3">
+              
+                <div class="col-10"> 
+                        <select class="form-control" id='areas' required >         
+                        </select>
+                </div>
+      
+                <div class="col-2">
+                  <button type="button" id="btn_agregar_area_usuario" class="btn btn-primary" onclick="agregarVinculacionUsuario()">Agregar</button>
+                </div>
+              </div>
+
+          <hr>
+              <div class="row">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Area</th>
+                      <th scope="col">Admin</th>
+                    </tr>
+                  </thead>
+                 
+                  <tbody id="tabla_vinculacion">          
+                  </tbody>
+                </table>
+               
+              </div>
+            </div>
+            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+          </div>
+
+
+
+
+
+         
 
 
 
 
         </div>
         <div class="modal-footer justify-content-center">
-          <button type="button" id="btn_registrar" class="btn btn-primary" onclick="registrarUsuario()">Registrar</button>
-          <button type="button" id="btn_actualizar" class="btn btn-primary" onclick="actualizarUsuario()">Actualziar</button>
-        </div>
+       </div>
       </div>
       <!-- /.modal-content -->
     </div>

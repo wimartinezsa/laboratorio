@@ -13,12 +13,18 @@ export  const validarUsuario=async(req,resp)=>{
         }
 
         const existenciaLogin = await prisma.usuario.findFirst(
-            {where: { email: login },
-            include:{
-                area:true
+                {where: { email: login },
+                include:{
+                    vinculacion:{
+                                include:{
+                                    area:true
+                                }
+                            }
+                }
             }
-        }
         );
+     // console.log(existenciaLogin.vinculacion[0].area.nombre);
+     // console.log( existenciaLogin.vinculacion.area.nombre );
     
         if (!existenciaLogin) {
             return resp.status(403).json({"status":403,"message":"Usuario no autorizado"});
@@ -28,7 +34,7 @@ export  const validarUsuario=async(req,resp)=>{
          
             if(passwordCorrecto){
                 const token = jwt.sign(
-                    { id: existenciaLogin.id_usuario, email: existenciaLogin.email, rol: existenciaLogin.rol,area: existenciaLogin.area.nombre }, // Datos que quieras incluir en el token
+                    { id: existenciaLogin.id_usuario, email: existenciaLogin.email, rol: existenciaLogin.rol,area: existenciaLogin.vinculacion[0].area.nombre }, // Datos que quieras incluir en el token
                     process.env.SECRET_TOKEN,
                     { expiresIn: '8h' } 
                 );
@@ -48,7 +54,7 @@ export  const validarUsuario=async(req,resp)=>{
                     "message": "Login exitoso",
                     token,
                     "status":200,
-                    user: { id: existenciaLogin.id_usuario,nombre:existenciaLogin.nombre ,email: existenciaLogin.email, rol: existenciaLogin.rol,area:existenciaLogin.area.nombre}
+                    user: { id: existenciaLogin.id_usuario,nombre:existenciaLogin.nombre ,email: existenciaLogin.email, rol: existenciaLogin.rol,area:existenciaLogin.vinculacion[0].area.nombre}
                 });
 
             }else{

@@ -69,9 +69,11 @@ export  const iniciarProcesoAnalisis=async(req,resp)=>{
 // Se lista de acuerdo al ROl ""
 export  const listarMuestrasArea=async(req,resp)=>{
     try{
-        let rol = req.params.rol;
-        let rea = req.params.area;
        
+       //console.log(req.user.id); 
+        let id_usuario=req.user.id;
+        let rol=req.user.rol;
+
         if(rol==='Administrador' ||  rol==='Bacteriologo'){
  
          const examenes = await prisma.Examen.findMany(
@@ -110,38 +112,49 @@ export  const listarMuestrasArea=async(req,resp)=>{
  
         }else{
  
-         const examenes = await prisma.Examen.findMany(
-             { 
-                 where: {
-                     estado:'Muestra_Recibida'             
-                    ,
-                     procedimiento: {
-                       area: {
-                         nombre: rea // Filtro por nombre del área
-                       }
-                     }
-                   },
-                 include:{
-                     factura:{
-                         include:{
-                             paciente:true
-                         }
-                     },
-                     resultado:{
-                         include:{
-                             parametro:true
-                         }
-                     },
-                     procedimiento:{
-                         include:{
-                             cups:true,
-                             area:true
-                         }
-                     }
-                     
-                 }         
-             } 
-         );
+            const examenes = await prisma.Examen.findMany({
+                where: {
+                  estado: 'Muestra_Recibida',
+                  procedimiento: {
+                    area: {
+                      vinculacion: {
+                        some: {
+                          usuario: {
+                            id_usuario: id_usuario, // Filtra por el ID del usuario
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                include: {
+                  factura: {
+                    include: {
+                      paciente: true,
+                    },
+                  },
+                  resultado: {
+                    include: {
+                      parametro: true,
+                    },
+                  },
+                  procedimiento: {
+                    include: {
+                      cups: true,
+                      area: {
+                        include: {
+                          vinculacion: {
+                            include: {
+                              usuario: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              });
+              
         
        
          return resp.status(200).json({"status":200,examenes});

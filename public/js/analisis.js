@@ -49,7 +49,7 @@ function listarMuestrasArea(rol,area){
     
 
    
-    fetch(`/listarMuestrasArea/${rol}/${area}`, {
+    fetch(`/listarMuestrasArea`, {
         method:'get',
         headers: {
             'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización

@@ -236,8 +236,10 @@ moment.defineLocale('es', {
                             doc.text(10, y, `Fecha/Hora Resultado : ${moment(examen.fecha_resultado).format('LLLL') }`);  
                             y+=3; 
                             let valido='';
-                            examen.procedimiento.area.usuario.forEach((usuario) => {
-                                valido=usuario.nombre;
+                            
+                            examen.procedimiento.area.vinculacion.forEach((item) => {
+                                
+                                valido+='-'+item.usuario.nombre;
                                
                             });
                             doc.text(10, y, `Validó : ${valido} `);  
