@@ -41,8 +41,6 @@ var Frm_muestras = new bootstrap.Modal(document.getElementById('Frm_muestras'), 
 
 
 
-
-
 function listarMuestrasArea(rol,area){
 
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
