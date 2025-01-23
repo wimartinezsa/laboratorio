@@ -294,7 +294,7 @@ model Empresa {
   codigo      String       @db.VarChar(20)
   nombre      String       @db.VarChar(50)
   sigla       String       @db.VarChar(50)
-  tipo        Tipo_Empresa
+  tipo        Tipo_Empresa?
   estado      Estado       @default(Activo)
   municipioId Int
   contrato    Contrato[]
@@ -455,5 +455,5 @@ enum Tipo_Empresa {
   Particular
   Empresa
   Eps
-  Esess
+  Ese
 }

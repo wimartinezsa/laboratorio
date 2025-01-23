@@ -129,7 +129,7 @@ if(rol==='Administrador'){
               <li class="nav-item">
                 <a href="/Examenes" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Examenes</p>
+                  <p>Procedimientos</p>
                 </a>
               </li>
               
