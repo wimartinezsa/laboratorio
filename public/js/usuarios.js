@@ -393,6 +393,7 @@ function buscarUsaurioId(id_usuario){
     .then(data=>{
 
    //console.log(data);
+  
 
         const nombreDeArea = data.vinculacion.map((area) => {
             if (area.length > 0) {

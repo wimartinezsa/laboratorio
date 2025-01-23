@@ -67,6 +67,7 @@ export  const actualizarFactura=async(req,resp)=>{
                 }
             } 
         );
+
         return resp.status(200).json({"status":200,"message":"Factura actualizada en el sistema"});
     }catch(error){
         console.log("Error en controller.factura.js :"+error);
@@ -105,8 +106,10 @@ export  const listarFacturasContratos=async(req,resp)=>{
 export  const registrarFactura=async(req,resp)=>{
     try{
         const datos= await req.body;
-        //console.log(datos);
-        const contrato = await prisma.Factura.create(
+
+        
+
+        const factura = await prisma.Factura.create(
             {
                 data: {
                 
@@ -119,8 +122,32 @@ export  const registrarFactura=async(req,resp)=>{
                     estado:'Pendiente_Emision',
                   
                 }
-            } 
+            }  
         );
+        console.log(factura);
+        // se actualiza la autorización 
+        if (factura){
+
+            if(datos.id_empresa ==='1'){
+               
+                const factura2 = await prisma.Factura.update(
+                    {    where:{id_factura:factura.id_factura},
+                        data: {
+                            autorizacion:String(String(datos.id_empresa)+String(factura.id_factura))
+                        }
+                    } 
+                );
+            }
+
+        }
+
+
+     
+        
+
+        
+
+
         return resp.status(200).json({"status":200,"message":"Factura registrado en el sistema"});
     }catch(error){
         console.log("Error en controller.factura.js :"+error);

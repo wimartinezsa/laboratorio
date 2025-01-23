@@ -70,8 +70,8 @@ function listarExamenesListos(){
         if(data.status==200){
 
         data.examenes.forEach(element => {
-        accionBTN =` <a class="btn btn-primary" href="javascript:imprimirResultados(${element.autorizacion})" title='Imprimir Resultados'><i class='fas fa-file-prescription'></i></a>
-        <a class="btn btn-success" href="javascript:gestionarEntregaExamen(${element.id_examen})" title='Confirmar Entrega de Examen'>Entregado</a>
+        accionBTN =` <a class="btn btn-primary" href="javascript:imprimirResultados(${element.autorizacion})" title='Descargar Resultados'><i class='fas fa-cloud-download-alt' style='font-size:20px'></i></a>
+        <a class="btn btn-success" href="javascript:gestionarEntregaExamen(${element.id_examen})" title='Confirmar Entrega de Examen'><i class='fas fa-thumbs-up' style='font-size:20px'></i></a>
         `;
 
         let dato = {

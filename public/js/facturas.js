@@ -50,7 +50,7 @@ var Frm_estado_prestacion = new bootstrap.Modal(document.getElementById('Frm_est
 
 function listarFacturasContrato(){
     let id_contrato= document.getElementById('contratos').value;
-    document.getElementById('btn_gestion_paciente').style.display = 'block';
+   
 
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
@@ -75,7 +75,7 @@ function listarFacturasContrato(){
         let arrayDatos=[];
        
        
-        
+        document.getElementById('btn_gestion_paciente').style.display = 'block';
         
 
 
@@ -199,7 +199,7 @@ function anularFactura(id_factura){
 
 function listarTodasFacturasContrato(){
   
-    document.getElementById('btn_gestion_paciente').style.display = 'none';
+   // document.getElementById('btn_gestion_paciente').style.display = 'none';
     fetch(`/factura`, {
         method:'get'
     })
@@ -271,6 +271,8 @@ function gestionarPaciente(){
    // document.getElementById('btn_registrar').style.display = 'block';
    // document.getElementById('btn_actualizar').style.display = 'none';
    limpiarFormularioPaciente();
+   document.getElementById("tabla_busqueda").innerHTML='';
+   document.getElementById('btn_registrar').style.display = 'none';
    
    Frm_factura.show();
    }
@@ -278,6 +280,11 @@ function gestionarPaciente(){
 
 function buscarPacienteId(){
     let ident = document.getElementById('identificacion').value;
+   
+     let id_empresa= document.getElementById('empresas').value;
+
+    
+
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
     document.getElementById("tabla_busqueda").innerHTML="";
     fetch(`/pacienteIdent/${ident}`, {
@@ -298,37 +305,39 @@ function buscarPacienteId(){
     })
     .then(data => {
 
-        
-       //data = Array.isArray(data) ? data : [data];
-        
-        document.getElementById("id_paciente").value=data.id_paciente;
-       
         let tabla=`
-            <table class="table" style="width: 100%;">
-                <thead>
-                  <th colspan="4" class="text-center">DATOS DEL PACIENTE</th>
-                </thead>
-               
-        `;
+        <table class="table" style="width: 100%;">
+            <thead>
+              <th colspan="4" class="text-center">DATOS DEL PACIENTE</th>
+            </thead>
+           
+    `;
+      
+       
+       if(data.status==200){
 
-        let edad = calcularEdad (data.fecha_nacimiento);
+        document.getElementById("id_paciente").value=data.paciente.id_paciente;
+       
+        document.getElementById('btn_registrar').style.display = 'block';
+
+        let edad = calcularEdad (data.paciente.fecha_nacimiento);
         tabla +=`<tr><td style="width: 15%;"><b>NOMBRES:</b></td>
-                    <td style="width: 35%;">${data.nombres}</td>
+                    <td style="width: 35%;">${data.paciente.nombres}</td>
                     <td style="width: 15%;"><b>EDAD:</b></td>
                 <td style="width: 35%;">${edad.años} Años ${edad.meses} Meses </td></tr> `
         tabla +=`<tr><td style="width: 15%;"><b>TELEFONO:</b></td style="width: 25%;">
-        <td>${data.telefono}</td style="width: 25%;"><td><b>EMAIL:</b></td>
-        <td style="width: 25%;">${data.email}</td></tr>`;
+        <td>${data.paciente.telefono}</td style="width: 25%;"><td><b>EMAIL:</b></td>
+        <td style="width: 25%;">${data.paciente.email}</td></tr>`;
 
         tabla +=`<tr><td style="width: 15%;"><b>MUNICIPIO:</b></td >
-        <td style="width: 20%;">${data.municipio.nombre}</td>
+        <td style="width: 20%;">${data.paciente.municipio.nombre}</td>
         <td style="width: 30%;"><b>TIPO DE PACIENTE:</b></td>
-        <td style="width: 35%;">${data.tipo_paciente.replace(/_/g, " ")}</td></tr>`;
+        <td style="width: 35%;">${data.paciente.tipo_paciente.replace(/_/g, " ")}</td></tr>`;
 
         tabla +=`<tr><td style="width: 15%;"><b>EPS:</b></td>
-        <td style="width: 35%;">${data.eps.nombre}</td>
+        <td style="width: 35%;">${data.paciente.eps.nombre}</td>
         <td style="width: 15%;"><b>PAIS ORIGEN:</b></td>
-        <td style="width: 35%;">${data.municipio.departamento.pais.nombre}</td></tr>`;
+        <td style="width: 35%;">${data.paciente.municipio.departamento.pais.nombre}</td></tr>`;
         tabla +=` <tbody>
                 </tbody>
             </table>
@@ -356,22 +365,42 @@ function buscarPacienteId(){
         </div>
         <div class="col-6">
           <label for="message-text" class="col-form-label"># Autorización:</label>
-          <input type="text" class="form-control" id='autorizacion'
+          <input type="number" class="form-control" id='autorizacion'
                   style="border: 1px solid rgb(208, 205, 205)"
                   placeholder="Digite la autorización"> 
         </div>
         
       </div>
             `;
+        //se habilita e campo de autorizción si la empresa es particular
+       
+
+       }else{
+        document.getElementById('btn_registrar').style.display = 'none';
+        Mensaje.fire({icon: 'success',title: data.message});
+
+       }
+        
         document.getElementById("tabla_busqueda").innerHTML=tabla;
+
+       
+        if(id_empresa ==='1'){
+            document.getElementById('autorizacion').disabled = true; // Desactiva el input
+            document.getElementById('autorizacion').value = 0; // Desactiva el input
+        }else{
+            document.getElementById('autorizacion').disabled = false; // Desactiva el input
+        }
+
+
        
     });
+    
 
 }
 
 
 function listarEmpresasActivas(){
-    document.getElementById('btn_gestion_paciente').style.display = 'none';
+  document.getElementById('btn_gestion_paciente').style.display = 'none';
 
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
@@ -405,7 +434,7 @@ function listarEmpresasActivas(){
 
 function listarContratos(){
   let id_empresa= document.getElementById('empresas').value;
-  document.getElementById('btn_gestion_paciente').style.display = 'none';
+ 
 
   const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
@@ -488,10 +517,15 @@ function emitirFactura(){
 function registrarFactura(){
     let datos= new URLSearchParams();
    // alert(document.getElementById('via_ingreso').value)
+
+   
+    datos.append('id_empresa',document.getElementById('empresas').value);
     datos.append('id_contrato',document.getElementById('contratos').value);
     datos.append('pacienteId',document.getElementById('id_paciente').value);
     datos.append('via_ingreso',document.getElementById('via_ingreso').value);
     datos.append('autorizacion',document.getElementById('autorizacion').value);
+
+
     
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
@@ -918,7 +952,11 @@ function confirmarCambiarEstadoExamen(){
                 title: 'No se realizan cambios en el estado'
                 });
         }                       
-    })
+    });
+
+
+
+
 }
 
 
@@ -981,38 +1019,59 @@ function  cambiarEstadoExamen(){
 function eliminarExamenFactura(id_examen){
     let id_factura= document.getElementById('id_factura').value;
 
-    const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+    Swal.fire({
+        title: 'Confirma que desea eliminar el examen ',
+        showDenyButton: true,
+        confirmButtonText: 'Si',
+        denyButtonText: `No`,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            //inicio de la petición eliminar un examen
+            const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+                fetch(`/examenFactura/${id_examen}`,
+                    {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+                            'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
+                        }
+                    })
+                    .then(response => {
+                        // Verificar si la respuesta es JSON
+                        const contentType = response.headers.get('content-type');
+                        if (contentType && contentType.includes('application/json')) {
+                            return response.json();
+                        } else {
+                            window.location.href = "/";
+                        }
+                    })
+                .then(data=>{
+                    if(data.status==403){window.location.href = "/";}
+                
+                    if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
+                        listarExamenesFactura(id_factura);
+                        listarFacturasContrato();
+                    }
+            
+                    if(data.status==404){Mensaje.fire({icon: 'warning',title: data.message});}
+            
+                    if(data.status==500){Mensaje.fire({icon: 'error',title: data.message});}
+                
+                });
 
-        fetch(`/examenFactura/${id_examen}`,
-            {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
-                    'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
-                }
-            })
-            .then(response => {
-                // Verificar si la respuesta es JSON
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    return response.json();
-                } else {
-                    window.location.href = "/";
-                }
-            })
-        .then(data=>{
-            if(data.status==403){window.location.href = "/";}
-        
-            if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
-                listarExamenesFactura(id_factura);
-                listarFacturasContrato();
-            }
+            // fin de la peticion eliminar un eaxmen
+
+        } else if (result.isDenied) {
+            Mensaje.fire({
+                icon: 'warning',
+                title: 'Operación cancelada...'
+                });
+        }                       
+    });
+
+
+
     
-            if(data.status==404){Mensaje.fire({icon: 'warning',title: data.message});}
-    
-            if(data.status==500){Mensaje.fire({icon: 'error',title: data.message});}
-          
-        });
     }
 
 

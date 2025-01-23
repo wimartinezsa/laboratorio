@@ -72,8 +72,17 @@ export  const buscarPacienteIdent=async(req,resp)=>{
                 }
             },
         });
-      
-        return resp.status(200).json(paciente);
+
+        if(paciente)
+            return resp.status(200).json({"status":200,paciente});
+        else{
+            return resp.status(404).json({"status":404,"message":"El paciente no se encuentra registrado en el sistema..."});
+        }
+
+
+
+
+
     }catch(error){
         console.log("Error en controller.paciente.js :"+error);
         resp.status(500).json({ status:500,message: 'Error al buscar el paciente' });
