@@ -240,13 +240,11 @@ export  const listarParametrosId=async(req,resp)=>{
     try{
        let id_parametro = req.params.id_parametro;
       
-        const tipos_resultado = await prisma.Tipo_Resultado.findMany(
-            { 
-                where:{
-                    parametroId: Number(id_parametro)
-                }
- 
-            });
+       const tipos_resultado = await prisma.$queryRaw`
+       SELECT tr.id_tipo_resultado,tr.nombre FROM tipo_resultados tr
+        join  parametros p on p.id_parametro = tr.parametroId
+        where p.id_parametro=${id_parametro}
+       `;
        
         return resp.status(200).json({"status":200,tipos_resultado});
          

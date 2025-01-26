@@ -111,15 +111,18 @@ function listarMuestrasArea(rol,area){
                 <tbody>
                   `;
         let resultados = element.resultado;
+        
         resultados.forEach(item=>{
+          
+
         let btn_parametro='';
         let estado_parametro='';
     
           if(item.estado==='Pendiente'){
-            btn_parametro=`<a class="btn btn-warning" href="javascript:digitarResultado(${item.id_resultado},'${item.resultado}','${item.parametro.valor_referencia}')" title='Digitar Resultados'> <i class='fas fa-thumbs-down'></i></a>`;
+            btn_parametro=`<a class="btn btn-warning" href="javascript:digitarResultado(${item.id_resultado},${item.parametro.id_parametro},'${item.resultado}','${item.parametro.valor_referencia}')" title='Digitar Resultados'> <i class='fas fa-thumbs-down'></i></a>`;
           }
           if(item.estado==='Finalizado'){
-            btn_parametro=`<a class="btn btn-success" href="javascript:digitarResultado(${item.id_resultado},'${item.resultado}','${item.parametro.valor_referencia}')" title='Digitar Resultados'> <i class='fas fa-thumbs-up'></i></a>`;
+            btn_parametro=`<a class="btn btn-success" href="javascript:digitarResultado(${item.id_resultado},${item.parametro.id_parametro},'${item.resultado}','${item.parametro.valor_referencia}')" title='Digitar Resultados'> <i class='fas fa-thumbs-up'></i></a>`;
            
           }
           
@@ -137,13 +140,7 @@ function listarMuestrasArea(rol,area){
               <td>${item.parametro.nombre}</td>
               <td>${item.resultado}</td>
               <td>${btn_parametro}</td>
-            </tr>`; 
-
-          
-      
-     
-              
-            
+            </tr>`;        
       });
      tabla+='</tbody></table>'
       //console.log(element);
@@ -258,8 +255,10 @@ async function leerResultados(){
 
 
 
-async function digitarResultado(id_parametro,resultado,valor_referencia){
-  document.getElementById('id_resultado_examen').value=id_parametro;
+async function digitarResultado(id_resultado,id_parametro,resultado,valor_referencia){
+
+
+  document.getElementById('id_resultado_examen').value=id_resultado;
   document.getElementById('resultado').value=resultado;
   document.getElementById('referencia').innerHTML=valor_referencia;
 
@@ -271,6 +270,9 @@ async function digitarResultado(id_parametro,resultado,valor_referencia){
 
 function listarTipoResultados(id_parametro){
   const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+
+  
+
 
   fetch(`/tipo_resultadoId/${id_parametro}`, {
     method:'get',
@@ -289,7 +291,8 @@ function listarTipoResultados(id_parametro){
   }
 })
 .then(data => {
-  
+ 
+  //console.log(data);
               const datalist = document.getElementById('options-list');
               if(data.tipos_resultado.length >0){
                 datalist.innerHTML = '';
