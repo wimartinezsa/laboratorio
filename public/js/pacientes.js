@@ -44,7 +44,7 @@ function listarPacientes(){
     })
     .then(data => {
 
-        console.log(data);
+        //console.log(data);
 
         let accionBTN='';
         let arrayDatos=[];
@@ -54,7 +54,7 @@ function listarPacientes(){
     accionBTN =` <a class="btn btn-primary" href="javascript:editarPaciente(${element.id_paciente})" title='Editar Paciente'><i class='fas fa-edit'></i></a>`;
     const nombres = `${element.nombres}`;   
     let dato = {
-       tipo_identificacion :element.tipo_identificacion,
+       tipo_identificacion :element.tipo_identificacion.replace(/_/g, " "),
        identificacion :element.identificacion,
        nombres : element.nombres,
        email :element.email,
@@ -88,10 +88,14 @@ function listarPacientes(){
                        ]
       
                                    });
+
+            /*
               Mensaje.fire({
                              icon: 'success',
                              title: "Se listaron los pacientes"
                           });
+
+            */
                                 
     });
    
@@ -262,7 +266,6 @@ function registrarPaciente(){
         })
     .then(data=>{
       
-      
         if(data.status==403){window.location.href = "/";}
         
        if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
@@ -272,8 +275,6 @@ function registrarPaciente(){
 
        if(data.status==500){Mensaje.fire({icon: 'warning',title: data.message});}
         
-      
-
     });
 
 }

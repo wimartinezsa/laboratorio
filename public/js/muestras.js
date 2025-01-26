@@ -70,8 +70,7 @@ function listarExamenesConfirmadas(){
         if(data.status==200){
 
         data.examenes.forEach(element => {
-        accionBTN =` <a class="btn btn-primary" href="javascript:gestionarMuestras(${element.id_examen})" title='Regitrar Muestras'><i class='fas fa-vial'></i></a>`;
-
+        accionBTN =` <a class="btn btn-primary" href="javascript:gestionarMuestras(${element.id_examen},'${element.observacion}')" title='Regitrar Muestras'><i class='fas fa-vial'></i></a>`;
         let dato = {
         codigo : element.id_examen,
         identificacion : element.identificacion,
@@ -115,8 +114,10 @@ function listarExamenesConfirmadas(){
 
 
 
-function gestionarMuestras(id_prestacion){
-    document.getElementById('id_prestacion').value=id_prestacion
+function gestionarMuestras(id_prestacion,observacion){
+    document.getElementById('id_prestacion').value=id_prestacion;
+    document.getElementById('observacion').value=observacion;
+    
     const now = new Date();
     const formattedDateTime = now.toISOString().slice(0, 16);
     document.getElementById("fecha_muestra").value = formattedDateTime;

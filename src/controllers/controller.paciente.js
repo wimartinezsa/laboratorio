@@ -13,7 +13,7 @@ export  const listarPacientes=async(req,resp)=>{
                 }
             }
         );
-        console.log(pacientes);
+       // console.log(pacientes);
         return resp.status(200).json(pacientes);
     }catch(error){
         console.log("Error en controller.paciente.js :"+error);
@@ -93,6 +93,18 @@ export  const registrarPaciente=async(req,resp)=>{
     try{
         const datos= await req.body;
       // console.log(datos);
+
+      const exist_paciente = await prisma.Paciente.findFirst({
+        where: { identificacion: datos.identificacion },   
+    });
+
+    // se busca si el paciente existe
+    if(exist_paciente){
+
+        return resp.status(200).json({"status":200,"message":"El paciente ya esta registrado en el sistema"});
+    }
+ // si no esxite el paciente se registra
+    else{
         const paciente = await prisma.Paciente.create(
             {
                 data: {
@@ -116,12 +128,17 @@ export  const registrarPaciente=async(req,resp)=>{
             } 
         );
         return resp.status(200).json({"status":200,"message":"Paciente Registrado en el Sistema"});
+    
+    }
+
     }catch(error){
         console.log("Error en controller.paciente.js :"+error);
         resp.status(500).json({ error: 'Error al registrar el paciente' });
        
     }  
 }
+
+
 
 export  const actualizarPacienteId=async(req,resp)=>{
     try{

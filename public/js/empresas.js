@@ -129,7 +129,6 @@ function listarMunicipios(){
             }
         })
            .then(data => {
-             
               let html=`<option value='0'>Seleccione una opción</option>`;
                data.forEach(element => {
                html+=`<option value='${element.id_municipio}'> ${element.nombre}</option>`;
@@ -200,9 +199,10 @@ function limpiarFormularioEmpresa(){
 
 
 
+
 async function editarEmpresa(id_empresa){
-    limpiarFormularioEmpresa();
-   await listarMunicipios();
+    await limpiarFormularioEmpresa();
+    await listarMunicipios();
     document.getElementById('id_empresa').value=id_empresa;
     document.getElementById('btn_registrar').style.display = 'none';
     document.getElementById('btn_actualizar').style.display = 'block';

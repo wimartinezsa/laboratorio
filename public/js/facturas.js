@@ -582,12 +582,17 @@ function limpiarFormularioPaciente(){
 
 
 
-function editarFactura(id_factura){
-    document.getElementById('id_factura').value=id_factura;
-    listarExamenesFactura(id_factura);
-    listarServiciosContrato();
-    buscarFactura(id_factura);
-    Frm_Prestacion.show();
+async function editarFactura(id_factura){
+
+
+
+    document.getElementById("tabla_factura").innerHTML='';
+
+   document.getElementById('id_factura').value=id_factura;
+   await listarExamenesFactura(id_factura);
+   await listarServiciosContrato();
+   await buscarFactura(id_factura);
+   await Frm_Prestacion.show();
 }
 
 
@@ -687,6 +692,11 @@ function buscarFactura(id_factura){
 
             `;
         document.getElementById("tabla_factura").innerHTML=tabla;
+
+        document.getElementById('autorizacion2').value=data[0].autorizacion;
+        document.getElementById('via_ingreso2').value=data[0].via_ingreso;
+
+        
        
     });
 
