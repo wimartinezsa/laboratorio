@@ -28,7 +28,7 @@ function cantidadPacientes(){
 
 
 function cantidadEmpresas(){
-    fetch('/cantidadPacientes',
+    fetch('/cantidadEmpresas',
         {
             method: 'get'
         })
