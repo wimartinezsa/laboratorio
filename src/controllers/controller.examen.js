@@ -5,8 +5,7 @@ import prisma from '../libs/prisma.js'
 export  const agregarExamenesFactura=async(req,resp)=>{
     try{
         const datos= await req.body;
-  
-       // console.log(datos)
+
         const examen = await prisma.Examen.create(
             {
                 data: {
@@ -46,7 +45,7 @@ export  const agregarExamenesFactura=async(req,resp)=>{
                 }
         }
     
-        return resp.status(200).json({"status":200,"message":"Ecamen agregado a la Factura"});
+        return resp.status(200).json({"status":200,"message":"Examen agregado a la Factura"});
     }catch(error){
         console.log("Error en controller.examen.js :"+error);
         resp.status(500).json({ "status":500,"message": 'Error al registrar el  ecamen' });
@@ -61,7 +60,7 @@ export  const listarExamenesFactura=async(req,resp)=>{
         const contratos = await prisma.$queryRaw`
         
         SELECT 
-	ex.id_examen,s.nombre AS servicio, cu.nombre AS procedimiento,ex.cantidad,DATE(ex.fecha_muestra)AS fecha,c.nombre AS contrato,ac.precio,
+	ex.id_examen,s.nombre AS servicio, cu.nombre AS procedimiento,ex.cantidad,DATE(ex.fecha_muestra)AS fecha,c.nombre AS contrato,ex.precio,
         cu.codigo AS cups,ex.estado
         FROM facturas f
         JOIN contratos c ON c.id_contrato = f.contratoId

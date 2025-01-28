@@ -5,6 +5,7 @@ examenesTomaMuestra();
 examenesProcesoAnalisis();
 examenesResultadosListos();
 examenesResultadosEntregados();
+cantidadExamenesPorDiaEmpresa();
 
 function cantidadPacientes(){
     fetch('/cantidadPacientes',
@@ -24,6 +25,42 @@ function cantidadPacientes(){
          document.getElementById('cant_pacientes').innerHTML=`${data[0].cantidad}`;
     });
 }
+
+
+
+
+function cantidadExamenesPorDiaEmpresa(){
+    fetch('/cantidadExamenesPorDiaEmpresa',
+        {
+            method: 'get'
+        })
+        .then(response => {
+            // Verificar si la respuesta es JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+               window.location.href = "/";
+            } 
+        })
+    .then(data=>{
+
+        const lista = document.getElementById('examenesPorDia');
+        lista.innerHTML = '';
+        
+        data.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = `${item.nombre.toLowerCase()} : ${item.cantidad}`;
+            lista.appendChild(li);
+        });
+
+
+       
+    });
+}
+
+
+
 
 
 

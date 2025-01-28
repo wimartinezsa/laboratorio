@@ -48,6 +48,36 @@ export const cantidadEmpresas = async (req, resp) => {
 
 
 
+
+export const cantidadExamenesPorDiaEmpresa = async (req, resp) => {
+    try {
+        const examenesDia = await prisma.$queryRaw`
+        SELECT emp.nombre,count(ex.id_examen) as cantidad FROM empresas emp
+                join contratos cont on cont.empresaId= emp.id_empresa
+                join facturas fact on fact.contratoId= cont.id_contrato
+                join examenes ex on ex.facturaId=id_factura
+                where ex.estado='Resultados_Listos' and date(ex.fecha_resultado)= date( curdate())
+                group by emp.nombre
+        `;
+        // Convertir BigInt a String
+        const resultado = examenesDia.map((row) => ({
+            ...row,
+            cantidad: row.cantidad.toString(),
+        }));
+        return resp.status(200).json(resultado);
+    } catch (error) {
+        console.error("Error en controller.estadistica.js:", error);
+        return resp.status(500).json({
+            status: 500,
+            message: 'Error al listar estadística',
+        });
+    }
+};
+
+
+
+
+
 export const contratosActivos = async (req, resp) => {
     try {
         const contratos = await prisma.$queryRaw`

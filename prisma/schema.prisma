@@ -36,6 +36,7 @@ model Paciente {
   municipio           Municipio?    @relation(fields: [municipioId], references: [id_municipio])
   pais                Pais?         @relation(fields: [paisId], references: [id_pais])
 
+
   @@index([epsId], map: "pacientes_epsId_fkey")
   @@index([municipioId], map: "pacientes_municipioId_fkey")
   @@index([paisId], map: "pacientes_paisId_fkey")

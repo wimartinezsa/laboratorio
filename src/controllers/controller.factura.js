@@ -12,6 +12,7 @@ export  const listarFacturas=async(req,resp)=>{
         JOIN pacientes pa ON pa.id_paciente = fa.pacienteId
         JOIN contratos co ON co.id_contrato = fa.contratoId
         JOIN empresas em ON em.id_empresa = co.empresaId
+        ORDER BY fa.id_factura DESC
         `;
 
 
@@ -92,7 +93,7 @@ export  const listarFacturasContratos=async(req,resp)=>{
         JOIN empresas em ON em.id_empresa = co.empresaId
         WHERE co.id_contrato=${id_contrato} 
         GROUP BY id_factura
-       
+      
         `;
         
         return resp.status(200).json(contratos);

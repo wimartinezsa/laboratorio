@@ -324,7 +324,7 @@ function buscarPacienteId(){
         tabla +=`<tr><td style="width: 15%;"><b>NOMBRES:</b></td>
                     <td style="width: 35%;">${data.paciente.nombres}</td>
                     <td style="width: 15%;"><b>EDAD:</b></td>
-                <td style="width: 35%;">${edad.años} Años ${edad.meses} Meses </td></tr> `
+                    <td style="width: 30%;">${moment(data.paciente.fecha_nacimiento).format('DD/MM/YYYY')} =>${edad.años} Años ${edad.meses} Meses </td></tr> `
         tabla +=`<tr><td style="width: 15%;"><b>TELEFONO:</b></td style="width: 25%;">
         <td>${data.paciente.telefono}</td style="width: 25%;"><td><b>EMAIL:</b></td>
         <td style="width: 25%;">${data.paciente.email}</td></tr>`;
@@ -589,6 +589,16 @@ async function editarFactura(id_factura){
     document.getElementById("tabla_factura").innerHTML='';
 
    document.getElementById('id_factura').value=id_factura;
+   document.getElementById('precio').value='';
+
+   const id_empresa= document.getElementById('empresas').value;
+    if(id_empresa==='1'){
+        document.getElementById('precio').disabled = false;
+    }else{
+        document.getElementById('precio').disabled =true ;
+    }
+
+
    await listarExamenesFactura(id_factura);
    await listarServiciosContrato();
    await buscarFactura(id_factura);
@@ -831,19 +841,15 @@ function listarProcedimientoContratados(){
  function agregarExamenFactura(){
 
     
-    let id_factura= document.getElementById('id_factura').value;
-    const procedimiento_acordado = document.getElementById("procedimiento_acordados");
-    let id_procedimiento=procedimiento_acordado.value;
+    const id_factura= document.getElementById('id_factura').value;
+    const procedimiento_acordado = document.getElementById("procedimiento_acordados").value;
+    const precio = document.getElementById("precio").value;
+
     
-    const textoSeleccionado = procedimiento_acordado.options[procedimiento_acordado.selectedIndex].text;
- // se obitiene el precio del texto selccionado en el select
-
-    const valor = textoSeleccionado.match(/<(\d+)>/)?.[1];
-
     let datos= new URLSearchParams();
-    datos.append('id_procedimiento',id_procedimiento);
+    datos.append('id_procedimiento',procedimiento_acordado);
     datos.append('id_factura',id_factura);
-    datos.append('precio',valor)
+    datos.append('precio',precio)
     
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
@@ -1124,6 +1130,16 @@ function calcularEdad(fechaNacimiento) {
         };
     }
 
+
+function obtenerPrecio(){
+       let precio= document.getElementById('procedimiento_acordados').value;
+
+       const select = document.getElementById('procedimiento_acordados');
+       const textoSeleccionado = select.options[select.selectedIndex].text;
+       precio = textoSeleccionado.match(/<(\d+)>/);
+       document.getElementById('precio').value=precio[1];
+
+    }
 
 
 

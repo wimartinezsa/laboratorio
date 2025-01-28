@@ -618,7 +618,6 @@ function eliminarParametro(id_prametro){
 function limpiarFormularioParametro(){
 
     document.getElementById('parametro').value='';
-    document.getElementById('procedimiento').value='';
     document.getElementById('valor_referencia').value='';
     document.getElementById('unidad').value='';
     document.getElementById('metodo').value='';
