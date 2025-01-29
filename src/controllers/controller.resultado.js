@@ -180,7 +180,7 @@ export const registrarResulatadosAutomaticos = async (req, resp) => {
         //
         // Procesar los datos si hay elementos
         if (json_resultados.length > 0) {
-          //  console.log(json_resultados);
+          //console.log(json_resultados);
         //console.log("Resultados encontrados desde completos:",json_resultados);
 
             for (const element of json_resultados) {
@@ -196,9 +196,8 @@ export const registrarResulatadosAutomaticos = async (req, resp) => {
    
                if (resultados.length > 0) {
                
-
+                
                     for (const resultado of resultados) {
-                       
                        const resultado_act= await prisma.Resultado.updateMany({
                             where: {
                                 id_resultado: resultado.id_resultado,
@@ -209,6 +208,7 @@ export const registrarResulatadosAutomaticos = async (req, resp) => {
                                 estado: 'Pendiente'
                             }
                         });
+
                         if (resultado_act.count > 0) {
                             actualizado++;
                         }
@@ -232,7 +232,7 @@ export const registrarResulatadosAutomaticos = async (req, resp) => {
         }
     } catch (error) {
         console.error("Error en controller.resultado.js:", error);
-        resp.status(500).json({ status: 500, message: "Error al asignar el resultado a la muestra" });
+        resp.status(500).json({ status: 500, message: "Error al actualizar el resultado al examen" });
     }
 };
 

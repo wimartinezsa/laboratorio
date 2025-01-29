@@ -278,7 +278,7 @@ function registrarResulatadosAutomaticos(resultados){
   })
   .then(data => {
 
-    console.log(data);
+   // console.log(data);
 
        if(data.status==403){window.location.href = "/";}
        
@@ -290,7 +290,7 @@ function registrarResulatadosAutomaticos(resultados){
         let area = localStorage.getItem('area'); 
        
         listarExamenesPorArea(rol,area);
-        //Frm_resultados.hide();
+        Frm_resultados.hide();
         }
 
        if(data.status==500){Mensaje.fire({icon: 'warning',title: data.message});}
@@ -314,10 +314,7 @@ async function gestionarResultados(id_examen){
 
 
   document.getElementById('id_resultado_examen').value=id_examen;
-  //document.getElementById('resultado').value=resultado;
-  //document.getElementById('referencia').innerHTML=valor_referencia;
-
- 
+  
   await crearFormularioDinamico(id_examen);
   
 
@@ -357,15 +354,14 @@ async function crearFormularioDinamico(id_examen){
 
 
 
-function pintarFormulario(data) {
+async function pintarFormulario(data) {
   // Seleccionar el contenedor donde se generará el formulario
-  console.log(data);
+  //console.log(data);
   const contenedorFormulario = document.getElementById("formulario-dinamico");
   contenedorFormulario.innerHTML = ""; // Limpia el contenido del formulario
   
   data.forEach((item, index) => {
     // Crear un contenedor para cada campo
-    console.log(index);
     const div = document.createElement("div");
     div.style.marginBottom = "10px";
 
@@ -375,6 +371,7 @@ function pintarFormulario(data) {
     label.setAttribute("for", `parametro-${index}`);
     div.appendChild(label);
 
+    if(item.parametro.metodo==='Automatico'){
     // Crear un campo de entrada
     const input = document.createElement("input");
     input.type = "text";
@@ -387,24 +384,45 @@ function pintarFormulario(data) {
     input.classList.add("form-control", "mb-3");
     div.appendChild(input);
 
+  }
+
+  if(item.parametro.metodo==='Manual'){
+        // Crear un campo de entrada
+      const select = document.createElement("select");
+      select.id = `parametro-${item.id_resultado}`; // Asignar un id único al select
+      select.name = item.id_resultado; // Asignar el nombre del parámetro
+      select.classList.add("form-control", "mb-3");
+      // Opciones de ejemplo (puedes cambiar esto dinámicamente)
+      
+      item.parametro.tipo_resultado.forEach(opcion => {
+        const option = document.createElement("option");
+        option.value = opcion.nombre;
+      
+        option.textContent = opcion.nombre;
+        select.appendChild(option);
+    });
+    select.value=item.resultado;
+        div.appendChild(select);
+
+  }
+
     // Agregar el div al formulario
     contenedorFormulario.appendChild(div);
   });
 
   // Limpia y asegura un solo listener en el botón
   const btnRegistrar = document.getElementById("btn_registrar");
-  const nuevoListener = () => {
+  const nuevoListener =async () => {
     let resultado_json = [];
     
     data.forEach((item, index) => {
-      const inputValue = document.getElementById(`parametro-${item.id_resultado}`).value;
-      resultado_json.push({ codigo: item.id_resultado, resultado: inputValue});
+      const campo_resultado = document.getElementById(`parametro-${item.id_resultado}`).value;
+      resultado_json.push({ codigo: item.id_resultado, resultado: campo_resultado});
     });
     
-    console.log(resultado_json);
-
-    //let parametros = JSON.stringify(resultado_json, null, 2);
-    //registrarResulatadosCompletos(resultado_json, estado);
+   // console.log(resultado_json);
+   
+   await registrarResulatadosAutomaticos(resultado_json);
   };
 
   // Remover cualquier listener anterior
