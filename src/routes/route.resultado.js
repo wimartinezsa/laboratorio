@@ -1,30 +1,33 @@
 import { Router } from "express";
 import {validarToken} from "../middlewares/authentication.js";
 import {
-        listarMuestrasArea,
-        registrarResultado,
+        listarExamenesPorArea,
+        //registrarResultado,
         registrarResulatadosAutomaticos,
-        finzalizarAnalisis,
-        listarParametrosId
+       // finzalizarAnalisis,
+       listarParametrosExamen
         
         
         } from "../controllers/controller.resultado.js";
 
 const route = Router();
 
-route.get('/listarEaxmenesArea/:rol/:area',validarToken,listarMuestrasArea);
+route.get('/listarExamenesPorArea/:rol/:area',validarToken,listarExamenesPorArea);
 
-route.put('/registrarResultado/:id_resultado',validarToken,registrarResultado);
+
 
 
 route.put('/registrarResulatadosAutomaticos',validarToken,registrarResulatadosAutomaticos);
 
-route.put('/finzalizarAnalisis/:id_examen',validarToken,finzalizarAnalisis);
+route.get('/listarParametrosExamen/:id_examen',validarToken,listarParametrosExamen);
+
+//route.put('/registrarResultado/:id_resultado',validarToken,registrarResultado);
+//route.put('/finzalizarAnalisis/:id_examen',validarToken,finzalizarAnalisis);
 
 
 
 
-route.get('/tipo_resultadoId/:id_parametro',validarToken,listarParametrosId);
+//route.get('/tipo_resultadoId/:id_parametro',validarToken,listarParametrosId);
 
 
 

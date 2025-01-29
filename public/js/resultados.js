@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let rol = localStorage.getItem('rol'); 
   let area = localStorage.getItem('area'); 
   
-  listarMuestrasArea(rol,area);
+  listarExamenesPorArea(rol,area);
   
 });
 
@@ -42,12 +42,12 @@ var Frm_resultados = new bootstrap.Modal(document.getElementById('Frm_resultados
 
 
 
-
-function listarMuestrasArea(rol,area){
+// se listan los laboratoriospor Area
+function listarExamenesPorArea(rol,area){
 
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
     
-    fetch(`/listarEaxmenesArea/${rol}/${area}`, {
+    fetch(`/listarExamenesPorArea/${rol}/${area}`, {
         method:'get',
         headers: {
             'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
@@ -77,23 +77,14 @@ function listarMuestrasArea(rol,area){
           //for que recorrelos examenes
         data.examenes.forEach(element => {
 
-          accionBTN =`<a class="badge badge-success badge-warning" style="font-size: 0.8rem;" href="javascript:confirmarFinalizarAnalisis(${element.id_examen})" title='Finalizar Análisis'>${element.estado.replace(/_/g," ")}</a>`;
-        
-        
+            
           if (element.estado==='En_Proceso_de_Analisis'){
-           accionBTN =`<a class="badge badge-pill badge-danger" style="font-size: 0.8rem;" href="javascript:confirmarFinalizarAnalisis(${element.id_examen})" title='Finalizar Análisis'>${element.estado.replace(/_/g," ")}</a>`;
+           accionBTN =`<a class="badge badge-pill badge-danger" style="font-size: 0.8rem;" 
+           href="javascript:gestionarResultados(${element.id_examen})" title='Finalizar Análisis'>${element.estado.replace(/_/g," ")}
+           </a>`;
 
           }
-        
-          if (element.estado==='Analisis_Completo'){
-           accionBTN =`<a class="badge badge-pill badge-warning" style="font-size: 0.8rem;" href="javascript:confirmarFinalizarAnalisis(${element.id_examen})" title='Finalizar Análisis'>${element.estado.replace(/_/g," ")}</a>`;
-
-          }
-
-          if (element.estado==='Resultados_Listos'){
-            accionBTN =`<a class="badge badge-success badge-warning" style="font-size: 0.8rem;" href="javascript:confirmarFinalizarAnalisis(${element.id_examen})" title='Finalizar Análisis'>${element.estado.replace(/_/g," ")}</a>`;
-          }
-
+ 
         
    
      // let resultados = element.resultado;
@@ -119,10 +110,14 @@ function listarMuestrasArea(rol,area){
         let estado_parametro='';
     
           if(item.estado==='Pendiente'){
-            btn_parametro=`<a class="btn btn-warning" href="javascript:digitarResultado(${item.id_resultado},${item.parametro.id_parametro},'${item.resultado}','${item.parametro.valor_referencia}')" title='Digitar Resultados'> <i class='fas fa-thumbs-down'></i></a>`;
+            btn_parametro=`<a class="btn btn-warning" 
+            href="javascript:cambiarEstadoResultado(${item.id_resultado},${item.parametro.id_parametro},'${item.resultado}','${item.parametro.valor_referencia}')" 
+            title='Digitar Resultados'> <i class='fas fa-thumbs-down'></i></a>`;
           }
+
+          
           if(item.estado==='Finalizado'){
-            btn_parametro=`<a class="btn btn-success" href="javascript:digitarResultado(${item.id_resultado},${item.parametro.id_parametro},'${item.resultado}','${item.parametro.valor_referencia}')" title='Digitar Resultados'> <i class='fas fa-thumbs-up'></i></a>`;
+            btn_parametro=`<a class="btn btn-success" href="javascript:cambiarEstadoResultado(${item.id_resultado},${item.parametro.id_parametro},'${item.resultado}','${item.parametro.valor_referencia}')" title='Digitar Resultados'> <i class='fas fa-thumbs-up'></i></a>`;
            
           }
           
@@ -151,11 +146,11 @@ function listarMuestrasArea(rol,area){
         examen:element.id_examen,
         autoriazacion:element.factura.autorizacion,
         identificacion : element.factura.paciente.identificacion,
-        nombres :element.factura.paciente.nombres,
+        nombres :element.factura.paciente.nombres.toUpperCase(),
         cups :element.procedimiento.cups.nombre,
         resultado :tabla,
         observacion:element.observacion,
-        area :element.procedimiento.area.nombre,
+        area :element.procedimiento.area.nombre.toUpperCase(),
         estado :accionBTN ,
                         }
                         arrayDatos.push(dato)
@@ -203,6 +198,8 @@ function listarMuestrasArea(rol,area){
 
 
 
+//=====================================Modulo de cargar el archivo plano ======================
+// se configura el formulario para cargar el archivo plano
 const fileInput = document.getElementById("fileInput");
 let fileContent = ""; // Almacenará el contenido del archivo
 
@@ -223,7 +220,7 @@ fileInput.addEventListener("change", (event) => {
 
 
 
-
+//Función para leer el archivo plano
 async function leerResultados(){
 
       if (!fileContent) {
@@ -242,10 +239,13 @@ async function leerResultados(){
               resultado: cells[3]
           });
           }
+          /*
           else{
            Mensaje.fire({icon: 'success',title:`El codigo ${cells[0]} no es numérico`});
           }
+           */
       })
+     
       await registrarResulatadosAutomaticos(resultado_txt);
       
 }
@@ -254,20 +254,178 @@ async function leerResultados(){
 
 
 
+// registra los resultados de lso parametros del archivo plano
+function registrarResulatadosAutomaticos(resultados){
+  const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
-async function digitarResultado(id_resultado,id_parametro,resultado,valor_referencia){
+  
+  fetch('registrarResulatadosAutomaticos', {
+      method:'put',
+      body: JSON.stringify(resultados),
+      headers: {
+          'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+          'Content-Type': 'application/json' // Especifica el tipo de contenido
+      }
+  })
+  .then(response => {
+    // Verificar si la respuesta es JSON
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+        return response.json();
+    } else {
+        window.location.href = "/";
+    }
+  })
+  .then(data => {
+
+    console.log(data);
+
+       if(data.status==403){window.location.href = "/";}
+       
+        if(data.status===200){
+          Mensaje.fire({icon: 'success',title: data.message}
+
+          );
+        let rol = localStorage.getItem('rol'); 
+        let area = localStorage.getItem('area'); 
+       
+        listarExamenesPorArea(rol,area);
+        //Frm_resultados.hide();
+        }
+
+       if(data.status==500){Mensaje.fire({icon: 'warning',title: data.message});}
+       
+  
+  });
+
+ 
 
 
-  document.getElementById('id_resultado_examen').value=id_resultado;
-  document.getElementById('resultado').value=resultado;
-  document.getElementById('referencia').innerHTML=valor_referencia;
-
-  await listarTipoResultados(id_parametro);
-
-
-  await Frm_resultados.show();
 }
 
+
+
+//=====================================Fin del Modulo de cargar el archivo plano ======================
+
+
+
+//=====================================Modulo de digitar los resultados de forma dinamica===============
+async function gestionarResultados(id_examen){
+
+
+  document.getElementById('id_resultado_examen').value=id_examen;
+  //document.getElementById('resultado').value=resultado;
+  //document.getElementById('referencia').innerHTML=valor_referencia;
+
+ 
+  await crearFormularioDinamico(id_examen);
+  
+
+ await Frm_resultados.show();
+}
+
+
+async function crearFormularioDinamico(id_examen){
+
+  const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+
+  
+ await fetch(`/listarParametrosExamen/${id_examen}`, {
+    method:'get',
+    headers: {
+      'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+      'Content-Type': 'application/json' // Especifica el tipo de contenido
+  }   
+})
+.then(response => {
+  // Verificar si la respuesta es JSON
+  const contentType = response.headers.get('content-type');
+  if (contentType && contentType.includes('application/json')) {
+      return response.json();
+  } else {
+      window.location.href = "/";
+  }
+})
+.then(data => {
+   if(data.status===200){
+    pintarFormulario(data.resultados);
+   }
+      
+      });
+
+}
+
+
+
+function pintarFormulario(data) {
+  // Seleccionar el contenedor donde se generará el formulario
+  console.log(data);
+  const contenedorFormulario = document.getElementById("formulario-dinamico");
+  contenedorFormulario.innerHTML = ""; // Limpia el contenido del formulario
+  
+  data.forEach((item, index) => {
+    // Crear un contenedor para cada campo
+    console.log(index);
+    const div = document.createElement("div");
+    div.style.marginBottom = "10px";
+
+    // Crear una etiqueta para el parámetro
+    const label = document.createElement("label");
+    label.textContent = `${item.parametro.nombre}: `;
+    label.setAttribute("for", `parametro-${index}`);
+    div.appendChild(label);
+
+    // Crear un campo de entrada
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = ""; // Inicialmente vacío
+    input.id = `parametro-${item.id_resultado}`; // Asignar un id único al input
+    input.placeholder = 'Digite ' + item.parametro.nombre;
+    input.name = item.id_resultado; // Asignar el nombre del parámetro
+    input.value = item.resultado;
+
+    input.classList.add("form-control", "mb-3");
+    div.appendChild(input);
+
+    // Agregar el div al formulario
+    contenedorFormulario.appendChild(div);
+  });
+
+  // Limpia y asegura un solo listener en el botón
+  const btnRegistrar = document.getElementById("btn_registrar");
+  const nuevoListener = () => {
+    let resultado_json = [];
+    
+    data.forEach((item, index) => {
+      const inputValue = document.getElementById(`parametro-${item.id_resultado}`).value;
+      resultado_json.push({ codigo: item.id_resultado, resultado: inputValue});
+    });
+    
+    console.log(resultado_json);
+
+    //let parametros = JSON.stringify(resultado_json, null, 2);
+    //registrarResulatadosCompletos(resultado_json, estado);
+  };
+
+  // Remover cualquier listener anterior
+  btnRegistrar.replaceWith(btnRegistrar.cloneNode(true)); // Clona el botón para resetear listeners
+  document.getElementById("btn_registrar").addEventListener("click", nuevoListener);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 function listarTipoResultados(id_parametro){
   const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
@@ -307,30 +465,13 @@ function listarTipoResultados(id_parametro){
               
       });
 }
+*/
 
 
 
 
-function confirmarRegistroResultado(){
-  Swal.fire({
-      title: 'Confirma el registro del resultado',
-      showDenyButton: true,
-      confirmButtonText: 'Si',
-      denyButtonText: `No`,
-  }).then((result) => {
-      if (result.isConfirmed) {
-        registrarResultado();
-      } else if (result.isDenied) {
-          Mensaje.fire({
-              icon: 'warning',
-              title: 'Operación Cancelada'
-              });
-      }                       
-  })
 
-}
-
-
+/*
 function registrarResultado(){
 
   let id_resultado= document.getElementById('id_resultado_examen').value;
@@ -372,11 +513,11 @@ function registrarResultado(){
           if(data.status==500){Mensaje.fire({icon: 'warning',title: data.message});}
     });
 }
+*/
 
 
 
-
-
+/*
 function confirmarFinalizarAnalisis(id_examen){
   Swal.fire({
       title: 'Desea finalizar el proceso de Anilisis',
@@ -395,7 +536,9 @@ function confirmarFinalizarAnalisis(id_examen){
   })
 
 }
+*/
 
+/*
 function finzalizarAnalisis(id_examen){
   const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
@@ -437,49 +580,7 @@ function finzalizarAnalisis(id_examen){
 
 }
 
-function registrarResulatadosAutomaticos(resultados){
-  const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
-
-  
-  fetch('registrarResulatadosAutomaticos', {
-      method:'put',
-      body: JSON.stringify(resultados),
-      headers: {
-          'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
-          'Content-Type': 'application/json' // Especifica el tipo de contenido
-      }
-  })
-  .then(response => {
-    // Verificar si la respuesta es JSON
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-        return response.json();
-    } else {
-        window.location.href = "/";
-    }
-  })
-  .then(data => {
-
-    //console.log(data);
-
-       if(data.status==403){window.location.href = "/";}
-       
-        if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
-        let rol = localStorage.getItem('rol'); 
-        let area = localStorage.getItem('area'); 
-        listarMuestrasArea(rol,area);
-        Frm_resultados.hide();
-        }
-
-       if(data.status==500){Mensaje.fire({icon: 'warning',title: data.message});}
-       
-  
-  });
-
- 
-
-
-}
+*/
 
 
 

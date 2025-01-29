@@ -138,11 +138,11 @@ function listarMuestrasArea(rol,area){
         examen:element.id_examen,
         autoriazacion:element.factura.autorizacion,
         identificacion : element.factura.paciente.identificacion,
-        nombres :element.factura.paciente.nombres,
+        nombres :element.factura.paciente.nombres.toUpperCase(),
         cups :element.procedimiento.cups.nombre,
         resultado :tabla,
         observacion:element.observacion,
-        area :element.procedimiento.area.nombre,
+        area :element.procedimiento.area.nombre.toUpperCase(),
         estado :accionBTN ,
                         }
                         arrayDatos.push(dato)

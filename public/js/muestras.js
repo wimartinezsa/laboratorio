@@ -74,11 +74,11 @@ function listarExamenesConfirmadas(){
         let dato = {
         codigo : element.id_examen,
         identificacion : element.identificacion,
-        nombres :element.nombres,
+        nombres :element.nombres.toUpperCase(),
         autorizacion :element.autorizacion,
         cups :element.cups,
         observacion :element.observacion,
-        estado :element.estado,
+        estado :element.estado.replace(/_/g, " ").toUpperCase(),
         Accion :accionBTN
                         }
                         arrayDatos.push(dato)

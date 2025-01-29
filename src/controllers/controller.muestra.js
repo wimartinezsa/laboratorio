@@ -13,7 +13,7 @@ export  const listarExamenesConfirmados=async(req,resp)=>{
             JOIN procedimientos proc ON proc.id_procedimiento = ex.procedimientoId
             JOIN cups cu ON cu.id_cups = proc.cupsId
             JOIN  pacientes pa ON pa.id_paciente = fact.pacienteId
-            WHERE ex.estado='En_Toma_de_Muestra' 
+            WHERE ex.estado='En_Toma_de_Muestra'
             ORDER BY ex.fecha_muestra ASC
         `;
         if(examenes){

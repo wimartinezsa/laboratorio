@@ -5,7 +5,7 @@ import prisma from '../libs/prisma.js'
 
 
 
-export  const listarMuestrasArea=async(req,resp)=>{
+export  const listarExamenesPorArea=async(req,resp)=>{
     try{
        
         let id_usuario=req.user.id;
@@ -106,8 +106,8 @@ export  const listarMuestrasArea=async(req,resp)=>{
 
 
 
-
-
+// Se registra el resultado individual por parametros
+/*
 export const registrarResultado = async (req, resp) => {
     try {
         let {resultado} = req.body;
@@ -132,10 +132,12 @@ export const registrarResultado = async (req, resp) => {
         resp.status(500).json({ status: 500, message: "Error al registrar el resultado del parametro" });
     }
 };
+*/
 
 
 
 
+/*
 export const finzalizarAnalisis = async (req, resp) => {
     try {
        
@@ -160,11 +162,15 @@ export const finzalizarAnalisis = async (req, resp) => {
     }
 };
 
+*/
 
+
+// se registra el json con los resultados de los parametros
 export const registrarResulatadosAutomaticos = async (req, resp) => {
     try {
         let json_resultados = req.body;
-        let registrado=0;
+       
+        let actualizado=0;
         let noEncontrados=0;
         // Asegúrate de que json_resultados sea un array
         if (!Array.isArray(json_resultados)) {
@@ -187,13 +193,13 @@ export const registrarResulatadosAutomaticos = async (req, resp) => {
                 JOIN parametros pa ON pa.id_parametro = res.parametroId
                 WHERE res.id_resultado = ${element.codigo}
               `;
-  
+   
                if (resultados.length > 0) {
                
 
                     for (const resultado of resultados) {
-                        //console.log(' se inserta : ' +resultado);
-                        await prisma.Resultado.updateMany({
+                       
+                       const resultado_act= await prisma.Resultado.updateMany({
                             where: {
                                 id_resultado: resultado.id_resultado,
                                 estado: 'Pendiente'
@@ -203,7 +209,9 @@ export const registrarResulatadosAutomaticos = async (req, resp) => {
                                 estado: 'Pendiente'
                             }
                         });
-                        registrado++;
+                        if (resultado_act.count > 0) {
+                            actualizado++;
+                        }
                 }
 
                
@@ -218,10 +226,7 @@ export const registrarResulatadosAutomaticos = async (req, resp) => {
 
             }// fin del for que recorre el json
 
-
-            
-
-            resp.status(200).json({ status: 200, message: "Se registraron :"+ registrado + " - No se registraron :" +noEncontrados });
+            resp.status(200).json({ status: 200, message: "Se actualizaron :"+ actualizado + " - No se actualizaron :" +noEncontrados });
         } else {
             return resp.status(400).json({ message: "El array está vacío." });
         }
@@ -236,20 +241,29 @@ export const registrarResulatadosAutomaticos = async (req, resp) => {
 
 
 
-export  const listarParametrosId=async(req,resp)=>{
+export  const listarParametrosExamen=async(req,resp)=>{
     try{
-       let id_parametro = req.params.id_parametro;
+       let id_examen = req.params.id_examen;
       
-       const tipos_resultado = await prisma.$queryRaw`
-       SELECT tr.id_tipo_resultado,tr.nombre FROM tipo_resultados tr
-        join  parametros p on p.id_parametro = tr.parametroId
-        where p.id_parametro=${id_parametro}
-       `;
+       const resultados = await prisma.resultado.findMany({
+        where: {
+            examenId: Number(id_examen)
+        },
+        include: {
+            parametro: {
+                include: {
+                    tipo_resultado: true // Asegúrate de que coincide con el modelo
+                }
+            }
+        }
+    });
+
+
        
-        return resp.status(200).json({"status":200,tipos_resultado});
+        return resp.status(200).json({"status":200,resultados});
          
     }catch(error){
-        console.log("Error en controller.muestra.js :"+error);
-        resp.status(500).json({"status":500,"message": 'Error al listar  las procedimientos facturados' });
+        console.log("Error en controller.resultado.js :"+error);
+        resp.status(500).json({"status":500,"message": 'Error al listar los resultados del examen' });
     }
 }
