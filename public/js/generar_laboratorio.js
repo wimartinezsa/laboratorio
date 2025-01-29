@@ -73,7 +73,10 @@ moment.defineLocale('es', {
             .then(res => res.json())
             .then(data => {
 
+                
                 if (data) {
+
+                   
                     const doc = new jsPDF();
                     
 
@@ -244,7 +247,7 @@ moment.defineLocale('es', {
                                 doc.text(135, y, `${formattedValorReferencia}`);                       // Columna 4 (Placeholder)
                                 // Dibujar línea horizontal después de la fila
                                
-                                y += 3;
+                                y += 4;
                                 
 
                                 if (y > pageHeight - margin) {
@@ -260,21 +263,19 @@ moment.defineLocale('es', {
                             y+=3; 
                             doc.text(10, y, `Metodo : ${examen.procedimiento.tecnica ===null ? '':examen.procedimiento.tecnica}`);  
                             y+=3; 
-                            doc.text(10, y, `Fecha/Hora Resultado : ${moment(examen.fecha_resultado).format('LLLL') }`);  
-                            y+=3; 
+                           // doc.text(10, y, `Fecha/Hora Resultado : ${moment(examen.fecha_resultado).format('LLLL') }`);  
+                           // y+=3; 
                            
-
-                           
-                          
                             doc.text(10, y, `Validó : ${examen.profesional}`);  
-                            y+=2; 
+                            y+=5; 
                            
-                            
+                            doc.text(10, y, `NOTA : * ${examen.observacion}`);  
+                            y+=2; 
                            
                         }
 
                        
-                       
+                      
 
                     });
 

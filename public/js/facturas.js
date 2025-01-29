@@ -323,8 +323,8 @@ function buscarPacienteId(){
         let edad = calcularEdad (data.paciente.fecha_nacimiento);
         tabla +=`<tr><td style="width: 15%;"><b>NOMBRES:</b></td>
                     <td style="width: 35%;">${data.paciente.nombres}</td>
-                    <td style="width: 15%;"><b>EDAD:</b></td>
-                    <td style="width: 30%;">${moment(data.paciente.fecha_nacimiento).format('DD/MM/YYYY')} =>${edad.años} Años ${edad.meses} Meses </td></tr> `
+                    <td style="width: 15%;"><b>FECHA Y EDAD:</b></td>
+                    <td style="width: 30%;">${moment(data.paciente.fecha_nacimiento).format('DD/MM/YYYY')} - ${edad.años} Años ${edad.meses} Meses </td></tr> `
         tabla +=`<tr><td style="width: 15%;"><b>TELEFONO:</b></td style="width: 25%;">
         <td>${data.paciente.telefono}</td style="width: 25%;"><td><b>EMAIL:</b></td>
         <td style="width: 25%;">${data.paciente.email}</td></tr>`;
