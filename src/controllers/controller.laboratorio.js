@@ -93,20 +93,7 @@ export  const generarLaboratorio=async(req,resp)=>{
                                 procedimiento:{
                                 include:{
                                     cups:true,
-                                    area:{
-                                        include:{
-                                            vinculacion:{
-                                                include:{
-                                                    usuario:{
-                                                        where: { estado: "Activo" }
-                                                    }
-
-                                                }
-                                                
-                                            }
-                                            
-                                        }
-                                    }
+                                    area:true
 
                                 }
                             }
@@ -126,17 +113,50 @@ export  const generarLaboratorio=async(req,resp)=>{
 
 
 
-export  const firmaLaboratorio=async(req,resp)=>{
+
+
+
+
+export  const firmaLaboratorioAuxiliar=async(req,resp)=>{
+    try{
+       let id_usuario= req.params.id_usuario;
+        const Axuliar = await prisma.Usuario.findFirst(
+            { 
+                where:{id_usuario:Number(id_usuario)} ,
+                select: {
+                    identificacion:true,
+                    nombre:true,
+                    firma:true 
+                }           
+            } 
+        );
+       // console.log(bacteriologo);
+        return resp.status(200).json(Axuliar);
+    }catch(error){
+        console.log("Error en controller.laboratorio.js :"+error);
+        resp.status(500).json({ error: 'Error al listar quien firma el laboratorio' });
+    }
+}
+
+
+
+export  const firmaLaboratorioBacteriologo=async(req,resp)=>{
     try{
         const bacteriologo = await prisma.Usuario.findFirst(
             { 
-                where:{rol:'Bacteriologo'}             
+                where:{rol:'Bacteriologo'},
+                select: {
+                    identificacion:true,
+                    nombre:true,
+                    firma:true
+                }
+
             } 
         );
        // console.log(bacteriologo);
         return resp.status(200).json(bacteriologo);
     }catch(error){
-        console.log("Error en controller.informe.js :"+error);
+        console.log("Error en controller.laboratorio.js :"+error);
         resp.status(500).json({ error: 'Error al listar quien firma el laboratorio' });
     }
 }

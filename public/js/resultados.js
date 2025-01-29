@@ -80,7 +80,7 @@ function listarExamenesPorArea(rol,area){
             
           if (element.estado==='En_Proceso_de_Analisis'){
            accionBTN =`<a class="badge badge-pill badge-danger" style="font-size: 0.8rem;" 
-           href="javascript:gestionarResultados(${element.id_examen})" title='Finalizar Análisis'>${element.estado.replace(/_/g," ")}
+           href="javascript:gestionarResultados(${element.id_examen},'${element.factura.paciente.nombres}','${element.observacion}')" title='Finalizar Análisis'>${element.estado.replace(/_/g," ")}
            </a>`;
 
           }
@@ -111,13 +111,13 @@ function listarExamenesPorArea(rol,area){
     
           if(item.estado==='Pendiente'){
             btn_parametro=`<a class="btn btn-warning" 
-            href="javascript:cambiarEstadoResultado(${item.id_resultado},${item.parametro.id_parametro},'${item.resultado}','${item.parametro.valor_referencia}')" 
-            title='Digitar Resultados'> <i class='fas fa-thumbs-down'></i></a>`;
+            href="javascript:cambiarEstadoResultado(${item.id_resultado},'${item.estado}')" 
+            title='Finalizar Resultado'> <i class='fas fa-thumbs-down'></i></a>`;
           }
 
           
           if(item.estado==='Finalizado'){
-            btn_parametro=`<a class="btn btn-success" href="javascript:cambiarEstadoResultado(${item.id_resultado},${item.parametro.id_parametro},'${item.resultado}','${item.parametro.valor_referencia}')" title='Digitar Resultados'> <i class='fas fa-thumbs-up'></i></a>`;
+            btn_parametro=`<a class="btn btn-success" href="javascript:cambiarEstadoResultado(${item.id_resultado},'${item.estado}')" title='Resultado Pendiente'> <i class='fas fa-thumbs-up'></i></a>`;
            
           }
           
@@ -288,9 +288,11 @@ function registrarResulatadosAutomaticos(resultados){
           );
         let rol = localStorage.getItem('rol'); 
         let area = localStorage.getItem('area'); 
-       
+        document.getElementById('btn_finalizar').style.display = 'block';
+        document.getElementById('observacion').style.display = 'block';
         listarExamenesPorArea(rol,area);
-        Frm_resultados.hide();
+       
+       
         }
 
        if(data.status==500){Mensaje.fire({icon: 'warning',title: data.message});}
@@ -310,11 +312,18 @@ function registrarResulatadosAutomaticos(resultados){
 
 
 //=====================================Modulo de digitar los resultados de forma dinamica===============
-async function gestionarResultados(id_examen){
+async function gestionarResultados(id_examen,nombre,observacion){
 
 
   document.getElementById('id_resultado_examen').value=id_examen;
+  document.getElementById('titulo-Frm_resultados').innerHTML='Resultados de : '+nombre;
+
+  //document.querySelector("textarea[id='observacion']").value =observacion ;
   
+  document.getElementById('btn_finalizar').style.display = 'none';
+  document.getElementById('btn_registrar').style.display = 'block';
+  document.getElementById('observacion').style.display = 'none';
+
   await crearFormularioDinamico(id_examen);
   
 
@@ -358,10 +367,19 @@ async function pintarFormulario(data) {
   // Seleccionar el contenedor donde se generará el formulario
   //console.log(data);
   const contenedorFormulario = document.getElementById("formulario-dinamico");
+
+  contenedorFormulario.style.maxHeight = "400px"; // Ajusta la altura según sea necesario
+  contenedorFormulario.style.overflowY = "auto"; // Habilita la barra de desplazamiento vertical
+
+
   contenedorFormulario.innerHTML = ""; // Limpia el contenido del formulario
   
   data.forEach((item, index) => {
     // Crear un contenedor para cada campo
+
+    
+
+
     const div = document.createElement("div");
     div.style.marginBottom = "10px";
 
@@ -408,6 +426,10 @@ async function pintarFormulario(data) {
 
     // Agregar el div al formulario
     contenedorFormulario.appendChild(div);
+   
+
+    
+    
   });
 
   // Limpia y asegura un solo listener en el botón
@@ -423,11 +445,14 @@ async function pintarFormulario(data) {
    // console.log(resultado_json);
    
    await registrarResulatadosAutomaticos(resultado_json);
+   document.getElementById('btn_registrar').style.display = 'none';
+   
   };
 
   // Remover cualquier listener anterior
   btnRegistrar.replaceWith(btnRegistrar.cloneNode(true)); // Clona el botón para resetear listeners
   document.getElementById("btn_registrar").addEventListener("click", nuevoListener);
+
 }
 
 
@@ -435,116 +460,16 @@ async function pintarFormulario(data) {
 
 
 
-
-
-
-
-
-
-
-
-/*
-function listarTipoResultados(id_parametro){
-  const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
-
-  
-
-
-  fetch(`/tipo_resultadoId/${id_parametro}`, {
-    method:'get',
-    headers: {
-      'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
-      'Content-Type': 'application/json' // Especifica el tipo de contenido
-  }   
-})
-.then(response => {
-  // Verificar si la respuesta es JSON
-  const contentType = response.headers.get('content-type');
-  if (contentType && contentType.includes('application/json')) {
-      return response.json();
-  } else {
-      window.location.href = "/";
-  }
-})
-.then(data => {
- 
-  //console.log(data);
-              const datalist = document.getElementById('options-list');
-              if(data.tipos_resultado.length >0){
-                datalist.innerHTML = '';
-                data.tipos_resultado.forEach(option => {
-                  const optionElement = document.createElement('option');
-                    optionElement.value = option.nombre;
-                    datalist.appendChild(optionElement);
-                }); 
-              }else{
-                datalist.innerHTML = '';
-              }
-              
-      });
-}
-*/
-
-
-
-
-
-/*
-function registrarResultado(){
-
-  let id_resultado= document.getElementById('id_resultado_examen').value;
-  let datos= new URLSearchParams();
- 
-
-  datos.append('resultado',document.getElementById('resultado').value);
-
-  const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
-
-  fetch(`/registrarResultado/${id_resultado}`, {
-    method:'put',
-    body:datos,
-    headers: {
-        'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
-        'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
-    }
-})
-.then(response => {
-  // Verificar si la respuesta es JSON
-  const contentType = response.headers.get('content-type');
-  if (contentType && contentType.includes('application/json')) {
-      return response.json();
-  } else {
-      window.location.href = "/";
-  }
-})
-.then(data => {
-
-          if(data.status==403){window.location.href = "/";}
-          
-            if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
-            let rol = localStorage.getItem('rol'); 
-          let area = localStorage.getItem('area'); 
-            listarMuestrasArea(rol,area);
-            Frm_resultados.hide();
-            }
-
-          if(data.status==500){Mensaje.fire({icon: 'warning',title: data.message});}
-    });
-}
-*/
-
-
-
-/*
-function confirmarFinalizarAnalisis(id_examen){
+function confirmarFinalizarResultado(){
   Swal.fire({
-      title: 'Desea finalizar el proceso de Anilisis',
+      title: 'Desea finalizar el proceso de resultado',
       showDenyButton: true,
       confirmButtonText: 'Si',
       denyButtonText: `No`,
   }).then((result) => {
       if (result.isConfirmed) {
-        finzalizarAnalisis(id_examen);
+      let id_examen=  document.getElementById('id_resultado_examen').value;
+      finzalizarResultados(id_examen);
       } else if (result.isDenied) {
           Mensaje.fire({
               icon: 'warning',
@@ -554,14 +479,60 @@ function confirmarFinalizarAnalisis(id_examen){
   })
 
 }
-*/
 
-/*
-function finzalizarAnalisis(id_examen){
+
+
+function finzalizarResultados(id_examen){
+  const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+
+  let datos= new URLSearchParams();
+  datos.append('observacion',document.getElementById('observacion').value);
+  
+  fetch(`finzalizarResultados/${id_examen}`, {
+      method:'put',
+      body:datos,
+      headers: {
+        'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+        'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
+   
+      }
+  })
+  .then(response => {
+    // Verificar si la respuesta es JSON
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+        return response.json();
+    } else {
+       window.location.href = "/";
+    }
+  })
+  .then(data => {
+
+       if(data.status==403){window.location.href = "/";}
+       
+        if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
+        let rol = localStorage.getItem('rol'); 
+        let area = localStorage.getItem('area'); 
+        listarExamenesPorArea(rol,area);
+        Frm_resultados.hide();
+        }
+
+       if(data.status==500){Mensaje.fire({icon: 'warning',title: data.message});}
+       
+  });
+
+}
+
+
+
+
+
+
+function cambiarEstadoResultado(id_resultado,estado){
   const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
   
-  fetch(`finzalizarAnalisis/${id_examen}`, {
+  fetch(`cambiarEstadoResultado/${id_resultado}/${estado}`, {
       method:'put',
       headers: {
           'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
@@ -584,24 +555,14 @@ function finzalizarAnalisis(id_examen){
         if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
         let rol = localStorage.getItem('rol'); 
         let area = localStorage.getItem('area'); 
-  
-        listarMuestrasArea(rol,area);
+        listarExamenesPorArea(rol,area);
         }
 
        if(data.status==500){Mensaje.fire({icon: 'warning',title: data.message});}
        
-  
   });
 
-
-
-
 }
-
-*/
-
-
-
 
 
 

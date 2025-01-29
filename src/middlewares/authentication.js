@@ -39,7 +39,7 @@ export  const validarUsuario=async(req,resp)=>{
                     { expiresIn: '8h' } 
                 );
 
-console.log(existenciaLogin);
+            //console.log(existenciaLogin);
                 const usuario = await prisma.usuario.update(
                     {
                         where:{id_usuario: Number(existenciaLogin.id_usuario)},

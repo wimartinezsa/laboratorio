@@ -101,6 +101,8 @@ model Examen {
   fecha_muestra   DateTime?
   fecha_analisis  DateTime?
   fecha_resultado DateTime?
+  profesional     String?       @db.VarChar(50)
+  firma           String?       @db.VarChar(100)
   estado          Estado_Examen @default(Solicitado)
   observacion     String?       @db.VarChar(200)
   procedimientoId Int

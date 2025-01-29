@@ -10,7 +10,37 @@ moment.defineLocale('es', {
 
 
 
-    async function Laboratorio(id_autorizacion) {
+
+
+
+    async function firmaLaboratorioBacteriologo(token) {
+        try {
+           // Asegúrate de que el token esté almacenado con la clave correcta
+            const response = await fetch('/firmaLaboratorioBacteriologo', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Error en la petición: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            return data; // Retorna la data correctamente
+        } catch (error) {
+            console.error("Error al obtener la firma:", error);
+            return null; // En caso de error, retorna null o maneja según necesites
+        }
+    }
+
+
+
+
+
+    let  Laboratorio= async(id_autorizacion)=>{
         /* ============fecha formateada==================== */
         var fecha = new Date();
         var ano = fecha.getFullYear();
@@ -20,28 +50,18 @@ moment.defineLocale('es', {
         if (dia < 10) { dia = "0" + dia }
         var fechaFormat = dia + "/" + mes + "/" + ano;
         /* ===================================================== */
-        const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
     let nombre_firma='';
     let cedula_firma='';
     let imagen_firma='';
-      await  fetch('/firmaLaboratorio', {
-            method: 'get',
-            headers: {
-                'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
-                'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
-            }
-        })
-            .then(res => res.json())
-            .then(data => {
-               
-                nombre_firma= data.nombre;
-                cedula_firma= data.identificacion;
-                imagen_firma= data.firma;
-                
-    });
 
- 
+   
 
+
+    const token = localStorage.getItem('token'); 
+    const firma_bacteriologo = await firmaLaboratorioBacteriologo(token);
+    nombre_firma= firma_bacteriologo.nombre;
+    cedula_firma= firma_bacteriologo.identificacion;
+    imagen_firma= firma_bacteriologo.firma;
 
     await  fetch('/generarLaboratorio/' + id_autorizacion, {
             method: 'get',
@@ -55,13 +75,17 @@ moment.defineLocale('es', {
 
                 if (data) {
                     const doc = new jsPDF();
+                    
 
                     let y = 10; // Posición inicial vertical
                     const pageHeight = 290; // Altura de la página (A4)
                     const margin = 10; // Margen adicional para evitar desbordamientos
+                    
     
                     data.forEach( element=> {
                         // Información básica
+
+                       
 
                         doc.setFontSize(14);
                         doc.text(35, y, 'LABORATORIO CLINICO ESPECIALIZADO DEL SUR IPS S.A.S.');
@@ -137,6 +161,9 @@ moment.defineLocale('es', {
                         const examenes = element.examen;
                         for (const examen of examenes) {
                             // Título del examen
+                           
+
+
                             y += 5;
                           
                                 // Centrar el texto del CUPS en la página
@@ -235,15 +262,14 @@ moment.defineLocale('es', {
                             y+=3; 
                             doc.text(10, y, `Fecha/Hora Resultado : ${moment(examen.fecha_resultado).format('LLLL') }`);  
                             y+=3; 
-                            let valido='';
-                            
-                            examen.procedimiento.area.vinculacion.forEach((item) => {
-                                
-                                valido+='-'+item.usuario.nombre;
-                               
-                            });
-                            doc.text(10, y, `Validó : ${valido} `);  
+                           
+
+                           
+                          
+                            doc.text(10, y, `Validó : ${examen.profesional}`);  
                             y+=2; 
+                           
+                            
                            
                         }
 
@@ -324,8 +350,7 @@ moment.defineLocale('es', {
     
 
 
-
-
+  
     function calcularEdad(fechaNacimiento) {
         const hoy = new Date();
         const nacimiento = new Date(fechaNacimiento);

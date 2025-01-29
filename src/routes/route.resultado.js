@@ -2,10 +2,10 @@ import { Router } from "express";
 import {validarToken} from "../middlewares/authentication.js";
 import {
         listarExamenesPorArea,
-        //registrarResultado,
         registrarResulatadosAutomaticos,
-       // finzalizarAnalisis,
-       listarParametrosExamen
+        finzalizarResultados,
+        listarParametrosExamen,
+        cambiarEstadoResultado
         
         
         } from "../controllers/controller.resultado.js";
@@ -21,13 +21,14 @@ route.put('/registrarResulatadosAutomaticos',validarToken,registrarResulatadosAu
 
 route.get('/listarParametrosExamen/:id_examen',validarToken,listarParametrosExamen);
 
-//route.put('/registrarResultado/:id_resultado',validarToken,registrarResultado);
-//route.put('/finzalizarAnalisis/:id_examen',validarToken,finzalizarAnalisis);
+
+route.put('/finzalizarResultados/:id_examen',validarToken,finzalizarResultados);
+
+
+route.put('/cambiarEstadoResultado/:id_resultado/:estado',validarToken,cambiarEstadoResultado);
 
 
 
-
-//route.get('/tipo_resultadoId/:id_parametro',validarToken,listarParametrosId);
 
 
 

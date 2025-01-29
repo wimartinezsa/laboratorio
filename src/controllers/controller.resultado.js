@@ -4,7 +4,7 @@ import prisma from '../libs/prisma.js'
 
 
 
-
+//Listar todos los examens por área
 export  const listarExamenesPorArea=async(req,resp)=>{
     try{
        
@@ -106,63 +106,49 @@ export  const listarExamenesPorArea=async(req,resp)=>{
 
 
 
-// Se registra el resultado individual por parametros
-/*
-export const registrarResultado = async (req, resp) => {
+// Finalizar el proceso de digitar resultados
+export const finzalizarResultados = async (req, resp) => {
     try {
-        let {resultado} = req.body;
-     
-        let id_resultado= req.params.id_resultado;
-    
-        await prisma.Resultado.updateMany({
+       let user= req.user;
+
+        let id_examen= req.params.id_examen;
+        let observacion= req.body.observacion;
+        
+
+        let usuario=  await prisma.Usuario.findUnique({
             where: {
-                id_resultado: Number(id_resultado)
-            },
-            data: {
-                resultado: resultado,
-                estado:'Finalizado'
+                id_usuario: Number(user.id)
             }
         });
 
-        
-        resp.status(200).json({ status: 200, message: "Se registro el resultado del examen" });
-       
-    } catch (error) {
-        console.error("Error en controller.resultado.js:", error);
-        resp.status(500).json({ status: 500, message: "Error al registrar el resultado del parametro" });
-    }
-};
-*/
-
-
-
-
-/*
-export const finzalizarAnalisis = async (req, resp) => {
-    try {
-       
-        let id_examen= req.params.id_examen;
-       // console.log('examen',id_examen);
         await prisma.Examen.update({
             where: {
                 id_examen: Number(id_examen)
             },
             data: {
                 fecha_resultado:new Date(),
-                estado:'Resultados_Listos'
+                estado:'Resultados_Listos',
+                observacion:observacion,
+                profesional:usuario.nombre,
+                firma: usuario.firma
             }
         });
 
+      
+
+
         
-        resp.status(200).json({ status: 200, message: "Analisis Finalizado" });
+ 
+        
+        resp.status(200).json({ status: 200, message: "Resultados  Finalizado" });
        
     } catch (error) {
         console.error("Error en controller.resultado.js:", error);
-        resp.status(500).json({ status: 500, message: "Error al finalizar el proceso de Analisis" });
+        resp.status(500).json({ status: 500, message: "Error al finalizar el proceso de resultado" });
     }
 };
 
-*/
+
 
 
 // se registra el json con los resultados de los parametros
@@ -238,9 +224,7 @@ export const registrarResulatadosAutomaticos = async (req, resp) => {
 
 
 
-
-
-
+// se listan los parametros para geenrar el formulario dinamico para digitar los resultados
 export  const listarParametrosExamen=async(req,resp)=>{
     try{
        let id_examen = req.params.id_examen;
@@ -267,3 +251,35 @@ export  const listarParametrosExamen=async(req,resp)=>{
         resp.status(500).json({"status":500,"message": 'Error al listar los resultados del examen' });
     }
 }
+
+
+
+
+// Finalizar el proceso de digitar resultados
+export const cambiarEstadoResultado = async (req, resp) => {
+    try {
+       
+        let id_resultado= req.params.id_resultado;
+        let estado= req.params.estado;
+        if(estado==='Finalizado'){
+            estado='Pendiente';
+        }else{
+            estado='Finalizado';
+        }
+      
+        await prisma.Resultado.update({
+            where: {
+                id_resultado: Number(id_resultado)
+            },
+            data: {
+                estado:estado
+            }
+        });
+
+        resp.status(200).json({ status: 200, message: "Resultado "+ estado });
+       
+    } catch (error) {
+        console.error("Error en controller.resultado.js:", error);
+        resp.status(500).json({ status: 500, message: "Error al cambiar estado del resultado" });
+    }
+};
