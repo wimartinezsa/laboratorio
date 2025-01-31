@@ -236,6 +236,7 @@ export  const registrarParametro=async(req,resp)=>{
                     metodo: datos.metodo,
                     unidad: datos.unidad,
                     procedimientoId: Number(datos.id_procedimiento),
+                    tipo_parametroId: Number(datos.tipo_parametro)
                 }
             } 
         );
@@ -254,9 +255,13 @@ export  const listarParametroId=async(req,resp)=>{
        
         const parametros = await prisma.Parametro.findMany(
             {
-                where:{procedimientoId:Number(id_procedimiento)},
+                where:{
+                    procedimientoId:Number(id_procedimiento),
+                    estado:'Activo'
+                },
                 include:{
-                    tipo_resultado:true
+                    tipo_resultado:true,
+                    tipo_parametro:true
                 }
               
             }
@@ -270,19 +275,38 @@ export  const listarParametroId=async(req,resp)=>{
 }
 
 
+export  const listarTipoParametro=async(req,resp)=>{
+    try{
+        const tipo_Parametro = await prisma.tipo_Parametro.findMany();
+        return resp.status(200).json(tipo_Parametro);      
+    }catch(error){
+        console.log("Error en controller.procedimiento.js :"+error);
+        return resp.status(500).json({"status":500,"message":"Error al listar los tipos de parametro"});
+    }
+}
+
+
+
+
+
+
+
 export  const eliminarParametro=async(req,resp)=>{
     try{
         const id_parametro= req.params.id_parametro;
        
-        const parametros = await prisma.Parametro.delete(
+        const parametros = await prisma.Parametro.update(
             {
-                where:{id_parametro:Number(id_parametro)}
+                where:{id_parametro:Number(id_parametro)},
+                data:{
+                    estado:'Inactivo'
+                }
             }
         );
         return resp.status(200).json({"status":200,"message":"Parametro Eliminado"});      
     }catch(error){
         console.log("Error en controller.procedimiento.js :"+error);
-        return resp.status(500).json({"status":500,"message":"Error al elimnarparametros"});
+        return resp.status(500).json({"status":500,"message":"Error al eliminar parametro"});
        
     }
 }

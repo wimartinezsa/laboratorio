@@ -221,31 +221,41 @@ moment.defineLocale('es', {
     
                             // Resultados
                             doc.setFontSize(8);
-                            let grupo='';
+                            
+                            let tipo_parametro='';
                             for (const resultado of examen.resultado) {
                                
-                               
-
                                  const valorReferencia = `${resultado.parametro.valor_referencia}`;
                                 //const maxWidth = 50; // Ancho máximo para la columna "VALOR DE REFERENCIA"
 
                                 // Usamos una expresión regular para dividir el texto en partes cada vez que encontremos una letra mayúscula
-                                const valorReferenciaParts = valorReferencia.split(/(?=[A-Z])/); // La expresión regular divide justo antes de la mayúscula
-
+                                const valorReferenciaParts = valorReferencia.split(/;/); // La expresión regular divide justo antes de la mayúscula
+                                
                                 const valorReferenciaLines = valorReferenciaParts.map(part => {
                                     return doc.splitTextToSize(part.trim(), 60); // Trim para eliminar espacios adicionales
                                 });
+                                
 
                                  // Aplanar el array de líneas (ya que splitTextToSize devuelve un array para cada parte)
                                 const formattedValorReferencia = valorReferenciaLines.flat().join('\n'); // Unir todo con salto de línea
 
                                 //console.log(valorReferenciaLines.length)
                                 
-                                doc.text(10, y, `${resultado.parametro.nombre}`); // Columna 1
+                                
+
+                                if( (resultado.parametro.tipo_parametro.nombre.trim() !== tipo_parametro.trim()) && resultado.parametro.tipo_parametro.id_parametro!=1 ){
+                                    doc.text(10, y, `${resultado.parametro.tipo_parametro.nombre}`); // Columna 1
+                                    tipo_parametro=resultado.parametro.tipo_parametro.nombre;
+                                    y += 4;
+                                }
+
+
+                                doc.text(13, y, `${resultado.parametro.nombre}`); // Columna 1
                                 doc.text(70, y, `${resultado.resultado}`);     // Columna 2
                                 doc.text(110, y, `${resultado.parametro.unidad}`);                       // Columna 3 (Placeholder)
                                 doc.text(135, y, `${formattedValorReferencia}`);                       // Columna 4 (Placeholder)
-                                // Dibujar línea horizontal después de la fila
+                                    // Dibujar línea horizontal después de la fila
+
                                
                                 y += 4;
                                 

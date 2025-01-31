@@ -75,6 +75,10 @@ function listarMuestrasArea(rol,area){
         if(data.status==403){window.location.href = "/";}
         if(data.status==200){
           //for que recorrelos examenes
+          
+
+
+
         data.examenes.forEach(element => {
 
           accionBTN =`<a class="badge badge-success badge-warning" style="font-size: 0.8rem;" href="javascript:iniciarProcesoAnalisis(${element.id_examen})" title='Iniciar Proceso de Análisis'>${element.estado.replace(/_/g," ")}</a>`;
@@ -96,6 +100,9 @@ function listarMuestrasArea(rol,area){
                   `;
         let resultados = element.resultado;
         resultados.forEach(item=>{
+
+            if (item.parametro.estado === 'Activo') {
+                
         let btn_parametro='';
         let estado_parametro='';
     
@@ -122,9 +129,8 @@ function listarMuestrasArea(rol,area){
               <td>${item.resultado}</td>
               <td>${item.estado}</td>
             </tr>`; 
-
-          
-      
+ 
+        }
      
               
             

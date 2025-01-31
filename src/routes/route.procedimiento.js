@@ -12,7 +12,8 @@ import {listarProcedimientos,
         eliminarParametro,
         listarAreas,
         registrarTipoResultado,
-        eliminarTipoResultado
+        eliminarTipoResultado,
+        listarTipoParametro
         } 
         from "../controllers/controller.procedimiento.js";
 
@@ -38,6 +39,9 @@ route.post('/tipo_resultado',validarToken,registrarTipoResultado);
 route.delete('/tipo_resultado/:id_tipo_resultado',validarToken,eliminarTipoResultado);
 
 route.get('/area',listarAreas);
+
+route.get('/listarTipoParametro',listarTipoParametro);
+
 
 
 

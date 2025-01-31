@@ -87,7 +87,11 @@ export  const generarLaboratorio=async(req,resp)=>{
                                 include:{
                                     resultado:{
                                         include:{
-                                            parametro:true
+                                            parametro:{
+                                                include:{
+                                                    tipo_parametro:true
+                                                }
+                                            }
                                         }       
                                 },
                                 procedimiento:{

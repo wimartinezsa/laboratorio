@@ -125,7 +125,7 @@ export  const registrarFactura=async(req,resp)=>{
                 }
             }  
         );
-        console.log(factura);
+       // console.log(factura);
         // se actualiza la autorización 
         if (factura){
 

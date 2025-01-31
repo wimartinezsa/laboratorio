@@ -198,16 +198,32 @@ model Tipo_Resultado {
   @@map("tipo_resultados")
 }
 
+
+
+model Tipo_Parametro {
+  id_tipo_parametro Int       @id @default(autoincrement())
+  nombre            String    @db.VarChar(50)
+  parametro Parametro[]
+  @@map("tipo_parametros")
+}
+
+
+
+
 model Parametro {
   id_parametro     Int              @id @default(autoincrement())
   nombre           String           @db.VarChar(50)
   metodo           String           @db.VarChar(30)
   unidad           String?          @db.VarChar(30)
   valor_referencia String?          @db.VarChar(300)
+  estado           Estado           @default(Activo)
   procedimientoId  Int
   procedimiento    Procedimiento    @relation(fields: [procedimientoId], references: [id_procedimiento])
   resultado        Resultado[]
   tipo_resultado   Tipo_Resultado[]
+
+  tipo_parametro    Tipo_Parametro    @relation(fields: [tipo_parametroId], references: [id_tipo_parametro])
+  tipo_parametroId Int
 
   @@index([procedimientoId], map: "parametros_procedimientoId_fkey")
   @@map("parametros")
@@ -265,7 +281,6 @@ model Vinculacion {
 
    usuario                Usuario?      @relation(fields: [usuarioId], references: [id_usuario])
    usuarioId              Int
-
    area                Area?      @relation(fields: [areaId], references: [id_area])
    areaId              Int
 

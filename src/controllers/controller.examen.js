@@ -25,7 +25,9 @@ export  const agregarExamenesFactura=async(req,resp)=>{
             const paremetros = await prisma.procedimiento.findMany({
                 where: { id_procedimiento:Number(examen.procedimientoId)},
                 include:{
-                    parametro:true
+                    parametro: {
+                        where: { estado: 'Activo' } // Filtra solo parámetros activos
+                    }
                 }
               });
                 if(paremetros){

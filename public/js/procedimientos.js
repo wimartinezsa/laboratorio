@@ -74,6 +74,11 @@ function listarProcedimientosServicioId(id_servicio){
               :
               `<a class="btn btn-danger" href="javascript:activarProcediemiento(${element.id_procedimiento},'Activo')" title='Activar Acuerdo'><i class="nav-icon fas fa-check-circle"></i></a>`;
 
+
+              
+
+
+
         let dato = {
                     id_procedimiento : element.id_procedimiento,
                     servicio :element.servicio.nombre,
@@ -442,6 +447,8 @@ async function getionarParametros(id_procedimiento){
     document.getElementById('procedimiento').value=id_procedimiento;
     document.getElementById('parametro').value='';
 
+    await listarTipoParametro();
+
    await listarParametroId(id_procedimiento)
    await Frm_parametros.show();
 
@@ -456,6 +463,10 @@ function registrarParametro(){
     datos.append('valor_referencia',document.getElementById('valor_referencia').value);
     datos.append('unidad',document.getElementById('unidad').value);
     datos.append('metodo',document.getElementById('metodo').value);
+    datos.append('tipo_parametro',document.getElementById('tipo_parametro').value);
+    
+
+
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
     fetch('/parametro',
@@ -516,6 +527,33 @@ function listarFinalidad(){
 
 
 
+function listarTipoParametro(){
+    fetch(`/listarTipoParametro`, {
+               method:'get'    
+           })
+           .then(response => {
+            // Verificar si la respuesta es JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                window.location.href = "/";
+            }
+          })
+           .then(data => {
+             
+              let html=``;
+               data.forEach(element => {
+               html+=`<option value='${element.id_tipo_parametro}'> ${element.nombre}</option>`;
+               });   
+               document.getElementById('tipo_parametro').innerHTML = html;  
+           });
+}
+
+
+
+
+
 
 function listarParametroId(id_procedimiento){
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
@@ -543,9 +581,15 @@ function listarParametroId(id_procedimiento){
         let html='';
            
         data.parametros.forEach(element => {
+
+         
+            
+
+            
             let tipo_respuesta= element.tipo_resultado;
            let lista_tipos='';
             tipo_respuesta.forEach(tipo =>{
+
                 lista_tipos +=`${tipo.nombre}
                 <a  href="javascript:eliminarTipoResultado(${tipo.id_tipo_resultado})" title='Elimina Tipo de Resultado'><i class='fas fa-trash'></i></a>
                 <br>`;
@@ -555,11 +599,24 @@ function listarParametroId(id_procedimiento){
         html+=`<td>${element.unidad}</td>`;
         html+=`<td>${element.valor_referencia}</td>`;
         html+=`<td>${element.metodo}</td>`;
+        html+=`<td>${element.tipo_parametro.nombre}</td>`;
         html+=`<td>${lista_tipos}</td>`;
-        html+=`<td>
-        <a class="btn btn-primary" href="javascript:eliminarParametro(${element.id_parametro})" title='Eliminar Parametro'><i class='fas fa-archive'></i></a>
-                <a class="btn btn-primary" href="javascript:gestionarTipoResultado(${element.id_parametro})" title='Agregar Tipo de Resultado'><i class='fas fa-hand-holding-medical'></i></a>
-        </td>`;
+
+        if(element.metodo==='Manual'){
+
+            html+=`<td>
+            <a class="btn btn-primary" href="javascript:eliminarParametro(${element.id_parametro})" title='Eliminar Parametro'><i class='fas fa-archive'></i></a>
+                    <a class="btn btn-primary" href="javascript:gestionarTipoResultado(${element.id_parametro})" title='Agregar Tipo de Resultado'><i class='fas fa-hand-holding-medical'></i></a>
+            </td>`;
+        }else{
+            html+=`<td>
+            <a class="btn btn-primary" href="javascript:eliminarParametro(${element.id_parametro})" title='Eliminar Parametro'><i class='fas fa-archive'></i></a>
+                   
+            </td>`;
+
+        }
+
+      
         html+=`</tr>`;
 
        });

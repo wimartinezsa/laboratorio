@@ -105,37 +105,41 @@ function listarExamenesPorArea(rol,area){
         
         resultados.forEach(item=>{
           
-
-        let btn_parametro='';
-        let estado_parametro='';
-    
-          if(item.estado==='Pendiente'){
-            btn_parametro=`<a class="btn btn-warning" 
-            href="javascript:cambiarEstadoResultado(${item.id_resultado},'${item.estado}')" 
-            title='Finalizar Resultado'> <i class='fas fa-thumbs-down'></i></a>`;
-          }
-
+          if (item.parametro.estado === 'Activo') {
+              let btn_parametro='';
+              let estado_parametro='';
           
-          if(item.estado==='Finalizado'){
-            btn_parametro=`<a class="btn btn-success" href="javascript:cambiarEstadoResultado(${item.id_resultado},'${item.estado}')" title='Resultado Pendiente'> <i class='fas fa-thumbs-up'></i></a>`;
-           
-          }
-          
-          if(item.parametro.metodo==='Automatico'){
-            estado_parametro=`<span class="badge badge-pill badge-danger" style="font-size: 0.8rem;">${item.id_resultado}</span>`;
-          }
-          else{
-             estado_parametro=`<span class="badge badge-pill badge-secondary" style="font-size: 0.8rem;">${item.id_resultado}</span>`
-          }
-         
-          tabla+=`
-            <tr>
-             <td>${estado_parametro}</td>
-             <td>${item.parametro.metodo}</td>
-              <td>${item.parametro.nombre}</td>
-              <td>${item.resultado}</td>
-              <td>${btn_parametro}</td>
-            </tr>`;        
+                if(item.estado==='Pendiente'){
+                  btn_parametro=`<a class="btn btn-warning" 
+                  href="javascript:cambiarEstadoResultado(${item.id_resultado},'${item.estado}')" 
+                  title='Finalizar Resultado'> <i class='fas fa-thumbs-down'></i></a>`;
+                }
+
+                
+                if(item.estado==='Finalizado'){
+                  btn_parametro=`<a class="btn btn-success" href="javascript:cambiarEstadoResultado(${item.id_resultado},'${item.estado}')" title='Resultado Pendiente'> <i class='fas fa-thumbs-up'></i></a>`;
+                
+                }
+                
+                if(item.parametro.metodo==='Automatico'){
+                  estado_parametro=`<span class="badge badge-pill badge-danger" style="font-size: 0.8rem;">${item.id_resultado}</span>`;
+                }
+                else{
+                  estado_parametro=`<span class="badge badge-pill badge-secondary" style="font-size: 0.8rem;">${item.id_resultado}</span>`
+                }
+              
+                tabla+=`
+                  <tr>
+                  <td>${estado_parametro}</td>
+                  <td>${item.parametro.metodo}</td>
+                    <td>${item.parametro.nombre}</td>
+                    <td>${item.resultado}</td>
+                    <td>${btn_parametro}</td>
+                  </tr>`;        
+
+              }
+
+
       });
      tabla+='</tbody></table>'
       //console.log(element);

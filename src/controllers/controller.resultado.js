@@ -73,8 +73,10 @@ export  const listarExamenesPorArea=async(req,resp)=>{
             },
             resultado: {
                 include: {
-                parametro: true,
-                },
+                    parametro: {
+                        where: { estado: 'Activo' } // Filtra solo parámetros con estado 'Activo'
+                    }
+                }
             },
             procedimiento: {
                 include: {

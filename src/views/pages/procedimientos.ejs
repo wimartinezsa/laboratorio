@@ -202,7 +202,6 @@
            
             <input type="number" id='procedimiento' readonly="true" hidden="true">
 
-
               <div class="accordion" id="accordionExample">
                 <div class="card">
                   <div class="card-header" id="headingOne">
@@ -225,22 +224,25 @@
 
                             <div class="row">
                                   
-                          
-                                <div class="col-6">
-                                    <label for="message-text" class="col-form-label">Unidad de medida:</label>
-                                    <input type="text" class="form-control" id='unidad'
-                                        style="border: 1px solid rgb(208, 205, 205)"
-                                        placeholder="Digite la unidad de medida" >
-                                </div>
+                                    <div class="col-3">
+                                        <label for="message-text" class="col-form-label">Grupo:</label>
+                                        <select id='tipo_parametro' class="form-control" required></select>
+                                    </div>
+                                    <div class="col-4">
+                                          <label for="message-text" class="col-form-label">Unidad de medida:</label>
+                                          <input type="text" class="form-control" id='unidad'
+                                              style="border: 1px solid rgb(208, 205, 205)"
+                                              placeholder="Digite la unidad de medida" >
+                                    </div>
 
-                                <div class="col-6">
-                                  <label for="message-text" class="col-form-label">Metodo de Analisis:</label>
-                                  <select id='metodo' class="form-control" required>
-                                    <option value="" disabled="true" selected="true">Seleccione un Método</option>
-                                    <option value="Manual">Manual</option>
-                                    <option value="Automatico">Automático</option>
-                                  </select>
-                                </div>
+                                    <div class="col-4">
+                                        <label for="message-text" class="col-form-label">Metodo de Analisis:</label>
+                                        <select id='metodo' class="form-control" required>
+                                          <option value="" disabled="true" selected="true">Seleccione un Método</option>
+                                          <option value="Manual">Manual</option>
+                                          <option value="Automatico">Automático</option>
+                                        </select>
+                                    </div>
                                   
                             </div>
 
@@ -262,9 +264,6 @@
                     </div>
                   </div>
                 </div>
-
-               
-              
               </div>
 
 
@@ -272,24 +271,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-              
-
-
-              
 
 
 
@@ -304,6 +285,7 @@
                             <th>Unidad</th>
                             <th>Rango Biologico</th>
                             <th>Metodo</th>
+                            <th>Grupo</th>
                             <th>Respuestas</th>
                             <th>Admin.</th>
                         </tr>
