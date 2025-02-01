@@ -45,6 +45,18 @@ var Frm_acuerdos = new bootstrap.Modal(document.getElementById('Frm_acuerdos'), 
 
 
 
+$(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
+
+});
+
+
 function listarContratos(){
 
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
