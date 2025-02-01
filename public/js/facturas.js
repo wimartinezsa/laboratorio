@@ -45,6 +45,17 @@ var Frm_estado_prestacion = new bootstrap.Modal(document.getElementById('Frm_est
 
 
 
+$(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
+
+});
+
 
 
 

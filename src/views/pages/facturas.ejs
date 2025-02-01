@@ -17,7 +17,8 @@
  <!-- Theme style -->
  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
 
-
+ <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
+ <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -190,7 +191,7 @@
                 </div>
       
                 <div class="col-3">
-                  <select id="procedimiento_acordados" class="form-control" onchange="obtenerPrecio()"></select>
+                  <select id="procedimiento_acordados" class="form-control select2bs4" onchange="obtenerPrecio()"></select>
                 </div>
                 <div class="col-4">
                   <input type="number" id='precio' class="form-control" placeholder="Digíte el precio">
@@ -325,6 +326,8 @@
 <script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+
+<script src="/plugins/select2/js/select2.full.min.js"></script>
 
 
 <script src="/js/generar_factura.js"></script>
