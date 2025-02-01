@@ -287,13 +287,14 @@ function registrarResulatadosAutomaticos(resultados){
        if(data.status==403){window.location.href = "/";}
        
         if(data.status===200){
+          Frm_resultados.hide();
           Mensaje.fire({icon: 'success',title: data.message}
+          
 
           );
         let rol = localStorage.getItem('rol'); 
         let area = localStorage.getItem('area'); 
-        document.getElementById('btn_finalizar').style.display = 'block';
-        document.getElementById('observacion').style.display = 'block';
+      
         listarExamenesPorArea(rol,area);
        
        
@@ -324,9 +325,9 @@ async function gestionarResultados(id_examen,nombre,observacion){
 
   //document.querySelector("textarea[id='observacion']").value =observacion ;
   
-  document.getElementById('btn_finalizar').style.display = 'none';
-  document.getElementById('btn_registrar').style.display = 'block';
-  document.getElementById('observacion').style.display = 'none';
+ 
+
+
 
   await crearFormularioDinamico(id_examen);
   
@@ -409,22 +410,40 @@ async function pintarFormulario(data) {
   }
 
   if(item.parametro.metodo==='Manual'){
+ // si tiene tipos de resultado se crea un select
+ 
+    if(item.parametro.tipo_resultado.length > 0){
         // Crear un campo de entrada
-      const select = document.createElement("select");
-      select.id = `parametro-${item.id_resultado}`; // Asignar un id único al select
-      select.name = item.id_resultado; // Asignar el nombre del parámetro
-      select.classList.add("form-control", "mb-3");
-      // Opciones de ejemplo (puedes cambiar esto dinámicamente)
+        const select = document.createElement("select");
+        select.id = `parametro-${item.id_resultado}`; // Asignar un id único al select
+        select.name = item.id_resultado; // Asignar el nombre del parámetro
+        select.classList.add("form-control", "mb-3");
+        // Opciones de ejemplo (puedes cambiar esto dinámicamente)
+        
+        item.parametro.tipo_resultado.forEach(opcion => {
+          const option = document.createElement("option");
+          option.value = opcion.nombre;
+          option.textContent = opcion.nombre;
+          select.appendChild(option);
+      });
+      select.value=item.resultado;
+          div.appendChild(select);
+    }else{
+
+        // Crear un campo de entrada
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = ""; // Inicialmente vacío
+    input.id = `parametro-${item.id_resultado}`; // Asignar un id único al input
+    input.placeholder = 'Digite ' + item.parametro.nombre;
+    input.name = item.id_resultado; // Asignar el nombre del parámetro
+    input.value = item.resultado;
+    input.classList.add("form-control", "mb-3");
+    div.appendChild(input);
+    }
+
+
       
-      item.parametro.tipo_resultado.forEach(opcion => {
-        const option = document.createElement("option");
-        option.value = opcion.nombre;
-      
-        option.textContent = opcion.nombre;
-        select.appendChild(option);
-    });
-    select.value=item.resultado;
-        div.appendChild(select);
 
   }
 
@@ -449,7 +468,7 @@ async function pintarFormulario(data) {
    // console.log(resultado_json);
    
    await registrarResulatadosAutomaticos(resultado_json);
-   document.getElementById('btn_registrar').style.display = 'none';
+  
    
   };
 

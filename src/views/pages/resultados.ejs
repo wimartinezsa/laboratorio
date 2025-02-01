@@ -124,20 +124,42 @@
           </button>
         </div>
                 <div class="modal-body">
+
+
                   <input type="number" id='id_resultado_examen' hidden="true" disabled="true">
-                
-                    <div id="formulario-dinamico">
 
+
+                  <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                      <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Digitar Resultado del Analisis</button>
+                      <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Finalizar Proceso de Analisis</button>
                     </div>
+                  </nav>
+                  <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active  " id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                      
+                      <div id="formulario-dinamico"></div> 
+                      <button type="button" id="btn_registrar" class="btn btn-success d-block mx-auto" >Actualizar</button>
+        
+                    </div>
+                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+        
+                      <textarea id="observacion" cols="100" rows="3" placeholder="Digite una observación a los resultados de los examenes"></textarea>
+                      <button type="button" id="btn_finalizar" class="btn btn-danger d-block mx-auto" onclick="confirmarFinalizarResultado()">Finalizar Resultado</button>
+       
+                    </div>
+                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+                  </div>
+        
 
-                    <textarea id="observacion" cols="100" rows="3" placeholder="Digite una observación a los resultados de los examenes"></textarea>
-                </div>
+                   
+               
+                  </div>
                
 
         <div class="modal-footer justify-content-center">
-          <button type="button" id="btn_registrar" class="btn btn-success" >Actualizar</button>
-          <button type="button" id="btn_finalizar" class="btn btn-danger" onclick="confirmarFinalizarResultado()">Finalizar Resultado</button>
-       
+          
+         
         </div>
        
       </div>

@@ -242,8 +242,8 @@ moment.defineLocale('es', {
                                 //console.log(valorReferenciaLines.length)
                                 
                                 
-
-                                if( (resultado.parametro.tipo_parametro.nombre.trim() !== tipo_parametro.trim()) && resultado.parametro.tipo_parametro.id_parametro!=1 ){
+                                //&& resultado.parametro.tipo_parametro.id_parametro!='1'
+                                if( (resultado.parametro.tipo_parametro.nombre.trim() !== tipo_parametro.trim())  ){
                                     doc.text(10, y, `${resultado.parametro.tipo_parametro.nombre}`); // Columna 1
                                     tipo_parametro=resultado.parametro.tipo_parametro.nombre;
                                     y += 4;
