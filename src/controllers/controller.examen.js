@@ -15,6 +15,7 @@ export  const agregarExamenesFactura=async(req,resp)=>{
                     estado:'Solicitado',
                     observacion : '',
                     cantidad:1,
+                    estado_pago:'Pendiente_Pago',
                     precio:Number(datos.precio),
                     facturaId:Number(datos.id_factura),
                     procedimientoId:Number(datos.id_procedimiento)

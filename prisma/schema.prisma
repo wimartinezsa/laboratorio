@@ -103,7 +103,9 @@ model Examen {
   fecha_resultado DateTime?
   profesional     String?       @db.VarChar(50)
   firma           String?       @db.VarChar(100)
-  estado          Estado_Examen @default(Solicitado)
+  estado          Estado_Examen? @default(Solicitado)
+  estado_pago    Estado_Pago? @default(Pendiente_Pago)
+  fecha_pago DateTime?
   observacion     String?       @db.VarChar(200)
   procedimientoId Int
   facturaId       Int
@@ -415,6 +417,14 @@ enum Estado_Factura {
   Cobro
   Pagado
   Anulado
+}
+
+
+
+enum Estado_Pago {
+  Pendiente_Pago
+  Cobro
+  Pagado
 }
 
 enum Via_Ingreso {
