@@ -13,36 +13,37 @@ export  const listarExamenesPorArea=async(req,resp)=>{
       
        if(rol==='Administrador' ||  rol==='Bacteriologo'){
 
-        const examenes = await prisma.Examen.findMany(
-            { 
-                where: {
-                    estado: { 
-                        in: ['En_Proceso_de_Analisis'] // Filtra por estado
-                      }          
-                  },
-                include:{
-                    factura:{
-                        include:{
-                            paciente:true
-                        }
-                    },
-                    resultado:{
-                        include:{
-                            parametro:true
-                        }
-                    },
-                    procedimiento:{
-                        include:{
-                            cups:true,
-                            area:true
-                        }
-                    }
-                    
-                }         
-            } 
-        );
 
-      
+        const examenes = await prisma.Examen.findMany({
+            where: {
+                OR: [
+
+                  
+                   // { estado: 'Resultados_Listos' },
+                    { estado: 'En_Proceso_de_Analisis' }, // Filtra por estado del examen
+                    { resultado: { some: { estado: 'Pendiente' } } } // Filtra por estado del resultado
+                ]
+            },
+            include: {
+                factura: {
+                    include: {
+                        paciente: true
+                    }
+                },
+                resultado: {
+                    include: {
+                        parametro: true
+                    }
+                },
+                procedimiento: {
+                    include: {
+                        cups: true,
+                        area: true
+                    }
+                }
+            }
+        });
+        
 
       
         return resp.status(200).json({"status":200,examenes});

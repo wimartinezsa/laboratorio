@@ -32,6 +32,7 @@ export  const listarUsuarios=async(req,resp)=>{
               email: true,
               estado: true,
               firma: true,
+              autoriza:true,
               vinculacion: { // Carga la relación vinculacion
                 select:
                  {
@@ -65,7 +66,7 @@ export  const listarUsuarios=async(req,resp)=>{
 export  const registrarUsuario=async(req,resp)=>{
     try {
       
-        const { identificacion,tipo_identificacion,nombre, email,rol,cargo,area} = req.body;
+        const { identificacion,tipo_identificacion,nombre, email,rol,cargo,area,autoriza} = req.body;
       /*
         if (!identificacion || !nombre || !email || !password || !rol || !cargo) {
             return resp.status(400).json({ "status": 400, "message": "Todos los datos son obligatorios" });
@@ -94,7 +95,8 @@ export  const registrarUsuario=async(req,resp)=>{
                     email: email,
                     password: encriptPassword,
                     rol: rol,
-                    cargo:cargo
+                    cargo:cargo,
+                    autoriza: autoriza
                 }
             })
             
@@ -149,7 +151,8 @@ export  const actualizarUsuarioId=async(req,resp)=>{
                         email: datos.email,
                         password: encriptPassword,
                         rol: datos.rol,
-                        cargo:datos.cargo
+                        cargo:datos.cargo,
+                        autoriza: datos.autoriza
                     }
                 }  
 

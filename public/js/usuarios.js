@@ -103,6 +103,7 @@ function listarUsuarios(){
         cargo :element.cargo,
         rol :element.rol,
         firma: imagen,
+        autoriza: element.autoriza,
         email :element.email,
         area :lista_areas,
         estado:estadoBTN,
@@ -127,6 +128,7 @@ function listarUsuarios(){
                            {"data": "cargo"},
                            {"data": "rol"},
                            {"data": "firma"},
+                           {"data": "autoriza"},
                            {"data": "estado"},
                            {"data": "Accion"}
                        ]
@@ -311,6 +313,7 @@ function registrarUsuario(){
     datos.append('email',document.getElementById('email').value);
     datos.append('cargo',document.getElementById('cargo').value);
     datos.append('rol',document.getElementById('rol').value);
+    datos.append('autoriza',document.getElementById('autoriza').value);
     
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
@@ -410,6 +413,7 @@ function buscarUsaurioId(id_usuario){
         document.getElementById('email').value=data.email;
         document.getElementById('cargo').value=data.cargo;
         document.getElementById('rol').value= data.rol;
+        document.getElementById('areas').value= data.autoriza;
         document.getElementById('areas').value= nombreDeArea;
    
     });
@@ -432,7 +436,7 @@ function actualizarUsuario(){
     datos.append('cargo',document.getElementById('cargo').value);
     datos.append('rol',document.getElementById('rol').value);
     datos.append('area',document.getElementById('areas').value);
-
+    datos.append('autoriza',document.getElementById('autoriza').value);
     
     
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta

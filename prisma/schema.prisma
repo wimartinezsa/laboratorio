@@ -295,12 +295,13 @@ model Usuario {
   nombre              String     @db.VarChar(30)
   cargo               String     @db.VarChar(50)
   firma               String?    @db.VarChar(100)
+  autoriza            String?    @db.VarChar(10)
   rol                 Rol
   email               String     @db.VarChar(50)
   password            String     @db.VarChar(100)
   estado              Estado     @default(Activo)
   token               String?    @db.VarChar(500)
- 
+
   vinculacion Vinculacion[]
  
   @@map("usuarios")
@@ -411,6 +412,7 @@ enum Estado_Factura {
   Pendiente_Emision
   Factura_Emitida
   Pendiente_Pago
+  Cobro
   Pagado
   Anulado
 }

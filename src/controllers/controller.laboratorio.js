@@ -146,9 +146,9 @@ export  const firmaLaboratorioAuxiliar=async(req,resp)=>{
 
 export  const firmaLaboratorioBacteriologo=async(req,resp)=>{
     try{
-        const bacteriologo = await prisma.Usuario.findFirst(
+        const bacteriologo = await prisma.Usuario.findMany(
             { 
-                where:{rol:'Bacteriologo'},
+                where:{autoriza:'Si'},
                 select: {
                     identificacion:true,
                     nombre:true,

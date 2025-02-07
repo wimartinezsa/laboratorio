@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {validarToken} from "../middlewares/authentication.js";
 import {
-        listarExamenesConfirmados,
+        listarExamenesTomaMuestra,
         confirmarTomaMuestra
         } from "../controllers/controller.muestra.js";
 
@@ -9,7 +9,7 @@ const route = Router();
 
 
 
-route.get('/listarExamenesConfirmados',validarToken,listarExamenesConfirmados);
+route.get('/listarExamenesTomaMuestra/:rol/:area',validarToken,listarExamenesTomaMuestra);
 
 route.put('/confirmarTomaMuestra/:id_prestacion',validarToken,confirmarTomaMuestra);
 

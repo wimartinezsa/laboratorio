@@ -50,18 +50,45 @@ moment.defineLocale('es', {
         if (dia < 10) { dia = "0" + dia }
         var fechaFormat = dia + "/" + mes + "/" + ano;
         /* ===================================================== */
-    let nombre_firma='';
-    let cedula_firma='';
-    let imagen_firma='';
+    let nombre_bacteriologo1='';
+    let cedula_bacteriologo1='';
+    let imagen_bacteriologo1='';
 
-   
+    let nombre_bacteriologo2='';
+    let cedula_bacteriologo2='';
+    let imagen_bacteriologo2='';
 
 
     const token = localStorage.getItem('token'); 
     const firma_bacteriologo = await firmaLaboratorioBacteriologo(token);
+
+    if(firma_bacteriologo.length>0){
+        for( i=0;i<firma_bacteriologo.length;i++){
+            if(i===0){
+                nombre_bacteriologo1=firma_bacteriologo[0].nombre;
+                cedula_bacteriologo1=firma_bacteriologo[0].identificacion;
+                imagen_bacteriologo1=firma_bacteriologo[0].firma;
+
+            }
+            if(i===1){
+                nombre_bacteriologo2=firma_bacteriologo[1].nombre;
+                cedula_bacteriologo2=firma_bacteriologo[1].identificacion;
+                imagen_bacteriologo2=firma_bacteriologo[1].firma;
+
+            }
+           
+        }
+        firma_bacteriologo.forEach(element=>{
+            
+        })
+    }
+  
+
+    /*
     nombre_firma= firma_bacteriologo.nombre;
     cedula_firma= firma_bacteriologo.identificacion;
     imagen_firma= firma_bacteriologo.firma;
+    */
 
     await  fetch('/generarLaboratorio/' + id_autorizacion, {
             method: 'get',
@@ -165,8 +192,6 @@ moment.defineLocale('es', {
                         for (const examen of examenes) {
                             // Título del examen
                            
-
-
                             y += 5;
                           
                                 // Centrar el texto del CUPS en la página
@@ -224,6 +249,8 @@ moment.defineLocale('es', {
                             
                             let tipo_parametro='';
                             for (const resultado of examen.resultado) {
+
+                                if(resultado.estado==='Pendiente') continue;
                                
                                  const valorReferencia = `${resultado.parametro.valor_referencia}`;
                                 //const maxWidth = 50; // Ancho máximo para la columna "VALOR DE REFERENCIA"
@@ -244,13 +271,16 @@ moment.defineLocale('es', {
                                 
                                 //&& resultado.parametro.tipo_parametro.id_parametro!='1'
                                 if( (resultado.parametro.tipo_parametro.nombre.trim() !== tipo_parametro.trim())  ){
-                                    doc.text(10, y, `${resultado.parametro.tipo_parametro.nombre}`); // Columna 1
+                                    y += 2;
+                                    doc.setFont("helvetica", "bold"); // Establece la fuente en negrita
+                                    doc.text(10, y, `${resultado.parametro.tipo_parametro.nombre.toUpperCase()}`); // Columna 1
+                                    doc.setFont("helvetica", "normal");
                                     tipo_parametro=resultado.parametro.tipo_parametro.nombre;
-                                    y += 4;
+                                    y += 6;
                                 }
 
 
-                                doc.text(13, y, `${resultado.parametro.nombre}`); // Columna 1
+                                doc.text(13, y, `${resultado.parametro.nombre.toLocaleLowerCase().replace(/\b\w/g, letra => letra.toLocaleUpperCase())}`); // Columna 1
                                 doc.text(70, y, `${resultado.resultado}`);     // Columna 2
                                 doc.text(110, y, `${resultado.parametro.unidad}`);                       // Columna 3 (Placeholder)
                                 doc.text(135, y, `${formattedValorReferencia}`);                       // Columna 4 (Placeholder)
@@ -290,14 +320,13 @@ moment.defineLocale('es', {
                     });
 
 
-                    y += 40;
+                    y += 45;
                     doc.setFontSize(10);
                     // Obtén las dimensiones de la página
                     const pageWidth = doc.internal.pageSize.width;
                     // Línea horizontal centrada
-                    const lineWidth = 42; // Ancho de la línea (130 - 88)
-                    const lineXStart = (pageWidth - lineWidth) / 2;
-                    doc.line(lineXStart, y - 4, lineXStart + lineWidth, y - 4);
+                    
+                  
                     // Función para calcular la posición X centrada
                     function getCenteredX(text) {
                         const textWidth =
@@ -305,25 +334,43 @@ moment.defineLocale('es', {
                             doc.internal.scaleFactor;
                         return (pageWidth - textWidth) / 2;
                     }
-                    // Textos centrados
-                    let text = `Dra. ${nombre_firma}`;
-                    doc.text(getCenteredX(text), y, text);
+
+                    
+
+                    // Firma del primer bacteriologo
+                    let text = `${nombre_bacteriologo1}`;
+                    doc.text(30, y, text);
                     y += 3;
                     
-                    text = `C.C. ${cedula_firma}`;
-                    doc.text(getCenteredX(text), y, text);
+                    text = `C.C. ${cedula_bacteriologo1}`;
+                    doc.text(30, y, text);
                     y += 3;
                     
-                    text = `Bacterióloga UCMC`;
-                    doc.text(getCenteredX(text), y, text);
+                    text = `Bacteriólogo(a) UCMC`;
+                    doc.text(30, y, text);
+                    y -= 6;
+
+                     // Firma del segundo bacteriologo
+                    text = `${nombre_bacteriologo2}`;
+                     doc.text(135, y, text);
+                     y += 3;
+                     
+                     text = `C.C. ${cedula_bacteriologo2}`;
+                     doc.text(135, y, text);
+                     y += 3;
+                     
+                     text = `Bacteriólogo(a) UCMC`;
+                     doc.text(135, y, text);
 
                         
                     // Se definen las URLs de las imágenes
-                    const imgUrlFirma = `/img/firmas/${imagen_firma}`;
+                    const imgUrlFirma1 = `/img/firmas/${imagen_bacteriologo1}`;
+                    const imgUrlFirma2 = `/img/firmas/${imagen_bacteriologo2}`;
                     const imgUrlLogo = `/img/logo.jpg`; // Asegúrate de que esta URL sea válida
 
                     // Crear las instancias de imágenes
-                    const imgFirma = new Image();
+                    const imgFirma1 = new Image();
+                    const imgFirma2 = new Image();
                     const imgLogo = new Image();
 
                     // Función que espera a que ambas imágenes se carguen
@@ -334,18 +381,22 @@ moment.defineLocale('es', {
                             imagenesCargadas++;
                             if (imagenesCargadas === 2) {
                                 // Una vez que ambas imágenes están cargadas, agrégalas al PDF
-                                doc.addImage(imgFirma, 'JPEG', 80, y - 40, 50, 30); // Ajusta las posiciones y tamaños según necesites
+                                doc.addImage(imgFirma1, 'JPEG', 30, y - 30, 40, 20); // Ajusta las posiciones y tamaños según necesites
+                                doc.addImage(imgFirma2, 'JPEG', 135, y - 30, 40, 20); // Ajusta las posiciones y tamaños según necesites
+                                
                                 doc.addImage(imgLogo, 'JPEG',2,1,30, 20);      // Ejemplo de otra posición
                                 // Guardar o continuar trabajando con el PDF
                                 doc.save(`${data[0].autorizacion}.pdf`);
                             }
                         };
                         // Asignar eventos onload a ambas imágenes
-                        imgFirma.onload = verificarCarga;
+                        imgFirma1.onload = verificarCarga;
+                        imgFirma2.onload = verificarCarga;
                         imgLogo.onload = verificarCarga;
 
                         // Establecer las URLs para iniciar la carga
-                        imgFirma.src = imgUrlFirma;
+                        imgFirma1.src = imgUrlFirma1;
+                        imgFirma2.src = imgUrlFirma2;
                         imgLogo.src = imgUrlLogo;
                     };
 

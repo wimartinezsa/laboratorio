@@ -1,6 +1,14 @@
 
 
-listarExamenesConfirmadas();
+
+document.addEventListener("DOMContentLoaded", function () {
+    let rol = localStorage.getItem('rol'); 
+    let area = localStorage.getItem('area'); 
+    
+    listarExamenesTomaMuestra(rol,area);
+    
+  });
+
 
 
 
@@ -37,9 +45,171 @@ var Frm_muestras = new bootstrap.Modal(document.getElementById('Frm_muestras'), 
 
 
 
+// se listan los laboratoriospor Area
+function listarExamenesTomaMuestra(rol,area){
+
+    const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+    
+    fetch(`/listarExamenesTomaMuestra/${rol}/${area}`, {
+        method:'get',
+        headers: {
+            'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+            'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
+        }
+    })
+    .then(response => {
+      // Verificar si la respuesta es JSON
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+          return response.json();
+      } else {
+         // window.location.href = "/";
+      }
+  })
+    .then(data => {
+
+        let accionBTN='';
+        let arrayDatos=[];
+        let estadoBTN='';
+
+
+      
+
+        if(data.status==403){window.location.href = "/";}
+        if(data.status==200){
+          //for que recorrelos examenes
+        data.examenes.forEach(element => {
+
+            
+          if (element.estado==='En_Toma_de_Muestra'){
+           accionBTN =`<a class="badge badge-pill badge-danger" style="font-size: 0.8rem;" 
+           href="javascript:gestionarMuestras(${element.id_examen},'${element.observacion}')" title='Finalizar Análisis'>${element.estado.replace(/_/g," ")}
+           </a>`;
+
+          }
+ 
+        
+   
+     // let resultados = element.resultado;
+
+      let tabla=`<table style="border-collapse: collapse; width: 100%;">
+                <thead>
+                    <tr>
+                    <th scope="col">CODIGO</th>
+                     <th scope="col">METODO</th>
+                      <th scope="col">PARAMETRO</th>
+                      <th scope="col">RESULTADO</th>
+                      <th scope="col">ESTADO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  `;
+        let resultados = element.resultado;
+        
+        resultados.forEach(item=>{
+          
+          if (item.parametro.estado === 'Activo') {
+              let btn_parametro='';
+              let estado_parametro='';
+          
+                if(item.estado==='Pendiente'){
+                  btn_parametro=`<a class="btn btn-warning" 
+                  href="javascript:cambiarEstadoResultado(${item.id_resultado},'${item.estado}')" 
+                  title='Finalizar Resultado'> <i class='fas fa-thumbs-down'></i></a>`;
+                }
+
+                
+                if(item.estado==='Finalizado'){
+                  btn_parametro=`<a class="btn btn-success" href="javascript:cambiarEstadoResultado(${item.id_resultado},'${item.estado}')" title='Resultado Pendiente'> <i class='fas fa-thumbs-up'></i></a>`;
+                
+                }
+                
+                if(item.parametro.metodo==='Automatico'){
+                    estado_parametro=`<span class="badge badge-pill badge-danger" style="font-size: 0.8rem;">${item.id_resultado}</span>`
+               
+                }
+                else{
+                  estado_parametro=`<span class="badge badge-pill badge-secondary" style="font-size: 0.8rem;">${item.id_resultado}</span>`
+                }
+              
+                tabla+=`
+                  <tr>
+                  <td>${estado_parametro}</td>
+                  <td>${item.parametro.metodo}</td>
+                    <td>${item.parametro.nombre}</td>
+                    <td>${item.resultado}</td>
+                    <td>${item.estado}</td>
+                  </tr>`;        
+
+              }
+
+
+      });
+     tabla+='</tbody></table>'
+      //console.log(element);
+
+     
+
+        let dato = {
+        examen:element.id_examen,
+        autoriazacion:`<span class="badge badge-pill badge-success" style="font-size: 0.8rem;">${element.factura.autorizacion}</span>`,
+        identificacion : element.factura.paciente.identificacion,
+        nombres :element.factura.paciente.nombres.toUpperCase(),
+        cups :element.procedimiento.cups.nombre,
+        resultado :tabla,
+        observacion:element.observacion,
+        area :element.procedimiento.area.nombre.toUpperCase(),
+        estado :accionBTN ,
+                        }
+                        arrayDatos.push(dato)
+                        });
+   
+              var table = $('#tabla_examenes_toma_muestra').DataTable({
+               "bInfo" : false,
+               searching: true,
+               paging: true,
+               autoWidth: true,
+               destroy: true,
+               responsive: false,
+               scrollX: false, 
+               data: arrayDatos,
+               columns: [
+                           {"data": "examen"},
+                           {"data": "autoriazacion"},
+                           {"data": "identificacion"},
+                           {"data": "nombres"},
+                           {"data": "cups"},
+                           {"data": "observacion"},  
+                           {"data": "resultado"},
+                           {"data": "area"},
+                           {"data": "estado"}    
+                       ]
+                        });
+
+
+                        table.on('search.dt', function() {
+                          var searchValue = table.search(); // Obtiene el valor actual del campo de búsqueda
+                        // document.getElementById('busqueda').value=searchValue;
+                      });
+                     
+
+                   //  table.search(document.getElementById('busqueda').value).draw();
+        }
+        if(data.status==404){ Mensaje.fire({icon: 'warning',title: data.message})}
+        if(data.status==500){ Mensaje.fire({icon: 'error',title: data.message})} 
+        
+    });
+
+
+   
+}
 
 
 
+
+
+
+/*
 function listarExamenesConfirmadas(){
 
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
@@ -111,7 +281,7 @@ function listarExamenesConfirmadas(){
     });
    
 }
-
+*/
 
 
 function gestionarMuestras(id_prestacion,observacion){
@@ -122,6 +292,8 @@ function gestionarMuestras(id_prestacion,observacion){
     const formattedDateTime = now.toISOString().slice(0, 16);
     document.getElementById("fecha_muestra").value = formattedDateTime;
     Frm_muestras.show();
+
+
 
 }
 
@@ -178,7 +350,9 @@ function confirmarTomaMuestra(){
             if(data.status==403){window.location.href = "/";}
         
             if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
-                listarExamenesConfirmadas();
+            let rol = localStorage.getItem('rol'); 
+            let area = localStorage.getItem('area'); 
+            listarExamenesTomaMuestra(rol,area);
                Frm_muestras.hide();
 
                

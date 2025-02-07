@@ -69,21 +69,21 @@ function listarMuestrasArea(rol,area){
         let arrayDatos=[];
         let estadoBTN='';
 
-
+       // console.log(data);
       
 
         if(data.status==403){window.location.href = "/";}
         if(data.status==200){
           //for que recorrelos examenes
           
-
+          
 
 
         data.examenes.forEach(element => {
 
           accionBTN =`<a class="badge badge-success badge-warning" style="font-size: 0.8rem;" href="javascript:iniciarProcesoAnalisis(${element.id_examen})" title='Iniciar Proceso de Análisis'>${element.estado.replace(/_/g," ")}</a>`;
         
-   
+ 
      // let resultados = element.resultado;
 
       let tabla=`<table style="border-collapse: collapse; width: 100%;">
@@ -142,7 +142,7 @@ function listarMuestrasArea(rol,area){
 
         let dato = {
         examen:element.id_examen,
-        autoriazacion:element.factura.autorizacion,
+        autoriazacion:`<span class="badge badge-pill badge-success" style="font-size: 0.8rem;">${  element.factura.autorizacion}</span>`,
         identificacion : element.factura.paciente.identificacion,
         nombres :element.factura.paciente.nombres.toUpperCase(),
         cups :element.procedimiento.cups.nombre,

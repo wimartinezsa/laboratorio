@@ -77,8 +77,8 @@ function listarExamenesPorArea(rol,area){
           //for que recorrelos examenes
         data.examenes.forEach(element => {
 
-            
-          if (element.estado==='En_Proceso_de_Analisis'){
+      
+          if (element.estado==='En_Proceso_de_Analisis' || element.estado==='Resultados_Listos'){
            accionBTN =`<a class="badge badge-pill badge-danger" style="font-size: 0.8rem;" 
            href="javascript:gestionarResultados(${element.id_examen},'${element.factura.paciente.nombres}','${element.observacion}')" title='Finalizar Análisis'>${element.estado.replace(/_/g," ")}
            </a>`;

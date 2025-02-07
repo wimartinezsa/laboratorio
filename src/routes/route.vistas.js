@@ -65,4 +65,12 @@ route.get('/usuarios',(req,resp)=>{
 });
 
 
+route.get('/cuenta_cobro',(req,resp)=>{
+    resp.render("pages/cuenta_cobro.ejs");
+});
+
+
+
+
+
 export default route;

@@ -47,13 +47,13 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-           <h4>Toma de Muestras Pendientes</h4>
+            <button type="button" class="btn btn-primary" onclick="gestionarEmpresa();">Nueva Empresa</button>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-              <li class="breadcrumb-item active">Examenes</li>
-              <li class="breadcrumb-item active">Muestras</li>
+              <li class="breadcrumb-item active">Cuentas</li>
+              <li class="breadcrumb-item active">Cuentas de Cobro</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -64,28 +64,23 @@
     <!-- Main content -->
    
     <div class="container-fluid">
-
-
-      <table class="table table-striped"  id="tabla_examenes_toma_muestra" style="font-size: 12px">
+        <table class="table table-striped" id="tabla_empresa" style="font-size: 12px;">
         <thead>
-            <tr>
+            <tr class="line-head">
+             
+                <th>Identificación</th>
+                <th>Nombre</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Edad</th>
+                <th>Telefono</th>
                 <th>Examen</th>
-                <th>Autorización</th>
-                <th>Identificacion</th>
-                <th>Nombres</th>
-                <th>Examen</th>
-                <th>Observación</th>
-                <th>Resultado</th>
-                <th>Area</th>
-                <th>Estado</th>
+      
+                <th>Admin.</th>
             </tr>
         </thead>
         <tbody >
         </tbody>
-      </table>
-
-
-
+        </table>
     </div>
 
       
@@ -100,100 +95,109 @@
 
 
 
-  <div class="modal fade" id="Frm_procedimientos">
+  <div class="modal fade" id="Frm_empresa">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Confirmar asistencia de Muestra</h5>
+          <h5 class="modal-title">Registrar Empresas</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <input type="number" id='id_factura' readonly="true" hidden="true">
+          <input type="number" id='id_empresa' readonly="true" hidden="true">
         
         
         
           <div class="row">
-                  <div class="col-12">
+                  <div class="col-6">
+                    <label for="message-text" class="col-form-label">Codigo:</label>
+                    <input type="text" class="form-control" id='codigo'
+                        style="border: 1px solid rgb(208, 205, 205)"
+                        placeholder="Digite el código de habilitación"  required>    
+                </div>
 
-                    <table class="table" >
-                      <thead>
-                        <tr>
-                          <th scope="col">codigo</th>
-                          <th scope="col">Servicio</th>
-                          <th scope="col">Examen</th>
-                          <th scope="col">Estado</th>
-                          <th scope="col">Confirmar Asistencia</th>
-                        </tr>
-                      </thead>
-                      <tbody id="tabla_procedimiento_facturado">
-                       
-                       
-                       
-                      </tbody>
-                    </table>
-                      
-                </div>  
+                <div class="col-6">
+                  <label for="message-text" class="col-form-label">Nit:</label>
+                  <input type="text" class="form-control" id='nit'
+                      style="border: 1px solid rgb(208, 205, 205)"
+                      placeholder="Digite el Nit de la Empresa"  required>    
+                </div>
+
+               
    
+          </div>
+
+
+        
+        <div class="row">
+         
+          <div class="col-6">
+            <label for="message-text" class="col-form-label">Razon Social:</label>
+            <input type="text" class="form-control" id="razon_social"
+                style="border: 1px solid rgb(208, 205, 205)"
+                placeholder="Digite nombre de la Empresa"  required>    
+          </div>
+
+          <div class="col-6">
+            <label for="message-text" class="col-form-label">Sigla:</label>
+            <input type="text" class="form-control" id='sigla'
+                style="border: 1px solid rgb(208, 205, 205)"
+                placeholder="Digite sigla de la empresa" > 
+          </div>
+
+
         </div>
 
 
 
+
+
+      <div class="row">
+         
+
+         
+
+          <div class="col-6">
+            <label for="message-text" class="col-form-label">Tipo de Empresa:</label>
+            <select class="form-control" id='tipo' required >
+                <option selected disabled>Seleccione una opción</option>
+                <option value='Particular'>Particular</option>
+                <option value='Empresa'>Empresa</option>
+                <option value='Eps'>Eps</option>
+                <option value='Ese'>Ese</option>
+              
+            </select>
         </div>
-       
+
+        <div class="col-6">
+          <label for="message-text" class="col-form-label">Municipio:</label>
+          <select class="form-control" id='municipio' required >
+           
+          </select>
+        </div>
+
+
       </div>
-      <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-  </div>
+
+
+      
 
 
 
 
-  <div class="modal fade" id="Frm_muestras">
-    <div class="modal-dialog modal-sm">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Registrar Toma de Muestras</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <input type="number" id='id_prestacion' readonly="true" hidden="true">
-        
-        
-        
-          <div class="row">
-            <div class="col-12">
-              <label for="message-text" class="col-form-label">Fecha de Muestra:</label>
-              <input type="datetime-local" id="fecha_muestra" class="form-control"/>
-          </div>  
-    </div>
-          <div class="row">
-              <div class="col-12">
-                <label for="message-text" class="col-form-label">Observación:</label>
-                <textarea id="observacion"  rows="4" cols="35" placeholder="Digitar una Observación"></textarea>
-            </div>  
-        </div>
 
 
         </div>
-
         <div class="modal-footer justify-content-center">
-          <button type="button" id="btn_registrar" class="btn btn-primary" onclick="gestionarTomaMuestra()">Confirmar Toma de Muestra</button>
+          <button type="button" id="btn_registrar" class="btn btn-primary" onclick="registrarEmpresa()">Registrar</button>
+          <button type="button" id="btn_actualizar" class="btn btn-primary" onclick="actualizarEmpresa()">Actualizar</button>
         </div>
-       
       </div>
       <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
   </div>
-
-
-
-
 
 
 
@@ -227,6 +231,6 @@
 <script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="/js/muestras.js"></script>
+<script src="/js/cuenta_cobro.js"></script>
 </body>
 </html>

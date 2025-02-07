@@ -46,10 +46,13 @@ function Facturar(id_factura){
                 var ident = data.autorizacion;
                 /* factura sencilla */
                 const doc = new jsPDF();
-                doc.rect(1,6, 208, 120); // empty square
+
+                
+                
+
                 /* ===contenido==== */ 
                 doc.setFontSize(14);
-                doc.text(35, 11,'LABORATORIO CLINICO ESPECIALIZADO MIRYAM CAMACHO ');
+                doc.text(35, 11,'LABORATORIO CLINICO ESPECIALIZADO DEL SUR SAS');
                 doc.setFontSize(9);
                 doc.text(90, 15,'N.I.T. 901832735-3');
                 /* =====pasar a string====== */
@@ -74,7 +77,7 @@ function Facturar(id_factura){
                
                 doc.text(10,36,'Nombres');
               
-                doc.text(40,36, data.paciente.nombres.substring(0,28));
+                doc.text(40,36, data.paciente.nombres.substring(0,21));
 
                
                 doc.text(90,36,'Contrato');
@@ -124,9 +127,9 @@ function Facturar(id_factura){
 
                         if (examen.procedimiento.cups) {
                             doc.text((x1+2),y,""+examen.procedimiento.cups.codigo);
-                            doc.text((x2-40),y,""+examen.procedimiento.cups.nombre); 
+                            doc.text((x2-40),y,""+examen.procedimiento.cups.nombre.toLocaleLowerCase().replace(/\b\w/g, letra => letra.toLocaleUpperCase())); 
                         }
-
+                        ;
 
                         doc.text((x3+5),y,""+examen.cantidad); 
                         doc.text((x4-1),y,""+examen.precio); 
@@ -152,7 +155,21 @@ function Facturar(id_factura){
                 doc.text(175,134,'$ '+total);
 */
                 
-                doc.save("Factura.pdf");
+
+
+        // Crear la imagen y cargar la fuente
+        const imgUrlLogo = "/img/logo.jpg"; 
+        const imgLogo = new Image();
+        imgLogo.src = imgUrlLogo;
+
+        // Esperar a que la imagen se cargue antes de agregarla
+        imgLogo.onload = function () {
+            doc.addImage(imgLogo, 'JPEG', 2, 1, 30, 20);
+            
+            // Guardar o previsualizar el PDF después de agregar la imagen
+            doc.save("Factura.pdf");  // O mostrarlo en pantalla
+        };
+
             }
         });
 } 

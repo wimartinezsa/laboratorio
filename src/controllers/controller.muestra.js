@@ -3,6 +3,113 @@ import prisma from '../libs/prisma.js'
 
 
 
+//Listar todos los examens por área
+export  const listarExamenesTomaMuestra=async(req,resp)=>{
+    try{
+       
+        let id_usuario=req.user.id;
+        let rol=req.user.rol;
+      
+       if(rol==='Administrador' ||  rol==='Bacteriologo'){
+
+        const examenes = await prisma.Examen.findMany(
+            { 
+                where: {
+                    estado: { 
+                        in: ['En_Toma_de_Muestra'] // Filtra por estado
+                      }          
+                  },
+                include:{
+                    factura:{
+                        include:{
+                            paciente:true
+                        }
+                    },
+                    resultado:{
+                        include:{
+                            parametro:true
+                        }
+                    },
+                    procedimiento:{
+                        include:{
+                            cups:true,
+                            area:true
+                        }
+                    }
+                    
+                }         
+            } 
+        );
+
+      
+
+      
+        return resp.status(200).json({"status":200,examenes});
+
+       }else{
+
+        
+        const examenes = await prisma.Examen.findMany({
+            where: {
+            estado: 'En_Toma_de_Muestra',
+            procedimiento: {
+                area: {
+                vinculacion: {
+                    some: {
+                    usuario: {
+                        id_usuario: id_usuario, // Filtra por el ID del usuario
+                    },
+                    },
+                },
+                },
+            },
+            },
+            include: {
+            factura: {
+                include: {
+                paciente: true,
+                },
+            },
+            resultado: {
+                include: {
+                    parametro: {
+                        where: { estado: 'Activo' } // Filtra solo parámetros con estado 'Activo'
+                    }
+                }
+            },
+            procedimiento: {
+                include: {
+                cups: true,
+                area: {
+                    include: {
+                    vinculacion: {
+                        include: {
+                        usuario: true,
+                        },
+                    },
+                    },
+                },
+                },
+            },
+            },
+        });
+       
+        return resp.status(200).json({"status":200,examenes});
+
+       }
+       
+          
+    }catch(error){
+        console.log("Error en controller.muestra.js :"+error);
+        resp.status(500).json({"status":500,"message": 'Error al listar  las procedimientos facturados' });
+    }
+}
+
+
+
+
+
+/*
 export  const listarExamenesConfirmados=async(req,resp)=>{
     try{
         const examenes = await prisma.$queryRaw`
@@ -29,6 +136,9 @@ export  const listarExamenesConfirmados=async(req,resp)=>{
         resp.status(500).json({"status":500,"message": 'Error al listar  las examenes facturados' });
     }
 }
+
+*/
+
 
 
 export  const confirmarTomaMuestra=async(req,resp)=>{

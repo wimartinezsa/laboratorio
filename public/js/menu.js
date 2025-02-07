@@ -139,29 +139,27 @@ if(rol==='Administrador'){
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-edit"></i>
               <p>
-                Cuentas de Cobro
+                Cuentas
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
+
+            <li class="nav-item">
+                <a href="/cuenta_cobro" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Cuentas de cobro</p>
+                </a>
+              </li>
+
               <li class="nav-item">
                 <a href="pages/forms/general.html" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>General Rips</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="pages/forms/general.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Cuentas Cobradas</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="pages/forms/general.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Cuentas por Cobrar</p>
-                </a>
-              </li>
+             
+              
             </ul>
           </li>
           <li class="nav-item">
