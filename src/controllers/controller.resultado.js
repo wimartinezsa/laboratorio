@@ -17,11 +17,13 @@ export  const listarExamenesPorArea=async(req,resp)=>{
         const examenes = await prisma.Examen.findMany({
             where: {
                 OR: [
-
-                  
-                   // { estado: 'Resultados_Listos' },
-                    { estado: 'En_Proceso_de_Analisis' }, // Filtra por estado del examen
-                    { resultado: { some: { estado: 'Pendiente' } } } // Filtra por estado del resultado
+                    { estado: 'En_Proceso_de_Analisis' }, // 1️⃣ Exámenes en análisis
+                    {
+                        estado: 'Resultados_Listos',       // 2️⃣ Exámenes listos
+                        resultado: { 
+                            some: { estado: 'Pendiente' } // Solo si tienen resultado pendiente
+                        }
+                    }
                 ]
             },
             include: {
@@ -44,7 +46,7 @@ export  const listarExamenesPorArea=async(req,resp)=>{
             }
         });
         
-
+  
       
         return resp.status(200).json({"status":200,examenes});
 
@@ -53,7 +55,15 @@ export  const listarExamenesPorArea=async(req,resp)=>{
         
         const examenes = await prisma.Examen.findMany({
             where: {
-            estado: 'En_Proceso_de_Analisis',
+                OR: [
+                    { estado: 'En_Proceso_de_Analisis' }, // 1️⃣ Exámenes en análisis
+                    {
+                        estado: 'Resultados_Listos',       // 2️⃣ Exámenes listos
+                        resultado: { 
+                            some: { estado: 'Pendiente' } // Solo si tienen resultado pendiente
+                        }
+                    }
+                ],
             procedimiento: {
                 area: {
                 vinculacion: {
@@ -74,9 +84,7 @@ export  const listarExamenesPorArea=async(req,resp)=>{
             },
             resultado: {
                 include: {
-                    parametro: {
-                        where: { estado: 'Activo' } // Filtra solo parámetros con estado 'Activo'
-                    }
+                    parametro: true
                 }
             },
             procedimiento: {
