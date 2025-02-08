@@ -65,8 +65,8 @@ route.get('/usuarios',(req,resp)=>{
 });
 
 
-route.get('/cuenta_por_cobrar',(req,resp)=>{
-    resp.render("pages/cuenta_cobrar.ejs");
+route.get('/cuenta_cobro',(req,resp)=>{
+    resp.render("pages/cuenta_cobro.ejs");
 });
 
 

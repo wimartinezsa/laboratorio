@@ -20,6 +20,13 @@ listarContratosActivos();
 
 
 
+async function buscarExamenesDelPerodo(){
+
+   await listarCuentasPendientePago();
+   await listarCuentasCobradas();
+   await listarCuentasPagadas();
+}
+
 
 
 function listarContratosActivos(){
@@ -59,13 +66,7 @@ function listarContratosActivos(){
 
 
 
-
-
-
-
-
-
-var table;
+var table1;
 function listarCuentasPendientePago(){
 
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
@@ -124,7 +125,7 @@ function listarCuentasPendientePago(){
                         arrayDatos.push(dato)
                         });
    
-             table = $('#tabla_cuenta_pendiente').DataTable({
+             table1 = $('#tabla_cuenta_pendiente').DataTable({
                "bInfo" : false,
                searching: true,
                paging: true,
@@ -149,7 +150,7 @@ function listarCuentasPendientePago(){
                             "data": null, 
                             "render": function(data, type, row) {
                                 if(data.estado==='Pendiente_Pago'){
-                                    return '<input type="checkbox" class="checkbox-item">';
+                                    return '<input type="checkbox" class="checkbox-pendiente">';
                                 }else return '';
                                 
                             },
@@ -166,41 +167,62 @@ function listarCuentasPendientePago(){
 }
 
 
-$('#btnToggleSeleccion').on('click', function() {
-    var checkboxes = $('.checkbox-item');
+$('#btn_seleccionar_pendientes').on('click', function() {
+    var checkboxes = $('.checkbox-pendiente');
     if (checkboxes.filter(':checked').length === checkboxes.length) {
         checkboxes.prop('checked', false);
         $(this).text('Seleccionar Todos');
     } else {
         checkboxes.prop('checked', true);
         $(this).text('Deseleccionar Todos');
-    }
-
-  
-    
+    } 
 });
 
 
 
 
 
-function obtenerSeleccionados() {
+function obtenerSeleccionadosPendiente() {
     var seleccionados = [];
     
-    $('#tabla_cuenta_pendiente tbody .checkbox-item:checked').each(function() {
-        var row = table.row($(this).closest('tr')).data();
+    $('#tabla_cuenta_pendiente tbody .checkbox-pendiente:checked').each(function() {
+        var row = table1.row($(this).closest('tr')).data();
         seleccionados.push(row);
     });
-
     return seleccionados;
 }
 
 
 
+
+function confirmarRegistroCuentaCobro(){
+    Swal.fire({
+        title: 'Desea registrar los examenes en estado de cobro...',
+        showDenyButton: true,
+        confirmButtonText: 'Si',
+        denyButtonText: `No`,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            registrarCuentaCobro();
+        } else if (result.isDenied) {
+            Mensaje.fire({
+                icon: 'warning',
+                title: 'Operación Cancelada'
+                });
+        }                       
+    })
+        
+
+}
+
+
+
+
 function registrarCuentaCobro(){
-    var cuenta = obtenerSeleccionados();
+    var cuenta = obtenerSeleccionadosPendiente();
     
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+    
     
     fetch('/registrarCuentaCobro', {
         method:'put',
@@ -222,8 +244,9 @@ function registrarCuentaCobro(){
     .then(data => {
             listarCuentasPendientePago();
             listarCuentasCobradas();
+            listarCuentasPagadas();
           
-            listarContratosActivos();
+            //listarContratosActivos();
             Mensaje.fire({icon: 'success',title: data.message});
 
     });
@@ -234,7 +257,7 @@ function registrarCuentaCobro(){
 
 
 
-
+var table2;
 function listarCuentasCobradas(){
 
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
@@ -289,7 +312,205 @@ function listarCuentasCobradas(){
                         arrayDatos.push(dato)
                         });
    
-             table = $('#tabla_cuenta_cobradas').DataTable({
+             table2 = $('#tabla_cuenta_cobradas').DataTable({
+                dom: 'Bfrtip', // Agrega botones en la interfaz
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
+                        className: 'btn btn-info', // Clase CSS opcional
+                        title: 'Reporte de Cuentas', // Título del archivo
+                        exportOptions: {
+                            columns: ':visible' // Exporta solo columnas visibles
+                        }
+                    }
+                ],
+               "bInfo" : false,
+               searching: true,
+               paging: true,
+               autoWidth: false,
+               destroy: true,
+               responsive: true,
+               data: arrayDatos,
+               columns: [
+                           {"data": "id"},
+                           {"data": "identificacion"},
+                           {"data": "nombre"},
+                           {"data": "fecha_nacimiento"},
+                           {"data": "edad"},
+                           {"data": "telefono"},
+                           {"data": "examen"},
+                           {"data": "fecha"},
+                           {"data": "contrato"},
+                           {"data": "precio"},
+                           {"data": "autorizacion"}, 
+                           {"data": "estado"},
+                           { 
+                            "data": null, 
+                            "render": function(data, type, row) {
+                                if(data.estado==='Cobro'){
+                                    return '<input type="checkbox" class="checkbox-pagado">';
+                                }else return '';
+                                
+                            },
+                            "orderable": false // Evita que la columna del checkbox sea ordenable
+                        }
+                       ]
+                       
+                        });
+
+      
+
+    });
+   
+}
+
+
+function obtenerSeleccionadosPagados() {
+    var seleccionados = [];
+    
+    $('#tabla_cuenta_cobradas tbody .checkbox-pagado:checked').each(function() {
+        var row = table2.row($(this).closest('tr')).data();
+        seleccionados.push(row);
+    });
+    return seleccionados;
+}
+
+
+$('#btn_seleccionar_pagos').on('click', function() {
+    var checkboxes = $('.checkbox-pagado');
+    if (checkboxes.filter(':checked').length === checkboxes.length) {
+        checkboxes.prop('checked', false);
+        $(this).text('Seleccionar Todos');
+    } else {
+        checkboxes.prop('checked', true);
+        $(this).text('Deseleccionar Todos');
+    } 
+});
+
+
+function confirmarRegistroCuentaPago(){
+
+    Swal.fire({
+        title: 'Desea registrar los examenes en estado pagado...',
+        showDenyButton: true,
+        confirmButtonText: 'Si',
+        denyButtonText: `No`,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            registrarCuentaPagada();
+        } else if (result.isDenied) {
+            Mensaje.fire({
+                icon: 'warning',
+                title: 'Operación Cancelada'
+                });
+        }                       
+    })
+
+}
+
+
+
+function registrarCuentaPagada(){
+    var cuenta = obtenerSeleccionadosPagados();
+    
+    const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+    
+    
+    fetch('/registrarCuentaPagada', {
+        method:'put',
+        body: JSON.stringify(cuenta),
+        headers: {
+            'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+            'Content-Type': 'application/json' // Especifica el tipo de contenido
+        }
+    })
+    .then(response => {
+      // Verificar si la respuesta es JSON
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+          return response.json();
+      } else {
+          window.location.href = "/";
+      }
+    })
+    .then(data => {
+            listarCuentasPendientePago();
+            listarCuentasCobradas();
+            listarCuentasPagadas();
+          
+            //listarContratosActivos();
+            Mensaje.fire({icon: 'success',title: data.message});
+
+    });
+
+
+}
+
+
+
+
+
+
+
+
+
+var table3;
+function listarCuentasPagadas(){
+
+    const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+
+    let id_contrato= document.getElementById('contratos').value;
+    let fecha_inicio= document.getElementById('fecha_inicio').value;
+    let fecha_fin= document.getElementById('fecha_fin').value;
+
+ 
+    fetch(`/listarCuentasPagadas/${id_contrato}/${fecha_inicio}/${fecha_fin}`, {
+        method:'get',
+        headers: {
+            'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+            'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
+        }
+    })
+    .then(response => {
+        // Verificar si la respuesta es JSON
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return response.json();
+        } else {
+           window.location.href = "/";
+        }
+    })
+    .then(data => {
+        let accionBTN='';
+        let arrayDatos=[];
+          
+        data.forEach(element => {
+        accionBTN =` <a class="btn btn-primary" href="javascript:editarEmpresa(${element.id_examen})" title='Editar Empresa'><i class='fas fa-edit'></i></a>`;
+
+            //moment(element.fecha).format('DD-MM-YYYY HH:mm:ss')
+
+        let edad= calcularEdad(element.factura.paciente.fecha_nacimiento);
+        let dato = {
+        id : element.id_examen,
+        identificacion : element.factura.paciente.identificacion,
+        nombre : element.factura.paciente.nombres,
+        fecha_nacimiento : moment(element.factura.paciente.fecha_nacimiento).format('DD-MM-YYYY'),
+        edad :`${edad.años} Años, ${edad.meses} Meses`,
+        telefono : element.factura.paciente.telefono,
+        identificacion : element.factura.paciente.identificacion,
+        examen : element.procedimiento.cups.nombre,
+        contrato : element.factura.contrato.nombre,
+        precio : element.procedimiento.acuerdo[0].precio,
+        autorizacion : element.factura.autorizacion,
+        fecha :moment(element.factura.fecha).format('DD-MM-YYYY'),
+        estado: element.estado_pago,
+        Accion :accionBTN
+                        }
+                        arrayDatos.push(dato)
+                        });
+   
+              table3 = $('#tabla_cuenta_pagadas').DataTable({
                 dom: 'Bfrtip', // Agrega botones en la interfaz
                 buttons: [
                     {
@@ -331,6 +552,7 @@ function listarCuentasCobradas(){
     });
    
 }
+
 
 
 

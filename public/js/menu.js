@@ -146,9 +146,9 @@ if(rol==='Administrador'){
             <ul class="nav nav-treeview">
 
             <li class="nav-item">
-                <a href="/cuenta_por_cobrar" class="nav-link">
+                <a href="/cuenta_cobro" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Cuentas por cobrar</p>
+                  <p>Cuentas de Cobro</p>
                 </a>
               </li>
 

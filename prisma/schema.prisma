@@ -105,6 +105,7 @@ model Examen {
   firma           String?       @db.VarChar(100)
   estado          Estado_Examen? @default(Solicitado)
   estado_pago    Estado_Pago? @default(Pendiente_Pago)
+  fecha_cobro DateTime?
   fecha_pago DateTime?
   observacion     String?       @db.VarChar(200)
   procedimientoId Int

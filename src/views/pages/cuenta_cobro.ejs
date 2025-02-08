@@ -54,9 +54,14 @@
         
             <input type="date" id='fecha_fin' class="form-control">
           </div><!-- /.col -->
-          <div class="col-sm-4">
-            <select class="form-control" id="contratos" onchange="listarCuentasPendientePago();listarCuentasCobradas();"></select>
+          <div class="col-sm-2">
+            <select class="form-control" id="contratos" ></select>
+          
           </div><!-- /.col -->
+
+          <div class="col-sm-2">
+            <button id="btn_buscar" onclick="buscarExamenesDelPerodo()" class="btn btn-primary">Buscar</button>
+          </div>
           
           <div class="col-sm-4">
             <ol class="breadcrumb float-sm-right">
@@ -78,8 +83,10 @@
 
       <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-          <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Cuentas Por Cobrar</button>
+          <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Cuentas Pendientes</button>
           <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Cuentas Cobradas</button>
+          <button class="nav-link" id="nav-pagadas-tab" data-toggle="tab" data-target="#nav-pagadas" type="button" role="tab" aria-controls="nav-pagadas" aria-selected="false">Cuentas Pagadas</button>
+       
         </div>
       </nav>
       <div class="tab-content" id="nav-tabContent">
@@ -88,11 +95,10 @@
           <div class="col-12">
             <div class="d-flex justify-content-between">
 
-              <button type="button" id="btnCuentaCobro" class="btn btn-danger" onclick="registrarCuentaCobro();">
-                Registrar Reporte de Cobro
+              <button type="button" id="btnCuentaCobro" class="btn btn-danger" onclick="confirmarRegistroCuentaCobro();">
+                Registrar Cuenta de Cobro
               </button>
-              <button id="btnToggleSeleccion" class="btn btn-primary">Seleccionar Todos</button>
-              
+              <button id="btn_seleccionar_pendientes" class="btn btn-primary">Seleccionar Todos</button>
           </div>
           
           </div><!-- /.col -->
@@ -100,6 +106,10 @@
           
           
           <div class="row">
+            <div class="col-12 text-center">
+              <h4>Cuentas Pendiente por Cobrar</h4>
+            </div>
+            
             <div class="col-12">
               <table class="table table-striped" id="tabla_cuenta_pendiente" style="font-size: 12px;">
                 <thead>
@@ -127,11 +137,28 @@
 
 
         </div>
-        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
 
+
+        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
           <div class="row">
+            <div class="col-12 text-center">
+              <h4>Cuentas Cobradas</h4>
+            </div>
             <div class="col-12">
-              <table class="table table-striped" id="tabla_cuenta_cobradas" style="font-size: 12px;">
+            <div class="d-flex justify-content-between">
+
+            
+
+              <button type="button" id="btnCuentaPagada" class="btn btn-danger" onclick="confirmarRegistroCuentaPago();">
+                Registrar Cuenta Pagadas
+              </button>
+              <button id="btn_seleccionar_pagos" class="btn btn-primary">Seleccionar Todos</button>
+          </div>
+
+        </div>
+           
+            <div class="col-12">
+              <table class="table table-striped mt-3" id="tabla_cuenta_cobradas" style="font-size: 12px;">
                 <thead>
                     <tr class="line-head">
                         <th>ID</th>
@@ -146,16 +173,54 @@
                         <th>Precio</th>
                         <th>Autorización</th>
                         <th>Estado</th>
+                        <th>Admin</th>
                     </tr>
                 </thead>
                 <tbody >
                 </tbody>
                 </table>
             </div>
+          </div>
         </div>
-        
-           
+
+
+        <div class="tab-pane fade" id="nav-pagadas" role="tabpanel" aria-labelledby="nav-pagadas-tab">
+          <div class="row">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-12 text-center">
+                  <h4>Cuentas Pagadas</h4>
+                </div>
+               
+                <div class="col-12">
+                  <table class="table table-striped" id="tabla_cuenta_pagadas" style="font-size: 12px;">
+                    <thead>
+                        <tr class="line-head">
+                            <th>ID</th>
+                            <th>Identificación</th>
+                            <th>Nombre</th>
+                            <th>Fecha de Nacimiento</th>
+                            <th>Edad</th>
+                            <th>Telefono</th>
+                            <th>Examen</th>
+                            <th>Fecha</th>
+                            <th>Contrato</th>
+                            <th>Precio</th>
+                            <th>Autorización</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody >
+                    </tbody>
+                    </table>
+                </div>
+              </div>
+              
+            </div>
+          </div>
         </div>
+
+
         <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
       </div>
 
