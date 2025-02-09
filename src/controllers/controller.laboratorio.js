@@ -22,10 +22,41 @@ export  const listarExamenesListos=async(req,resp)=>{
         return resp.status(200).json({"status":200,examenes});
        
     }catch(error){
-        console.log("Error en controller.muestra.js :"+error);
-        resp.status(500).json({"status":500,"message": 'Error al listar  las procedimientos facturados' });
+        console.log("Error en controller.laboratorio.js :"+error);
+        resp.status(500).json({"status":500,"message": 'Error al listar  examenes en estad listos' });
     }
 }
+
+
+
+export  const listarLaboratoriosPaciente=async(req,resp)=>{
+    try{
+       let identificacion= req.user.identificacion;
+
+        const examenes = await prisma.$queryRaw ` SELECT 
+                    pa.identificacion,pa.nombres,ex.id_examen,cu.nombre AS cups,ex.estado,fact.autorizacion,ex.observacion,
+                    fact.fecha,cont.nombre AS contrato
+                    FROM facturas fact
+                    JOIN contratos cont ON cont.id_contrato=fact.contratoId
+                    JOIN examenes ex ON ex.facturaId= fact.id_factura
+                    JOIN procedimientos proc ON proc.id_procedimiento = ex.procedimientoId
+                    JOIN cups cu ON cu.id_cups = proc.cupsId
+                    JOIN  pacientes pa ON pa.id_paciente = fact.pacienteId
+                    WHERE (ex.estado='Resultados_Listos' or ex.estado='Resultados_Entregados') and pa.identificacion=${identificacion}
+                    ORDER BY ex.fecha_muestra ASC`;
+        
+       
+        
+        return resp.status(200).json({"status":200,examenes});
+       
+    }catch(error){
+        console.log("Error en controller.laboratorio.js :"+error);
+        resp.status(500).json({"status":500,"message": 'Error al listar  los laboratorios del paciente' });
+    }
+}
+
+
+
 
 
 
@@ -52,8 +83,8 @@ export  const buscarExamenesListos=async(req,resp)=>{
         
        
     }catch(error){
-        console.log("Error en controller.muestra.js :"+error);
-        resp.status(500).json({"status":500,"message": 'Error al listar  las procedimientos facturados' });
+        console.log("Error en controller.laboratiroi.js :"+error);
+        resp.status(500).json({"status":500,"message": 'Error al buscar examenes' });
     }
 }
 
@@ -110,7 +141,7 @@ export  const generarLaboratorio=async(req,resp)=>{
         //console.log(examenes);
         return resp.status(200).json(examenes);
     }catch(error){
-        console.log("Error en controller.informe.js :"+error);
+        console.log("Error en controller.laboratorio.js :"+error);
         resp.status(500).json({ error: 'Error al listar el laboratorio' });
     }
 }
@@ -185,8 +216,8 @@ export const confirmarEntregaExamen = async (req, resp) => {
         resp.status(200).json({ status: 200, message: "Laboratorio entregado" });
        
     } catch (error) {
-        console.error("Error en controller.informe.js:", error);
-        resp.status(500).json({ status: 500, message: "Error al entregar el laboratorio" });
+        console.error("Error en controller.laboratorio.js:", error);
+        resp.status(500).json({ status: 500, message: "Error al descargar el laboratorio" });
     }
 };
 

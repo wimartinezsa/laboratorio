@@ -69,6 +69,11 @@ route.get('/cuenta_cobro',(req,resp)=>{
     resp.render("pages/cuenta_cobro.ejs");
 });
 
+route.get('/laboratorio_invitado',(req,resp)=>{
+    resp.render("pages/laboratorio_invitado.ejs");
+});
+
+
 
 
 

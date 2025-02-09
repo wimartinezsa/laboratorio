@@ -9,7 +9,7 @@ const route = Router();
 
 
 
-route.get('/listarExamenesTomaMuestra/:rol/:area',validarToken,listarExamenesTomaMuestra);
+route.get('/listarExamenesTomaMuestra',validarToken,listarExamenesTomaMuestra);
 
 route.put('/confirmarTomaMuestra/:id_prestacion',validarToken,confirmarTomaMuestra);
 

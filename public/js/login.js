@@ -46,7 +46,7 @@ document.getElementById('frmValidar').addEventListener('submit', function(event)
           localStorage.setItem('nombre', '');
           localStorage.setItem('rol', '');
           localStorage.setItem('id', '');
-          localStorage.setItem('area', '');
+         
 
           if (data.status != 200) {
               Mensaje.fire({ icon: 'warning', title: data.message });
@@ -55,9 +55,12 @@ document.getElementById('frmValidar').addEventListener('submit', function(event)
               localStorage.setItem('nombre', data.user.nombre);
               localStorage.setItem('rol', data.user.rol);
               localStorage.setItem('id', data.user.id);
-              localStorage.setItem('area', data.user.area);
+            
+              
 
-              window.location.href = "/home";
+            if(data.user.rol==='Invitado')  {window.location.href = "/laboratorio_invitado";}
+            else {window.location.href = "/home";}
+             
               Mensaje.fire({ icon: 'success', title: data.message });
           }
       })

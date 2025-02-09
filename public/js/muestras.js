@@ -2,10 +2,9 @@
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    let rol = localStorage.getItem('rol'); 
-    let area = localStorage.getItem('area'); 
+  
     
-    listarExamenesTomaMuestra(rol,area);
+    listarExamenesTomaMuestra();
     
   });
 
@@ -46,11 +45,11 @@ var Frm_muestras = new bootstrap.Modal(document.getElementById('Frm_muestras'), 
 
 
 // se listan los laboratoriospor Area
-function listarExamenesTomaMuestra(rol,area){
+function listarExamenesTomaMuestra(){
 
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
     
-    fetch(`/listarExamenesTomaMuestra/${rol}/${area}`, {
+    fetch(`/listarExamenesTomaMuestra`, {
         method:'get',
         headers: {
             'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
@@ -350,9 +349,8 @@ function confirmarTomaMuestra(){
             if(data.status==403){window.location.href = "/";}
         
             if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
-            let rol = localStorage.getItem('rol'); 
-            let area = localStorage.getItem('area'); 
-            listarExamenesTomaMuestra(rol,area);
+           
+            listarExamenesTomaMuestra();
                Frm_muestras.hide();
 
                

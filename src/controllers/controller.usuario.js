@@ -198,6 +198,8 @@ export  const buscarUsuarioId=async(req,resp)=>{
                   }
               },
           });
+
+          console.log(usuario);
        resp.status(200).json(usuario);
           
     }catch(error){

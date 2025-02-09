@@ -1,9 +1,7 @@
 
 document.addEventListener("DOMContentLoaded", function () {
-    let rol = localStorage.getItem('rol'); 
-    let area = localStorage.getItem('area'); 
-    
-    listarMuestrasArea(rol,area);
+   
+    listarMuestrasArea();
     
 });
 
@@ -41,7 +39,7 @@ var Frm_muestras = new bootstrap.Modal(document.getElementById('Frm_muestras'), 
 
 
 
-function listarMuestrasArea(rol,area){
+function listarMuestrasArea(){
 
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
     
@@ -256,9 +254,8 @@ function registrarConfirmarMuestraRecibida(){
         
             if(data.status==200){
                 Mensaje.fire({icon: 'success',title: data.message});
-                let rol = localStorage.getItem('rol'); 
-                let area = localStorage.getItem('area'); 
-                listarMuestrasArea(rol,area);
+                
+                listarMuestrasArea();
                Frm_muestras.hide();
 
              
@@ -320,9 +317,8 @@ function confirmarInicioProcesoAnalisis(id_prestacion){
         
             if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
         
-                let rol = localStorage.getItem('rol'); 
-                let area = localStorage.getItem('area'); 
-                listarMuestrasArea(rol,area);
+              
+                listarMuestrasArea();
                
                
            

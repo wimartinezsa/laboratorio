@@ -1,6 +1,6 @@
 
 import prisma from '../libs/prisma.js'
-
+import bcrypt from 'bcryptjs';
 
 export  const listarFacturas=async(req,resp)=>{
     try{
@@ -128,7 +128,7 @@ export  const registrarFactura=async(req,resp)=>{
        // console.log(factura);
         // se actualiza la autorización 
         if (factura){
-
+            // se crea una nueva autorización solo para los particulares
             if(datos.id_empresa ==='1'){
                
                 const factura2 = await prisma.Factura.update(
@@ -138,15 +138,63 @@ export  const registrarFactura=async(req,resp)=>{
                         }
                     } 
                 );
+
+
             }
+
+            //se crear el usuro con rol de invitado
+            // se consulta en la tabla de pacientes los datos
+
+            const Paciente = await prisma.Paciente.findFirst({
+                where:{
+                    id_paciente: factura.pacienteId
+                }
+            });
+            if(Paciente) {
+                
+                // se consulta en la tabla usuario si existe
+                const Usuario = await prisma.Usuario.findFirst({
+                    where:{
+                        identificacion: Paciente.identificacion
+                    }
+                });
+                
+                const encriptPassword = bcrypt.hashSync(String(Paciente.identificacion), 12)
+                if(Usuario) console.log('Ya existe');
+                else{
+                    // se crea el usuro con rol de invitado
+                    const new_user=await  prisma.Usuario.create({
+                        data: {
+                            identificacion:Paciente.identificacion,
+                            tipo_identificacion: Paciente.tipo_identificacion,
+                            nombre: Paciente.nombres,
+                            email: Paciente.email,
+                            password: encriptPassword,
+                            rol: 'Invitado',
+                            cargo:'Invitado',
+                            autoriza: 'No'
+                        }
+                    })
+
+
+                }
+
+                 
+
+
+            }
+            else{
+                console.log(usuario_invitado);
+
+               
+
+
+        }
+            
 
         }
 
 
-     
-        
-
-        
 
 
         return resp.status(200).json({"status":200,"message":"Factura registrado en el sistema"});

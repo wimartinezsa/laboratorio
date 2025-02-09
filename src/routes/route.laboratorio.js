@@ -6,7 +6,8 @@ import {
         firmaLaboratorioBacteriologo,
         confirmarEntregaExamen,
         buscarExamenesListos,
-        firmaLaboratorioAuxiliar
+        firmaLaboratorioAuxiliar,
+        listarLaboratoriosPaciente
         } from "../controllers/controller.laboratorio.js";
 
 const route = Router();
@@ -20,6 +21,7 @@ route.get('/firmaLaboratorioBacteriologo',validarToken,firmaLaboratorioBacteriol
 route.put('/confirmarEntregaExamen/:id_examen',validarToken,confirmarEntregaExamen);
 route.get('/firmaLaboratorioAuxiliar/:id_usuario',validarToken,firmaLaboratorioAuxiliar);
 
+route.get('/listarLaboratoriosPaciente',validarToken,listarLaboratoriosPaciente);
 
 
 

@@ -484,6 +484,8 @@ enum Rol {
   Facturacion
   Bacteriologo
   Auxiliar
+  Invitado
+  
 }
 
 enum Tipo_Empresa {

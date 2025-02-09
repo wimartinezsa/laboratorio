@@ -1,9 +1,8 @@
 const nombre = localStorage.getItem('nombre'); 
 const rol = localStorage.getItem('rol'); 
-const area = localStorage.getItem('area'); 
+
 document.getElementById('user').innerHTML= `
 <p style="margin: 0.5px 0; color:white";>Usuario: ${nombre}</p>
-<p style="margin: 0.5px 0;color:white";>Área : ${area}</p>
 <p style="margin: 0.5px 0;color:white";>Rol : ${rol}</p>
 `;
 
@@ -465,6 +464,24 @@ if(rol==='Bacteriologo'){
    
   `;
 }
+
+
+if(rol==='Invitado'){
+  document.getElementById("menu").innerHTML=`
+ <li class="nav-item">
+          <a href="/laboratorio_invitado" class="nav-link">
+            <i class="nav-icon fas fa-user"></i>
+            <p>
+              Descargar Resultados
+            </p>
+          </a>
+</li>
+  `;
+}
+
+
+
+
 
 function cerrrar_sesion(){
   

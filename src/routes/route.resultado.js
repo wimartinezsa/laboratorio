@@ -12,7 +12,7 @@ import {
 
 const route = Router();
 
-route.get('/listarExamenesPorArea/:rol/:area',validarToken,listarExamenesPorArea);
+route.get('/listarExamenesPorArea',validarToken,listarExamenesPorArea);
 
 
 

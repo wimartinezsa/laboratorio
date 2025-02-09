@@ -1,10 +1,9 @@
 
 
 document.addEventListener("DOMContentLoaded", function () {
-  let rol = localStorage.getItem('rol'); 
-  let area = localStorage.getItem('area'); 
+ 
   
-  listarExamenesPorArea(rol,area);
+  listarExamenesPorArea();
   
 });
 
@@ -43,11 +42,11 @@ var Frm_resultados = new bootstrap.Modal(document.getElementById('Frm_resultados
 
 
 // se listan los laboratoriospor Area
-function listarExamenesPorArea(rol,area){
+function listarExamenesPorArea(){
 
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
     
-    fetch(`/listarExamenesPorArea/${rol}/${area}`, {
+    fetch(`/listarExamenesPorArea`, {
         method:'get',
         headers: {
             'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
@@ -290,10 +289,9 @@ function registrarResulatadosAutomaticos(resultados){
           
 
           );
-        let rol = localStorage.getItem('rol'); 
-        let area = localStorage.getItem('area'); 
       
-        listarExamenesPorArea(rol,area);
+      
+        listarExamenesPorArea();
        
        
         }
@@ -370,8 +368,7 @@ async function pintarFormulario(data) {
   //console.log(data);
   const contenedorFormulario = document.getElementById("formulario-dinamico");
 
-  contenedorFormulario.style.maxHeight = "400px"; // Ajusta la altura según sea necesario
-  contenedorFormulario.style.overflowY = "auto"; // Habilita la barra de desplazamiento vertical
+  contenedorFormulario.style.maxHeight = "400px"; // Ajusta la altura según sea necesar
 
 
   contenedorFormulario.innerHTML = ""; // Limpia el contenido del formulario
@@ -531,9 +528,8 @@ function finzalizarResultados(id_examen){
        if(data.status==403){window.location.href = "/";}
        
         if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
-        let rol = localStorage.getItem('rol'); 
-        let area = localStorage.getItem('area'); 
-        listarExamenesPorArea(rol,area);
+
+        listarExamenesPorArea();
         Frm_resultados.hide();
         }
 
@@ -573,9 +569,8 @@ function cambiarEstadoResultado(id_resultado,estado){
        if(data.status==403){window.location.href = "/";}
        
         if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
-        let rol = localStorage.getItem('rol'); 
-        let area = localStorage.getItem('area'); 
-        listarExamenesPorArea(rol,area);
+      
+        listarExamenesPorArea();
         }
 
        if(data.status==500){Mensaje.fire({icon: 'warning',title: data.message});}

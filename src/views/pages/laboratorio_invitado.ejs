@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Software Laboratorio Clinico</title>
+
+  <%- include ('../parts/script_superior.ejs')%>
+
+   <!-- DataTables -->
+ <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+ <link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+ <link rel="stylesheet" href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+  </div>
+
+  <!-- Navbar -->
+  <%- include ('../parts/navbar.ejs')%>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+ 
+  <%- include ('../parts/menu.ejs')%>
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Labortorios</h1>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+       
+        <table class="table table-striped "  id="tabla_laboratorios_paciente" style="font-size: 12px">
+            <thead>
+                <tr class="line-head">
+                    <th>Codigo</th>
+                    <th>identificacion</th>
+                    <th>Nombres</th>
+                    <th>Fecha</th>
+                    <th>Autorización</th>
+                    <th>Examen</th>
+                    <th>Estado</th>
+                    <th>Admin.</th>
+                </tr>
+            </thead>
+            <tbody >
+            </tbody>
+          </table>
+       
+
+
+
+
+        <!-- Main row -->
+       
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <%- include ('../parts/footer.ejs')%>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<%- include ('../parts/script_inferior.ejs')%>
+</body>
+
+
+<script src="/plugins/jspdf/jspdf.debug.js"></script>
+<script src="/plugins/moment/moment.min.js"></script>
+
+
+
+<!-- DataTables  & Plugins -->
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="/plugins/jszip/jszip.min.js"></script>
+<script src="/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+
+<script src="/js/generar_laboratorio.js"></script>
+</html>
+
+<script>
+
+
+
+
+
+
+listarLaboratoriosPaciente();
+
+
+function listarLaboratoriosPaciente(){
+
+
+const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+
+fetch('/listarLaboratoriosPaciente', {
+    method:'get',
+    headers: {
+        'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+        'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
+    }
+})
+.then(response => {
+    // Verificar si la respuesta es JSON
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+        return response.json();
+    } else {
+      // window.location.href = "/";
+    }
+})
+.then(data => {
+
+   
+    let accionBTN='';
+    let arrayDatos=[];
+
+    if(data.status==200){
+
+    data.examenes.forEach(element => {
+    accionBTN =` <a class="btn btn-primary" href="javascript:imprimirResultados(${element.id_examen},${element.autorizacion})" title='Descargar Resultados'><i class='fas fa-cloud-download-alt' style='font-size:20px'></i></a>
+    `;
+
+    let dato = {
+    codigo : element.id_examen,
+    identificacion : element.identificacion,
+    nombres :element.nombres,
+    fecha :moment(element.fecha).format('LL') ,
+    autorizacion :element.autorizacion,
+    cups :element.cups,
+    estado : element.estado.replace(/_/g, " "),
+
+   
+    Accion :accionBTN
+                    }
+                    arrayDatos.push(dato)
+                    });
+
+                    var table = $('#tabla_laboratorios_paciente').DataTable({
+           "bInfo" : false,
+           searching: true,
+           paging: true,
+           autoWidth: false,
+           destroy: true,
+           responsive: true,
+           data: arrayDatos,
+           columns: [
+                       {"data": "codigo"},
+                       {"data": "identificacion"},
+                       {"data": "nombres"},
+                       {"data": "fecha"},
+                       {"data": "autorizacion"},
+                       {"data": "cups"},
+                       {"data": "estado"},                     
+                       {"data": "Accion"}
+                   ]
+  
+                    });
+    }
+  
+    
+});
+
+
+
+
+
+
+
+}
+
+
+
+
+async function  imprimirResultados(id_examen,autorizacion){
+  await Laboratorio(autorizacion);
+  await confirmarEntregaExamen(id_examen);
+}
+
+
+function confirmarEntregaExamen(id_examen){
+    const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+
+        fetch(`/confirmarEntregaExamen/${id_examen}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+                    'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
+                }
+            })
+        .then(resp =>resp.json())
+        .then(data=>{
+          
+        
+            if(data.status==200){
+            listarLaboratoriosPaciente(); 
+            }
+    
+         
+          
+        });
+
+}
+
+
+
+
+
+</script>
+
+
+
+
