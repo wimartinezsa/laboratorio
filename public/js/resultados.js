@@ -4,8 +4,12 @@ document.addEventListener("DOMContentLoaded", function () {
  
   
   listarExamenesPorArea();
+ 
+  
   
 });
+
+
 
 
 moment.defineLocale('es', {
@@ -39,7 +43,20 @@ var Frm_resultados = new bootstrap.Modal(document.getElementById('Frm_resultados
 });
 
 
+function activarBotonLectura(){
 
+  let maquina = document.getElementById('maquina').value;
+  
+  if(maquina==="Maquina Analizador Quimica"){
+    document.getElementById('btn_Quimica').hidden =false;
+    document.getElementById('btn_Hematologia').hidden =true;
+  }else{
+    document.getElementById('btn_Quimica').hidden =true;
+    document.getElementById('btn_Hematologia').hidden =false;
+  }
+
+
+}
 
 // se listan los laboratoriospor Area
 function listarExamenesPorArea(){
@@ -77,8 +94,8 @@ function listarExamenesPorArea(){
         data.examenes.forEach(element => {
 
         accionBTN =``;
-        accionBTN =`<a class="badge badge-pill badge-danger" style="font-size: 0.8rem;" 
-           href="javascript:gestionarResultados(${element.id_examen},'${element.factura.paciente.nombres}','${element.observacion}')" title='Finalizar Análisis'>${element.estado.replace(/_/g," ")}
+        accionBTN =`<a class="badge badge-pill badge-warning" style="font-size: 0.8rem;" 
+           href="javascript:gestionarResultados(${element.id_examen},'${element.factura.paciente.nombres}','${element.observacion}')" title='Migrar Resultados de Análisis'>${element.estado.replace(/_/g," ")}
            </a>`;
           
  
@@ -89,7 +106,6 @@ function listarExamenesPorArea(){
       let tabla=`<table style="border-collapse: collapse; width: 100%;">
                 <thead>
                     <tr>
-                    <th scope="col">CODIGO</th>
                      <th scope="col">METODO</th>
                       <th scope="col">PARAMETRO</th>
                       <th scope="col">RESULTADO</th>
@@ -118,16 +134,18 @@ function listarExamenesPorArea(){
                 
                 }
                 
+
+                /*
                 if(item.parametro.metodo==='Automatico'){
                   estado_parametro=`<span class="badge badge-pill badge-danger" style="font-size: 0.8rem;">${item.id_resultado}</span>`;
                 }
                 else{
                   estado_parametro=`<span class="badge badge-pill badge-secondary" style="font-size: 0.8rem;">${item.id_resultado}</span>`
                 }
+                */
               
                 tabla+=`
                   <tr>
-                  <td>${estado_parametro}</td>
                   <td>${item.parametro.metodo}</td>
                     <td>${item.parametro.nombre}</td>
                     <td>${item.resultado}</td>
@@ -145,12 +163,13 @@ function listarExamenesPorArea(){
 
         let dato = {
         examen:element.id_examen,
-        autoriazacion:element.factura.autorizacion,
+       
         identificacion : element.factura.paciente.identificacion,
         nombres :element.factura.paciente.nombres.toUpperCase(),
         cups :element.procedimiento.cups.nombre,
         resultado :tabla,
         observacion:element.observacion,
+        autoriazacion:`<span class="badge badge-pill badge-success" style="font-size: 0.8rem;">${  element.factura.autorizacion}</span>`,
         area :element.procedimiento.area.nombre.toUpperCase(),
         estado :accionBTN ,
                         }
@@ -167,12 +186,12 @@ function listarExamenesPorArea(){
                scrollX: false, 
                data: arrayDatos,
                columns: [
-                           {"data": "examen"},
-                           {"data": "autoriazacion"},
+                           {"data": "examen"},                         
                            {"data": "identificacion"},
                            {"data": "nombres"},
                            {"data": "cups"},
-                           {"data": "observacion"},  
+                           {"data": "observacion"},
+                           {"data": "autoriazacion"},  
                            {"data": "resultado"},
                            {"data": "area"},
                            {"data": "estado"}    
@@ -218,44 +237,126 @@ fileInput.addEventListener("change", (event) => {
 
 
 
+async function leerArchivoAnalisisCompletos(tipo_analisis){
+  const rows = fileContent.trim().split("\n");
+  let codMuestras;
+  
+  if(tipo_analisis==="Quimica"){
+    
+    if (!fileContent) {
+      Mensaje.fire({icon: 'warning',title:`Por favor cargar el archivo .txt de la maquina de Quimica`});
+      return;
+    }
+    const rows =await fileContent.split("\n").filter(row => row.trim() !== "");
+    
+    const resultado_txt = [];
+
+    await rows.forEach(async (row) => {
+      const cells = row.split(/\s+/); // Dividir por espacios
+     if(!isNaN(Number(cells[0]))){
+     
+      resultado_txt.push(
+        {"muestra": cells[0],"parametro":cells[1],"valor":cells[3]}
+           
+        );
+        }
+       
+        registrarResulatadosAutomaticos(resultado_txt);
+       
+    })
+   
+  }// fin del if tipo_analisis
+
+ 
+
+}
 
 
-
-//Función para leer el archivo plano
-async function leerResultados(){
+//Función para leer el archivo plano de los resultados txt de la maquina Quimica
+/*
+async function leerResultadosAutorizacion(){
 
       if (!fileContent) {
-        Mensaje.fire({icon: 'warning',title:`Por favor cargar el archivo plano`});
+        Mensaje.fire({icon: 'warning',title:`Por favor cargar el archivo .txt de la maquina de Quimica`});
         return;
       }
       const rows =await fileContent.split("\n").filter(row => row.trim() !== "");
+
+      
      
       const resultado_txt = [];
 
       await rows.forEach(async (row) => {
         const cells = row.split(/\s+/); // Dividir por espacios
        if(!isNaN(Number(cells[0]))){
-        resultado_txt.push({
-              codigo: cells[0],
-              resultado: cells[3]
-          });
+        console.log(cells[0]);
+       
+        resultado_txt.push(
+          {"muestra": cells[0],"parametro":cells[1],"valor":cells[3]}
+             
+          );
           }
-          /*
-          else{
-           Mensaje.fire({icon: 'success',title:`El codigo ${cells[0]} no es numérico`});
-          }
-           */
+         
       })
+      //console.log(resultado_txt);
      
-      await registrarResulatadosAutomaticos(resultado_txt);
+    // await registrarResulatadosAutomaticos(resultado_txt);
       
+}
+
+*/
+
+
+
+
+
+
+
+function registrarFormularioAutomaticos(resultados){
+  const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+
+  fetch('registrarFormularioAutomaticos', {
+      method:'put',
+      body: JSON.stringify(resultados),
+      headers: {
+          'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+          'Content-Type': 'application/json' // Especifica el tipo de contenido
+      }
+  })
+  .then(response => {
+    // Verificar si la respuesta es JSON
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+        return response.json();
+    } else {
+       // window.location.href = "/";
+    }
+  })
+  .then(data => {
+
+  // console.log(data);
+
+       if(data.status==403){window.location.href = "/";}
+       
+        if(data.status===200){
+          Frm_resultados.hide();
+          Mensaje.fire({icon: 'success',title: data.message}
+          );
+      
+      
+        listarExamenesPorArea();
+        }
+
+       if(data.status==500){Mensaje.fire({icon: 'warning',title: data.message});}
+  });
+
+ 
 }
 
 
 
-
-
 // registra los resultados de lso parametros del archivo plano
+
 function registrarResulatadosAutomaticos(resultados){
   const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
@@ -279,15 +380,13 @@ function registrarResulatadosAutomaticos(resultados){
   })
   .then(data => {
 
-   // console.log(data);
+   console.log(data);
 
        if(data.status==403){window.location.href = "/";}
        
         if(data.status===200){
           Frm_resultados.hide();
           Mensaje.fire({icon: 'success',title: data.message}
-          
-
           );
       
       
@@ -320,9 +419,6 @@ async function gestionarResultados(id_examen,nombre,observacion){
 
   //document.querySelector("textarea[id='observacion']").value =observacion ;
   
- 
-
-
 
   await crearFormularioDinamico(id_examen);
   
@@ -363,20 +459,22 @@ async function crearFormularioDinamico(id_examen){
 
 
 
+
+
+
 async function pintarFormulario(data) {
   // Seleccionar el contenedor donde se generará el formulario
   //console.log(data);
   const contenedorFormulario = document.getElementById("formulario-dinamico");
 
-  contenedorFormulario.style.maxHeight = "400px"; // Ajusta la altura según sea necesar
+  contenedorFormulario.style.maxHeight = "none";
+  contenedorFormulario.style.height = "auto";
 
 
   contenedorFormulario.innerHTML = ""; // Limpia el contenido del formulario
   
   data.forEach((item, index) => {
     // Crear un contenedor para cada campo
-
-    
 
 
     const div = document.createElement("div");
@@ -444,7 +542,7 @@ async function pintarFormulario(data) {
     // Agregar el div al formulario
     contenedorFormulario.appendChild(div);
    
-
+   
     
     
   });
@@ -458,10 +556,11 @@ async function pintarFormulario(data) {
       const campo_resultado = document.getElementById(`parametro-${item.id_resultado}`).value;
       resultado_json.push({ codigo: item.id_resultado, resultado: campo_resultado});
     });
+    //  {"muestra": cells[0],"parametro":cells[1],"valor":cells[3]}
     
-   // console.log(resultado_json);
+   console.log(resultado_json);
    
-   await registrarResulatadosAutomaticos(resultado_json);
+   await registrarFormularioAutomaticos(resultado_json);
   
    
   };

@@ -82,6 +82,8 @@ model Factura {
 
 model Resultado {
   id_resultado Int              @id @default(autoincrement())
+  autorizacion String?          @db.VarChar(50)
+  codigo_maquina String?          @db.VarChar(50)
   resultado    String?          @db.VarChar(200)
   estado       Estado_Resultado
   examenId     Int
@@ -220,6 +222,7 @@ model Parametro {
   unidad           String?          @db.VarChar(30)
   valor_referencia String?          @db.VarChar(300)
   estado           Estado           @default(Activo)
+  codigo_maquina   String?          @db.VarChar(50)
   procedimientoId  Int
   procedimiento    Procedimiento    @relation(fields: [procedimientoId], references: [id_procedimiento])
   resultado        Resultado[]

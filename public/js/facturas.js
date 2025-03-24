@@ -60,8 +60,9 @@ $(function () {
 
 
 function listarFacturasContrato(){
+
     let id_contrato= document.getElementById('contratos').value;
-   
+      
 
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
@@ -93,12 +94,12 @@ function listarFacturasContrato(){
     data.forEach(element => {
 
         if(element.estado==="Pendiente_Emision"){
-            accionBTN =`<a class="btn btn-primary" href="javascript:editarFactura(${element.id_factura})" title='Editar Factura'><i class="nav-icon fas fa-microscope"></i></a>
+            accionBTN =`<a class="btn btn-primary" href="javascript:editarFactura(${element.id_factura},${element.autorizacion})" title='Editar Factura'><i class="nav-icon fas fa-microscope"></i></a>
             <a class="btn btn-primary" href="javascript:gestionarAnulacionFactura(${element.id_factura})" title='Anular Factura'><i class="nav-icon fas fa-trash-alt"></i></a>`;
         }
       
         if(element.estado==="Factura_Emitida" || element.estado==="Pendiente_Pago" || element.estado==="Pagado"){
-            accionBTN =`<a class="btn btn-primary" href="javascript:editarFactura(${element.id_factura})" title='Editar Factura'><i class="nav-icon fas fa-microscope"></i></a>
+            accionBTN =`<a class="btn btn-primary" href="javascript:editarFactura(${element.id_factura},${element.autorizacion})" title='Editar Factura'><i class="nav-icon fas fa-microscope"></i></a>
                         <a class="btn btn-primary" href="javascript:imprimirFactura(${element.id_factura})" title='Imprimir Factura'><i class="nav-icon fas fa-file-pdf"></i></a>
             `;
         }
@@ -118,9 +119,8 @@ function listarFacturasContrato(){
         contrato :element.contrato,
         autorizacion :element.autorizacion,
         total :element.total,
-        estado : element.estado.replace(/_/g, " "),
-                                            
-       Accion :accionBTN
+        estado : element.estado.replace(/_/g, " "),                                   
+        Accion :accionBTN
    }
        arrayDatos.push(dato)
        });
@@ -593,13 +593,15 @@ function limpiarFormularioPaciente(){
 
 
 
-async function editarFactura(id_factura){
+async function editarFactura(id_factura,autorizacion){
 
 
 
     document.getElementById("tabla_factura").innerHTML='';
 
    document.getElementById('id_factura').value=id_factura;
+   document.getElementById('cod_autorizacion').value=autorizacion;
+   
    document.getElementById('precio').value='';
 
    const id_empresa= document.getElementById('empresas').value;
@@ -853,6 +855,8 @@ function listarProcedimientoContratados(){
 
     
     const id_factura= document.getElementById('id_factura').value;
+    const cod_autorizacion= document.getElementById('cod_autorizacion').value;
+    
     const procedimiento_acordado = document.getElementById("procedimiento_acordados").value;
     const precio = document.getElementById("precio").value;
 
@@ -860,6 +864,7 @@ function listarProcedimientoContratados(){
     let datos= new URLSearchParams();
     datos.append('id_procedimiento',procedimiento_acordado);
     datos.append('id_factura',id_factura);
+    datos.append('cod_autorizacion',cod_autorizacion);
     datos.append('precio',precio)
     
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta

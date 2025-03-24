@@ -142,7 +142,7 @@ export  const registrarFactura=async(req,resp)=>{
 
             }
 
-            //se crear el usuro con rol de invitado
+            //se crear el usuario con rol de invitado
             // se consulta en la tabla de pacientes los datos
 
             const Paciente = await prisma.Paciente.findFirst({
@@ -176,19 +176,11 @@ export  const registrarFactura=async(req,resp)=>{
                         }
                     })
 
-
                 }
-
-                 
-
 
             }
             else{
                 console.log(usuario_invitado);
-
-               
-
-
         }
             
 

@@ -43,6 +43,15 @@ $(function () {
 
 });
 
+document.getElementById('codigo_maquina').disabled =true;
+function activarCodigoMaquiena(){
+ let metodo=document.getElementById('metodo').value;
+ if(metodo==='Manual'){
+    document.getElementById('codigo_maquina').disabled =true;
+ }else{
+    document.getElementById('codigo_maquina').disabled =false;
+ }
+}
 
 
 
@@ -476,6 +485,7 @@ function registrarParametro(){
     datos.append('unidad',document.getElementById('unidad').value);
     datos.append('metodo',document.getElementById('metodo').value);
     datos.append('tipo_parametro',document.getElementById('tipo_parametro').value);
+    datos.append('codigo_maquina',document.getElementById('codigo_maquina').value);
     
 
 
@@ -611,6 +621,7 @@ function listarParametroId(id_procedimiento){
         html+=`<td>${element.unidad}</td>`;
         html+=`<td>${element.valor_referencia}</td>`;
         html+=`<td>${element.metodo}</td>`;
+        html+=`<td>${element.codigo_maquina}</td>`;
         html+=`<td>${element.tipo_parametro.nombre}</td>`;
         html+=`<td>${lista_tipos}</td>`;
 

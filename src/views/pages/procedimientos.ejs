@@ -217,44 +217,45 @@
                     <div class="card-body">
                     
                           <div class="row">
-                            <div class="col-12">
+                            <div class="col-6">
                               <label for="message-text" class="col-form-label">Nombre del Parametro:</label>
                               <input class="form-control" id='parametro' placeholder="Digite el nombre del parametro">
                             </div>
+                            <div class="col-3">
+                              <label for="message-text" class="col-form-label">Grupo:</label>
+                              <select id='tipo_parametro' class="form-control" required></select>
+                            </div>
+                            <div class="col-3">
+                              <label for="message-text" class="col-form-label">Unidad de medida:</label>
+                              <input type="text" class="form-control" id='unidad'
+                                  style="border: 1px solid rgb(208, 205, 205)"
+                                  placeholder="Digite la unidad de medida" >
+                            </div>
+
                           </div>
 
                             <div class="row">
+                              <div class="col-4">
+                                <label for="message-text" class="col-form-label">Metodo de Analisis:</label>
+                                <select id='metodo' onchange="activarCodigoMaquiena()" class="form-control" required>
+                                  <option value="" disabled="true" selected="true">Seleccione un Método</option>
+                                  <option value="Manual">Manual</option>
+                                  <option value="Automatico">Automático</option>
+                                </select>
+                            </div>
                                   
-                                    <div class="col-3">
-                                        <label for="message-text" class="col-form-label">Grupo:</label>
-                                        <select id='tipo_parametro' class="form-control" required></select>
-                                    </div>
                                     <div class="col-4">
-                                          <label for="message-text" class="col-form-label">Unidad de medida:</label>
-                                          <input type="text" class="form-control" id='unidad'
-                                              style="border: 1px solid rgb(208, 205, 205)"
-                                              placeholder="Digite la unidad de medida" >
-                                    </div>
-
+                                      <label for="message-text" class="col-form-label">Codigo Maquina:</label>
+                                      <input class="form-control" id='codigo_maquina' placeholder="Digite el codigo de la maquina"> 
+                                   </div>
                                     <div class="col-4">
-                                        <label for="message-text" class="col-form-label">Metodo de Analisis:</label>
-                                        <select id='metodo' class="form-control" required>
-                                          <option value="" disabled="true" selected="true">Seleccione un Método</option>
-                                          <option value="Manual">Manual</option>
-                                          <option value="Automatico">Automático</option>
-                                        </select>
-                                    </div>
-                                  
+                                      <label for="message-text" class="col-form-label">Rango Biologico:</label>
+                                      <textarea  id='valor_referencia' class="form-control" cols="30" rows="3"  placeholder="Digite el rango biologico"
+                                      style="border: 1px solid rgb(208, 205, 205)" ></textarea>  
+                                    </div> 
                             </div>
 
-                            <div class="row">
-                            
-                              <div class="col-12">
-                                <label for="message-text" class="col-form-label">Rango Biologico:</label>
-                                <textarea  id='valor_referencia' class="form-control" cols="50" rows="4"  placeholder="Digite el rango biologico"
-                                style="border: 1px solid rgb(208, 205, 205)" ></textarea>
-                              </div>
-                            </div>
+                           
               <div class="row mt-2">
                 <div class="col-12 d-flex justify-content-center">
                     <button type="button" id="btn_registrar" class="btn btn-primary" onclick="registrarParametro()">Registrar</button>
@@ -286,6 +287,7 @@
                             <th>Unidad</th>
                             <th>Rango Biologico</th>
                             <th>Metodo</th>
+                            <th>Codigo</th>
                             <th>Grupo</th>
                             <th>Respuestas</th>
                             <th>Admin.</th>

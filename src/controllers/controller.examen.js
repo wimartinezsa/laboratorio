@@ -5,7 +5,6 @@ import prisma from '../libs/prisma.js'
 export  const agregarExamenesFactura=async(req,resp)=>{
     try{
         const datos= await req.body;
-
         const examen = await prisma.Examen.create(
             {
                 data: {
@@ -39,6 +38,8 @@ export  const agregarExamenesFactura=async(req,resp)=>{
                                 data: {
                                     parametroId: Number(subItem.id_parametro),
                                     examenId: Number(examen.id_examen),
+                                    autorizacion:datos.cod_autorizacion,
+                                    codigo_maquina:subItem.codigo_maquina,
                                     resultado: '',
                                     estado:'Pendiente'
                                 }

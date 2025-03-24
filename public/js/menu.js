@@ -154,7 +154,7 @@ if(rol==='Administrador'){
               <li class="nav-item">
                 <a href="pages/forms/general.html" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>General Rips</p>
+                  <p>Generar Rips</p>
                 </a>
               </li>
              
@@ -190,24 +190,7 @@ if(rol==='Administrador'){
           </li>
 
           
-		  <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-chart-pie"></i>
-              <p>
-                Estadisticas
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="pages/tables/simple.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Simple Tables</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-		
+		  
      
     `;
 }
@@ -273,7 +256,7 @@ if(rol==='Facturacion'){
               <li class="nav-item">
                 <a href="pages/forms/general.html" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>General Rips</p>
+                  <p>Generar Rips</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -309,23 +292,7 @@ if(rol==='Facturacion'){
             </ul>
           </li>
 
-		  <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-chart-pie"></i>
-              <p>
-                Estadisticas
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="pages/tables/simple.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Simple Tables</p>
-                </a>
-              </li>
-            </ul>
-          </li>
+		
 		
      
     `;

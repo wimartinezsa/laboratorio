@@ -94,7 +94,6 @@ function listarExamenesTomaMuestra(){
       let tabla=`<table style="border-collapse: collapse; width: 100%;">
                 <thead>
                     <tr>
-                    <th scope="col">CODIGO</th>
                      <th scope="col">METODO</th>
                       <th scope="col">PARAMETRO</th>
                       <th scope="col">RESULTADO</th>
@@ -122,7 +121,7 @@ function listarExamenesTomaMuestra(){
                   btn_parametro=`<a class="btn btn-success" href="javascript:cambiarEstadoResultado(${item.id_resultado},'${item.estado}')" title='Resultado Pendiente'> <i class='fas fa-thumbs-up'></i></a>`;
                 
                 }
-                
+                /*
                 if(item.parametro.metodo==='Automatico'){
                     estado_parametro=`<span class="badge badge-pill badge-danger" style="font-size: 0.8rem;">${item.id_resultado}</span>`
                
@@ -130,10 +129,11 @@ function listarExamenesTomaMuestra(){
                 else{
                   estado_parametro=`<span class="badge badge-pill badge-secondary" style="font-size: 0.8rem;">${item.id_resultado}</span>`
                 }
+                */
               
                 tabla+=`
                   <tr>
-                  <td>${estado_parametro}</td>
+                
                   <td>${item.parametro.metodo}</td>
                     <td>${item.parametro.nombre}</td>
                     <td>${item.resultado}</td>
@@ -151,12 +151,12 @@ function listarExamenesTomaMuestra(){
 
         let dato = {
         examen:element.id_examen,
-        autoriazacion:`<span class="badge badge-pill badge-success" style="font-size: 0.8rem;">${element.factura.autorizacion}</span>`,
         identificacion : element.factura.paciente.identificacion,
         nombres :element.factura.paciente.nombres.toUpperCase(),
         cups :element.procedimiento.cups.nombre,
         resultado :tabla,
         observacion:element.observacion,
+        autoriazacion:`<span class="badge badge-pill badge-success" style="font-size: 0.8rem;">${element.factura.autorizacion}</span>`,  
         area :element.procedimiento.area.nombre.toUpperCase(),
         estado :accionBTN ,
                         }
@@ -174,11 +174,11 @@ function listarExamenesTomaMuestra(){
                data: arrayDatos,
                columns: [
                            {"data": "examen"},
-                           {"data": "autoriazacion"},
                            {"data": "identificacion"},
                            {"data": "nombres"},
                            {"data": "cups"},
-                           {"data": "observacion"},  
+                           {"data": "observacion"},
+                           {"data": "autoriazacion"},  
                            {"data": "resultado"},
                            {"data": "area"},
                            {"data": "estado"}    

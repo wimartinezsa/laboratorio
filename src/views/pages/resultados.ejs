@@ -68,12 +68,20 @@
     <div class="container-fluid">
         
       <div class="row"> 
-        <div class="col-3"></div>
         <div class="col-3">
-          <input type="file" id="fileInput" accept=".txt"> 
+          <select id="maquina" class="form-control" onchange="activarBotonLectura()">
+            <option value="" disabled='true' selected="true">Seleccionar el Tipo de Maquina</option>
+            <option value="Maquina Analizador Quimica">Maquina Analizadora Quimica</option>
+          
+          </select>
+        </div>
+        <div class="col-3">
+          <input type="file" id="fileInput" class="form-control" class=""  accept=".txt"> 
         </div>
         <div class="col-3"> 
-          <button class="btn btn-primary" onclick="leerResultados();">Leer Resultados</button>
+          <button class="btn btn-primary" id="btn_Quimica" hidden="true" onclick="leerArchivoAnalisisCompletos('Quimica');">Leer Resultados Maquina Quimica</button>
+          <button class="btn btn-primary" id="btn_Hematologia" hidden="true" onclick="leerArchivoAnalisisCompletos('Hematologia');">Leer Resultados Hematologia</button>
+       
         </div>
         <div class="col-3"></div>
       </div>
@@ -85,11 +93,11 @@
           <thead>
               <tr>
                   <th>Examen</th>
-                  <th>Autorización</th>
                   <th>Identificacion</th>
                   <th>Nombres</th>
                   <th>Examen</th>
                   <th>Observación</th>
+                  <th>Autorización</th>
                   <th>Resultado</th>
                   <th>Area</th>
                   <th>Estado</th>
@@ -139,6 +147,8 @@
                     <div class="tab-pane fade show active  " id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                       
                       <div id="formulario-dinamico"></div> 
+
+
                       <button type="button" id="btn_registrar" class="btn btn-success d-block mx-auto" >Actualizar</button>
         
                     </div>

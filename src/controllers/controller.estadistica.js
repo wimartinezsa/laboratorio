@@ -56,7 +56,7 @@ export const cantidadExamenesPorDiaEmpresa = async (req, resp) => {
                 join contratos cont on cont.empresaId= emp.id_empresa
                 join facturas fact on fact.contratoId= cont.id_contrato
                 join examenes ex on ex.facturaId=id_factura
-                where ex.estado='Resultados_Listos' and date(ex.fecha_resultado)= date( curdate())
+                where (ex.estado='Resultados_Listos' OR ex.estado='Resultados_Entregados') and date(ex.fecha_resultado)= date( curdate())
                 group by emp.nombre
         `;
         // Convertir BigInt a String

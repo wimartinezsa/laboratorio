@@ -236,7 +236,8 @@ export  const registrarParametro=async(req,resp)=>{
                     metodo: datos.metodo,
                     unidad: datos.unidad,
                     procedimientoId: Number(datos.id_procedimiento),
-                    tipo_parametroId: Number(datos.tipo_parametro)
+                    tipo_parametroId: Number(datos.tipo_parametro),
+                    codigo_maquina:datos.codigo_maquina
                 }
             } 
         );

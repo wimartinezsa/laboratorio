@@ -18,6 +18,7 @@ export  const listarExamenesPorArea=async(req,resp)=>{
             where: {
                 OR: [
                     { estado: 'En_Proceso_de_Analisis' }, // 1️⃣ Exámenes en análisis
+                    { estado: 'Analisis_Completo' },
                     {
                         estado: 'Resultados_Listos',       // 2️⃣ Exámenes listos
                         resultado: { 
@@ -161,77 +162,204 @@ export const finzalizarResultados = async (req, resp) => {
 
 
 
+// Se registra los analisis Completos del archivo 
 
-// se registra el json con los resultados de los parametros
-export const registrarResulatadosAutomaticos = async (req, resp) => {
+export const registrarAnalisisCompletosArchivo = async (req, resp) => {
     try {
         let json_resultados = req.body;
-       
-        let actualizado=0;
-        let noEncontrados=0;
-        // Asegúrate de que json_resultados sea un array
+        let actualizado = 0;
+        let noEncontrados = 0;
+   
+        console.log(json_resultados);
+        
         if (!Array.isArray(json_resultados)) {
             return resp.status(400).json({ message: "El cuerpo de la solicitud debe ser un array." });
         }
 
-        //
-        // Procesar los datos si hay elementos
         if (json_resultados.length > 0) {
-          //console.log(json_resultados);
-        //console.log("Resultados encontrados desde completos:",json_resultados);
+            let batchQueries = [];
 
+            
             for (const element of json_resultados) {
-                
-                // Usa interpolación segura
+                let sql =`SELECT ex.id_examen,ex.estado,fact.autorizacion FROM facturas fact
+                        JOIN examenes ex ON ex.facturaId = fact.id_factura
+                        WHERE fact.autorizacion=${element} AND ex.estado='En_Proceso_de_Analisis'`;
+                    const resultados = await prisma.$queryRawUnsafe (sql);
+    
+                    console.log(resultados);
+              
+                              
 
-                const resultados = await prisma.$queryRaw`
-                SELECT res.id_resultado,pa.nombre as parametro, res.parametroId, res.examenId 
-                FROM resultados res
-                JOIN parametros pa ON pa.id_parametro = res.parametroId
-                WHERE res.id_resultado = ${element.codigo}
-              `;
-   
-               if (resultados.length > 0) {
-               
-                
-                    for (const resultado of resultados) {
-                       const resultado_act= await prisma.Resultado.updateMany({
-                            where: {
-                                id_resultado: resultado.id_resultado,
-                                estado: 'Pendiente'
-                            },
-                            data: {
-                                resultado: element.resultado,
-                                estado: 'Pendiente'
-                            }
-                        });
+                if (resultados.length > 0) {
+                    batchQueries.push(
+                        prisma.$executeRaw`
+                            UPDATE examenes 
+                            SET estado = 'Analisis_Completo'
+                            WHERE id_examen = ${resultados[0].id_examen}  
+                        `
+                    );
 
-                        if (resultado_act.count > 0) {
-                            actualizado++;
-                        }
-                }
-
-               
-
+                    actualizado++;
                 } else {
                     noEncontrados++;
-                   // console.log(`No se encontraron resultados para el código: ${element.codigo}`);
                 }
+                
+            }
 
+            // Ejecutar todas las consultas en una transacción
+            await prisma.$transaction(batchQueries);
 
-
-
-            }// fin del for que recorre el json
-
-            resp.status(200).json({ status: 200, message: "Se actualizaron :"+ actualizado + " - No se actualizaron :" +noEncontrados });
-        } else {
-            return resp.status(400).json({ message: "El array está vacío." });
+            return resp.status(200).json({ 
+                status: 200, 
+                message: `Se actulizaron ${actualizado} examenes. No se encontraron: ${noEncontrados}` 
+            });
         }
+
+        return resp.status(200).json({ 
+            status: 200, 
+            message: "No se encontraron registros para actualizar." 
+        });
+
     } catch (error) {
         console.error("Error en controller.resultado.js:", error);
-        resp.status(500).json({ status: 500, message: "Error al actualizar el resultado al examen" });
+        return resp.status(500).json({ 
+            status: 500, 
+            message: "Error al actualizar el resultado al examen" 
+        });
     }
 };
+
+
+
+
+
+export const registrarFormularioAutomaticos = async (req, resp) => {
+    try {
+        let json_resultados = req.body;
+        let actualizado = 0;
+        let noEncontrados = 0;
+
+       // console.log(json_resultados);
+
+        if (!Array.isArray(json_resultados)) {
+            return resp.status(400).json({ message: "El cuerpo de la solicitud debe ser un array." });
+        }
+
+        if (json_resultados.length > 0) {
+            let batchQueries = [];
+
+            for (const element of json_resultados) {
+                const resultados = await prisma.$queryRaw`
+                    SELECT res.id_resultado, res.resultado, pa.nombre as parametro, res.codigo_maquina, res.autorizacion
+                    FROM resultados res
+                    JOIN parametros pa ON pa.id_parametro = res.parametroId
+                    WHERE res.id_resultado = ${element.codigo} 
+                `;
+
+                if (resultados.length > 0) {
+                    batchQueries.push(
+                        prisma.$executeRaw`
+                            UPDATE resultados 
+                            SET resultado = ${element.resultado}, estado = 'Pendiente'
+                            WHERE id_resultado = ${resultados[0].id_resultado} AND estado = 'Pendiente';
+                        `
+                    );
+                    actualizado++;
+                } else {
+                    noEncontrados++;
+                }
+            }
+
+            // Ejecutar todas las consultas en una transacción
+            await prisma.$transaction(batchQueries);
+
+            return resp.status(200).json({ 
+                status: 200, 
+                message: `Se registraron ${actualizado} resultados. No encontrados: ${noEncontrados}` 
+            });
+        }
+
+        return resp.status(200).json({ 
+            status: 200, 
+            message: "No se encontraron registros para actualizar." 
+        });
+
+    } catch (error) {
+        console.error("Error en controller.resultado.js:", error);
+        return resp.status(500).json({ 
+            status: 500, 
+            message: "Error al actualizar el resultado al examen" 
+        });
+    }
+};
+
+
+
+
+
+
+// se registra el json con los resultados de los parametros segun autorización
+export const registrarResulatadosAutomaticos = async (req, resp) => {
+    try {
+        let json_resultados = req.body;
+        let actualizado = 0;
+        let noEncontrados = 0;
+
+       // console.log(json_resultados);
+
+        if (!Array.isArray(json_resultados)) {
+            return resp.status(400).json({ message: "El cuerpo de la solicitud debe ser un array." });
+        }
+
+        if (json_resultados.length > 0) {
+            let batchQueries = [];
+
+            for (const element of json_resultados) {
+                const resultados = await prisma.$queryRaw`
+                    SELECT res.id_resultado, res.resultado, pa.nombre as parametro, res.codigo_maquina, res.autorizacion
+                    FROM resultados res
+                    JOIN parametros pa ON pa.id_parametro = res.parametroId
+                    WHERE res.autorizacion = ${element.muestra} AND res.codigo_maquina = ${element.parametro}
+                `;
+
+                if (resultados.length > 0) {
+                    batchQueries.push(
+                        prisma.$executeRaw`
+                            UPDATE resultados 
+                            SET resultado = ${element.valor}, estado = 'Pendiente'
+                            WHERE autorizacion = ${resultados[0].autorizacion} and codigo_maquina= ${resultados[0].codigo_maquina}
+                            AND estado = 'Pendiente';
+                        `
+                    );
+                    actualizado++;
+                } else {
+                    noEncontrados++;
+                }
+            }
+
+            // Ejecutar todas las consultas en una transacción
+            await prisma.$transaction(batchQueries);
+
+            return resp.status(200).json({ 
+                status: 200, 
+                message: `Se registraron ${actualizado} resultados. No encontrados: ${noEncontrados}` 
+            });
+        }
+
+        return resp.status(200).json({ 
+            status: 200, 
+            message: "No se encontraron registros para actualizar." 
+        });
+
+    } catch (error) {
+        console.error("Error en controller.resultado.js:", error);
+        return resp.status(500).json({ 
+            status: 500, 
+            message: "Error al actualizar el resultado al examen" 
+        });
+    }
+};
+
 
 
 
