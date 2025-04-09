@@ -23,6 +23,11 @@ export  const listarUsuarios=async(req,resp)=>{
     try{
         const id= await req.params.id_usuario;
         const usuarios = await prisma.Usuario.findMany({
+            where: {
+              rol: {
+                not: 'Invitado', // Excluye usuarios con rol "invitado"
+              },
+            },
             select: {
               id_usuario: true,
               identificacion: true,
@@ -32,14 +37,13 @@ export  const listarUsuarios=async(req,resp)=>{
               email: true,
               estado: true,
               firma: true,
-              autoriza:true,
-              vinculacion: { // Carga la relación vinculacion
-                select:
-                 {
-                 id_vinculacion:true,
-                  area: { // Dentro de vinculacion, selecciona el área
+              autoriza: true,
+              vinculacion: {
+                select: {
+                  id_vinculacion: true,
+                  area: {
                     select: {
-                      nombre: true, // Selecciona solo el campo 'nombre' del área
+                      nombre: true,
                     },
                   },
                 },

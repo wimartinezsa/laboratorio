@@ -381,8 +381,8 @@ moment.defineLocale('es', {
                             imagenesCargadas++;
                             if (imagenesCargadas === 2) {
                                 // Una vez que ambas imágenes están cargadas, agrégalas al PDF
-                                doc.addImage(imgFirma1, 'JPEG', 30, y - 30, 40, 20); // Ajusta las posiciones y tamaños según necesites
-                                doc.addImage(imgFirma2, 'JPEG', 135, y - 30, 40, 20); // Ajusta las posiciones y tamaños según necesites
+                               doc.addImage(imgFirma1, 'JPEG', 30, y - 30, 40, 20); // Ajusta las posiciones y tamaños según necesites
+                             doc.addImage(imgFirma2, 'JPEG', 135, y - 30, 40, 20); // Ajusta las posiciones y tamaños según necesites
                                 
                                 doc.addImage(imgLogo, 'JPEG',2,1,30, 20);      // Ejemplo de otra posición
                                 // Guardar o continuar trabajando con el PDF

@@ -72,9 +72,7 @@ export  const listarExamenesTomaMuestra=async(req,resp)=>{
             },
             resultado: {
                 include: {
-                    parametro: {
-                        where: { estado: 'Activo' } // Filtra solo parámetros con estado 'Activo'
-                    }
+                    parametro: true
                 }
             },
             procedimiento: {
