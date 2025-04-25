@@ -102,8 +102,12 @@ function listarExamenesPorArea(){
         
    
      // let resultados = element.resultado;
+     let tabla='';
+   //  console.log(element.procedimiento);
+   // si el laboratorio se desea generar automatico
+     if(element.procedimiento.resultado_laboratorio==='Automatico'){
 
-      let tabla=`<table style="border-collapse: collapse; width: 100%;">
+       tabla=`<table style="border-collapse: collapse; width: 100%;">
                 <thead>
                     <tr>
                      <th scope="col">METODO</th>
@@ -114,7 +118,8 @@ function listarExamenesPorArea(){
                 </thead>
                 <tbody>
                   `;
-        let resultados = element.resultado;
+      resultados = element.resultado;
+      
         
         resultados.forEach(item=>{
           
@@ -157,8 +162,11 @@ function listarExamenesPorArea(){
 
       });
      tabla+='</tbody></table>'
-      //console.log(element);
+    }// fin del if del reulstado_procedimiento
 
+else{
+  tabla=`<button type="button" class="btn btn-primary">Subir Resultado</button>`;
+}
      
 
         let dato = {

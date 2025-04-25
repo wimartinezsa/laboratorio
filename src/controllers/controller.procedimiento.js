@@ -67,6 +67,7 @@ export  const registrarProcedimiento=async(req,resp)=>{
                     tecnica:datos.tecnica,
                     finalidadId:Number(datos.finalidadId),
                     precio: parseFloat(datos.precio),
+                    resultado_laboratorio: datos.resultado_laboratorio,
                     estado: "Activo"
                 }
             } 
@@ -85,6 +86,7 @@ export  const actualizarProcedimientoId=async(req,resp)=>{
         const datos= await req.body;
         const id= await req.params.id_procedimiento;
 
+       // console.log(datos);
 
         const procedimientos = await prisma.Procedimiento.findUnique({
             where: { id_procedimiento: Number(id)},
@@ -102,6 +104,7 @@ export  const actualizarProcedimientoId=async(req,resp)=>{
                         areaId: Number(datos.areaId),
                         tecnica:datos.tecnica,
                         finalidadId:Number(datos.finalidadId),
+                        resultado_laboratorio: datos.resultado_laboratorio,
                         precio: parseFloat(datos.precio),
                         estado: "Activo"
 

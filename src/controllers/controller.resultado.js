@@ -170,7 +170,7 @@ export const registrarAnalisisCompletosArchivo = async (req, resp) => {
         let actualizado = 0;
         let noEncontrados = 0;
    
-        console.log(json_resultados);
+       // console.log(json_resultados);
         
         if (!Array.isArray(json_resultados)) {
             return resp.status(400).json({ message: "El cuerpo de la solicitud debe ser un array." });

@@ -238,12 +238,13 @@ model Parametro {
 model Procedimiento {
   id_procedimiento Int         @id @default(autoincrement())
   estado           Estado      @default(Activo)
+  resultado_laboratorio Resultado_Laboratorio?  @default(Automatico)
   tecnica          String?     @db.VarChar(50)
   servicioId       Int
   finalidadId      Int
   cupsId           Int
   areaId           Int?
-  precio           Decimal?    @default(0.00) @db.Decimal(10, 2)
+  precio           Decimal?    @default(0.00) @db.Decimal(10,2)
   acuerdo          Acuerdo[]
   examen           Examen[]
   parametro        Parametro[]
@@ -360,6 +361,11 @@ model Acuerdo {
   @@map("acuerdos")
 }
 
+
+enum Resultado_Laboratorio {
+  Automatico
+  Manual
+}
 
 
 

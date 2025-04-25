@@ -305,6 +305,10 @@ function registrarProcedimiento(){
     datos.append('areaId',document.getElementById('areas').value);
     datos.append('tecnica',document.getElementById('tecnica').value);
     datos.append('precio',document.getElementById('precio').value);
+    datos.append('resultado_laboratorio',document.getElementById('resultado_laboratorio').value);
+
+    
+
     
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
@@ -364,6 +368,7 @@ async function editarProcedimiento(id_procedimiento){
     await buscarProcedimientoId(id_procedimiento);
     document.getElementById('btn_registrar').style.display = 'none';
     document.getElementById('btn_actualizar').style.display = 'block';
+
     
     Frm_procedimiento.show();
 }
@@ -400,6 +405,7 @@ function buscarProcedimientoId(id_procedimiento){
         document.getElementById('areas').value=data.areaId;
         document.getElementById('tecnica').value=data.tecnica;
         document.getElementById('precio').value=data.precio;
+        document.getElementById('resultado_laboratorio').value=data.resultado_laboratorio;
     });
 
 
@@ -420,6 +426,7 @@ function actualizarProcedimiento(){
     datos.append('areaId',document.getElementById('areas').value);
     datos.append('tecnica',document.getElementById('tecnica').value);
     datos.append('precio',document.getElementById('precio').value);
+    datos.append('resultado_laboratorio',document.getElementById('resultado_laboratorio').value);
 
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
