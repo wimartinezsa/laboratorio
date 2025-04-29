@@ -110,6 +110,7 @@ model Examen {
   fecha_cobro DateTime?
   fecha_pago DateTime?
   observacion     String?       @db.VarChar(200)
+  resultado_pdf     String?       @db.VarChar(100)
   procedimientoId Int
   facturaId       Int
   factura         Factura       @relation(fields: [facturaId], references: [id_factura])

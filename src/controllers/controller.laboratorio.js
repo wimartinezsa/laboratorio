@@ -8,7 +8,7 @@ export  const listarExamenesListos=async(req,resp)=>{
         const examenes = await prisma.$queryRaw`
          SELECT 
             pa.identificacion,pa.nombres,ex.id_examen,cu.nombre AS cups,ex.estado,fact.autorizacion,ex.observacion,
-            fact.fecha,cont.nombre AS contrato
+            fact.fecha,cont.nombre AS contrato,ex.resultado_pdf,proc.resultado_laboratorio
             FROM facturas fact
             JOIN contratos cont ON cont.id_contrato=fact.contratoId
             JOIN examenes ex ON ex.facturaId= fact.id_factura
@@ -35,7 +35,7 @@ export  const listarLaboratoriosPaciente=async(req,resp)=>{
 
         const examenes = await prisma.$queryRaw ` SELECT 
                     pa.identificacion,pa.nombres,ex.id_examen,cu.nombre AS cups,ex.estado,fact.autorizacion,ex.observacion,
-                    fact.fecha,cont.nombre AS contrato
+                    fact.fecha,cont.nombre AS contrato,ex.resultado_pdf,proc.resultado_laboratorio
                     FROM facturas fact
                     JOIN contratos cont ON cont.id_contrato=fact.contratoId
                     JOIN examenes ex ON ex.facturaId= fact.id_factura

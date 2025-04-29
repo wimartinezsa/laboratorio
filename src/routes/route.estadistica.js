@@ -8,7 +8,8 @@ import {
         examenesProcesoAnalisis,
         examenesResultadosListos,
         examenesResultadosEntregados,
-        cantidadExamenesPorDiaEmpresa
+        cantidadExamenesPorDiaEmpresa,
+        cantidadPacientesPorDiaEmpresa
         } from "../controllers/controller.estadistica.js";
 
 const route = Router();
@@ -17,6 +18,7 @@ route.get('/cantidadPacientes',cantidadPacientes);
 route.get('/cantidadEmpresas',cantidadEmpresas);
 route.get('/cantidadContratos',cantidadContratos);
 route.get('/cantidadExamenesPorDiaEmpresa',cantidadExamenesPorDiaEmpresa);
+route.get('/cantidadPacientesPorDiaEmpresa',cantidadPacientesPorDiaEmpresa);
 
 
 

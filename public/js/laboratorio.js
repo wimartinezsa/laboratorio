@@ -70,9 +70,19 @@ function listarExamenesListos(){
         if(data.status==200){
 
         data.examenes.forEach(element => {
-        accionBTN =` <a class="btn btn-primary" href="javascript:imprimirResultados(${element.autorizacion})" title='Descargar Resultados'><i class='fas fa-cloud-download-alt' style='font-size:20px'></i></a>
-        <a class="btn btn-success" href="javascript:gestionarEntregaExamen(${element.id_examen})" title='Confirmar Entrega de Examen'><i class='fas fa-thumbs-up' style='font-size:20px'></i></a>
-        `;
+
+          
+        if(element.resultado_laboratorio==='Automatico'){
+            accionBTN =` <a class="btn btn-primary" href="javascript:imprimirResultados(${element.autorizacion})" title='Descargar Resultados'><i class='fas fa-cloud-download-alt' style='font-size:20px'></i></a>
+            <a class="btn btn-success" href="javascript:gestionarEntregaExamen(${element.id_examen})" title='Confirmar Entrega de Examen'><i class='fas fa-thumbs-up' style='font-size:20px'></i></a>
+            `;
+        }else{
+//<a href="laboratorios/${element.resultado_pdf}">Descargar Resultado</a>
+            accionBTN =`<a class="btn btn-primary" href="${element.resultado_pdf}" download title='Descargar Resultados'><i class='fas fa-cloud-download-alt' style='font-size:20px'></i></a> 
+            <a class="btn btn-success" href="javascript:gestionarEntregaExamen(${element.id_examen})" title='Confirmar Entrega de Examen'><i class='fas fa-thumbs-up' style='font-size:20px'></i></a> `;
+
+        }
+        
 
         let dato = {
         codigo : element.id_examen,

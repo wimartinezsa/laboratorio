@@ -57,13 +57,8 @@ if(rol==='Administrador'){
                   <p>Muestras</p>
                 </a>
               </li>
-
-              <li class="nav-item">
-                <a href="/analisis" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Analisis</p>
-                </a>
-              </li>
+         
+             
               <li class="nav-item">
                 <a href="/resultados" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -339,12 +334,7 @@ if(rol==='Auxiliar'){
                 </a>
               </li>
 
-              <li class="nav-item">
-                <a href="/analisis" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Analisis</p>
-                </a>
-              </li>
+             
 
               <li class="nav-item">
                 <a href="/resultados" class="nav-link">
@@ -406,12 +396,7 @@ if(rol==='Bacteriologo'){
               </a>
             </li>
 
-            <li class="nav-item">
-              <a href="/analisis" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Analisis</p>
-              </a>
-            </li>
+           
 
             <li class="nav-item">
               <a href="/resultados" class="nav-link">

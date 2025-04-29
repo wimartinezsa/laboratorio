@@ -72,14 +72,13 @@ function listarExamenesTomaMuestra(){
         let estadoBTN='';
 
 
-      
-
         if(data.status==403){window.location.href = "/";}
         if(data.status==200){
           //for que recorrelos examenes
         data.examenes.forEach(element => {
 
-            
+           // console.log(element.factura.contrato.nombre);
+
           if (element.estado==='En_Toma_de_Muestra'){
            accionBTN =`<a class="badge badge-pill badge-danger" style="font-size: 0.8rem;" 
            href="javascript:gestionarMuestras(${element.id_examen},'${element.observacion}')" title='Finalizar Análisis'>${element.estado.replace(/_/g," ")}
@@ -90,7 +89,7 @@ function listarExamenesTomaMuestra(){
         
    
      // let resultados = element.resultado;
-
+/*
       let tabla=`<table style="border-collapse: collapse; width: 100%;">
                 <thead>
                     <tr>
@@ -121,15 +120,7 @@ function listarExamenesTomaMuestra(){
                   btn_parametro=`<a class="btn btn-success" href="javascript:cambiarEstadoResultado(${item.id_resultado},'${item.estado}')" title='Resultado Pendiente'> <i class='fas fa-thumbs-up'></i></a>`;
                 
                 }
-                /*
-                if(item.parametro.metodo==='Automatico'){
-                    estado_parametro=`<span class="badge badge-pill badge-danger" style="font-size: 0.8rem;">${item.id_resultado}</span>`
                
-                }
-                else{
-                  estado_parametro=`<span class="badge badge-pill badge-secondary" style="font-size: 0.8rem;">${item.id_resultado}</span>`
-                }
-                */
               
                 tabla+=`
                   <tr>
@@ -138,13 +129,20 @@ function listarExamenesTomaMuestra(){
                     <td>${item.parametro.nombre}</td>
                     <td>${item.resultado}</td>
                     <td>${item.estado}</td>
-                  </tr>`;        
+                  </tr>`;    
+                  
+              
 
               }
 
 
       });
      tabla+='</tbody></table>'
+
+     */
+
+
+
       //console.log(element);
 
      
@@ -154,7 +152,7 @@ function listarExamenesTomaMuestra(){
         identificacion : element.factura.paciente.identificacion,
         nombres :element.factura.paciente.nombres.toUpperCase(),
         cups :element.procedimiento.cups.nombre,
-        resultado :tabla,
+        contrato:element.factura.contrato.nombre,
         observacion:element.observacion,
         autoriazacion:`<span class="badge badge-pill badge-success" style="font-size: 0.8rem;">${element.factura.autorizacion}</span>`,  
         area :element.procedimiento.area.nombre.toUpperCase(),
@@ -177,9 +175,9 @@ function listarExamenesTomaMuestra(){
                            {"data": "identificacion"},
                            {"data": "nombres"},
                            {"data": "cups"},
+                           {"data": "contrato"},
                            {"data": "observacion"},
                            {"data": "autoriazacion"},  
-                           {"data": "resultado"},
                            {"data": "area"},
                            {"data": "estado"}    
                        ]

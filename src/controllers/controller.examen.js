@@ -8,10 +8,11 @@ export  const agregarExamenesFactura=async(req,resp)=>{
         const examen = await prisma.Examen.create(
             {
                 data: {
+  
                 
                     fecha_muestra:new Date(),
                     fecha_resultado:new Date(),
-                    estado:'Solicitado',
+                    estado:'En_Toma_de_Muestra',
                     observacion : '',
                     cantidad:1,
                     estado_pago:'Pendiente_Pago',
@@ -41,7 +42,7 @@ export  const agregarExamenesFactura=async(req,resp)=>{
                                     autorizacion:datos.cod_autorizacion,
                                     codigo_maquina:subItem.codigo_maquina,
                                     resultado: '',
-                                    estado:'Pendiente'
+                                    estado:'Finalizado'
                                 }
                             });
                         }

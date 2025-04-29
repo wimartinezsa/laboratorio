@@ -132,11 +132,7 @@
           </button>
         </div>
                 <div class="modal-body">
-
-
                   <input type="number" id='id_resultado_examen' hidden="true" disabled="true">
-
-
                   <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                       <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Digitar Resultado del Analisis</button>
@@ -146,11 +142,22 @@
                   <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active  " id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                       
+                      <div id="dinamico">
                       <div id="formulario-dinamico"></div> 
 
+                      <button type="button" id="btn_registrar" class="btn btn-success d-block mx-auto m-3 " >Actualizar</button>
+                    </div> 
 
-                      <button type="button" id="btn_registrar" class="btn btn-success d-block mx-auto" >Actualizar</button>
-        
+                      <div id="subir-archivo">
+                        <input type="file" class="form-control" id="foto" style="border: 1px solid rgb(208, 205, 205)">
+                        <button class="btn btn-primary" id="btn_subir_archivo" onclick="subirResultadoLaboratorio();">
+                          Subir
+                        </button>
+                      </div>
+                      
+                    
+
+                     
                     </div>
                     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
         

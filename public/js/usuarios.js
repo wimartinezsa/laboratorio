@@ -483,6 +483,7 @@ function gestionarFirma(id_usuario){
 }
 
 function registrarFirma(){
+    
     let id_usuario= document.getElementById('id_usuario_firma').value;
 
     let datos= new FormData(); 

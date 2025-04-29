@@ -1,7 +1,48 @@
 
 import { Console } from 'console';
 import prisma from '../libs/prisma.js'
+import  multer from 'multer-js';
 
+
+const storage=multer.diskStorage({
+    destination:function(req,img,cb){
+        cb(null,"public/laboratorios");
+    },
+    filename: function(req,img,cb){
+        cb(null,img.originalname);
+    }
+});
+
+const upload=multer({storage:storage});
+export const cargarImagen=upload.single('img');
+
+
+
+
+
+export  const registrarResultadoLaboratorio=async(req,resp)=>{
+    try{
+        const id= await req.params.id_examen;
+        let pdf= req.file.originalname;
+
+     
+            const examen = await prisma.examen.update(
+                {
+                    where:{id_examen:Number(id)},
+                    data:{
+                        resultado_pdf:pdf                
+                    }
+                }  
+            );
+
+            
+            //console.log(usuario);
+            return resp.status(200).json({"status":200,"message":"Resultado cargado al sistema"});
+    }catch(error){
+        console.log("Error en controller.resultado.js :"+error);
+        resp.status(500).json({ error: 'Error al registrar el resultado' });
+    }  
+}
 
 
 //Listar todos los examens por área

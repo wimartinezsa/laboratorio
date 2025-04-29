@@ -7,7 +7,9 @@ import {
         listarParametrosExamen,
         cambiarEstadoResultado,
         registrarAnalisisCompletosArchivo,
-        registrarFormularioAutomaticos
+        registrarFormularioAutomaticos,
+        cargarImagen,
+        registrarResultadoLaboratorio
         } from "../controllers/controller.resultado.js";
 
 const route = Router();
@@ -33,10 +35,7 @@ route.put('/cambiarEstadoResultado/:id_resultado/:estado',validarToken,cambiarEs
 
 route.put('/registrarFormularioAutomaticos',validarToken,registrarFormularioAutomaticos);
 
-
-
-
-
+route.put('/registrarResultadoLaboratorio/:id_examen',cargarImagen,registrarResultadoLaboratorio);
 
 
 

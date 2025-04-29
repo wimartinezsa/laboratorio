@@ -22,7 +22,8 @@ export  const listarExamenesTomaMuestra=async(req,resp)=>{
                 include:{
                     factura:{
                         include:{
-                            paciente:true
+                            paciente:true,
+                            contrato:true
                         }
                     },
                     resultado:{
@@ -151,14 +152,14 @@ export  const confirmarTomaMuestra=async(req,resp)=>{
             return resp.status(404).json({"status":404,"message":"No existe examen en la factura"});
           }
           else{
-            
+            // se 
             const prestacion = await prisma.Examen.update(
                 {
                     where:{id_examen: Number(id)},
                     data:{
                         fecha_muestra: new  Date(datos.fecha),
                         observacion: datos.observacion,
-                        estado: "Muestra_Recibida"                     
+                        estado:"Analisis_Completo"                     
                     }
                 }  
             );

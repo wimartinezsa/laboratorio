@@ -35,9 +35,6 @@ const Mensaje = Swal.mixin({
 
 
 
-
-
-
 var Frm_resultados = new bootstrap.Modal(document.getElementById('Frm_resultados'), {
   keyboard: false
 });
@@ -95,7 +92,7 @@ function listarExamenesPorArea(){
 
         accionBTN =``;
         accionBTN =`<a class="badge badge-pill badge-warning" style="font-size: 0.8rem;" 
-           href="javascript:gestionarResultados(${element.id_examen},'${element.factura.paciente.nombres}','${element.observacion}')" title='Migrar Resultados de Análisis'>${element.estado.replace(/_/g," ")}
+           href="javascript:gestionarResultados(${element.id_examen},'${element.factura.paciente.nombres}','${element.observacion}','${element.procedimiento.resultado_laboratorio}')" title='Editar Resultados de Análisis'>${element.estado.replace(/_/g," ")}
            </a>`;
           
  
@@ -165,7 +162,7 @@ function listarExamenesPorArea(){
     }// fin del if del reulstado_procedimiento
 
 else{
-  tabla=`<button type="button" class="btn btn-primary">Subir Resultado</button>`;
+  tabla=`<a href="laboratorios/${element.resultado_pdf}">Descargar Resultado</a> `;
 }
      
 
@@ -420,19 +417,72 @@ function registrarResulatadosAutomaticos(resultados){
 
 
 //=====================================Modulo de digitar los resultados de forma dinamica===============
-async function gestionarResultados(id_examen,nombre,observacion){
+async function gestionarResultados(id_examen,nombre,observacion,tipo_resultado){
 
   document.getElementById('id_resultado_examen').value=id_examen;
   document.getElementById('titulo-Frm_resultados').innerHTML='Resultados de : '+nombre;
 
   //document.querySelector("textarea[id='observacion']").value =observacion ;
   
+  document.getElementById('subir-archivo').style.display  = 'none';
+  document.getElementById('dinamico').style.display  = 'none';
 
+ if(tipo_resultado==='Automatico'){
+  document.getElementById('subir-archivo').style.display  = 'none';
+  document.getElementById('dinamico').style.display  = 'block';
   await crearFormularioDinamico(id_examen);
+  
+ }
+
+ if(tipo_resultado==='Manual'){
+ 
+ document.getElementById('subir-archivo').style.display  = 'block';
+ document.getElementById('dinamico').style.display  = 'none';
+ }
+ 
+ 
   
 
  await Frm_resultados.show();
 }
+
+function subirResultadoLaboratorio() {
+  let id_examen= document.getElementById('id_resultado_examen').value;
+
+    let datos= new FormData(); 
+    let FileN = document.getElementById('foto');
+    datos.append('img', FileN.files[0]);
+
+   
+    fetch(`/registrarResultadoLaboratorio/${id_examen}`,
+        {
+            method: 'put',
+            body:datos
+        })
+        .then(response => {
+            // Verificar si la respuesta es JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                window.location.href = "/";
+            }
+          })
+    .then(data=>{
+        if(data.status==403){window.location.href = "/";}
+        
+        if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
+            listarExamenesPorArea();
+        }
+ 
+        if(data.status==500){Mensaje.fire({icon: 'error',title: data.message});}
+    });
+}
+
+
+
+
+
 
 
 async function crearFormularioDinamico(id_examen){
