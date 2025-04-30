@@ -146,10 +146,16 @@ async function gestionarContratos(){
 
 
 async function gesitonarAcuerdos(id_contrato,nom_comtrato){
-   await  listarServicios();
-    document.getElementById('id_contrato').value=id_contrato;
+  // await  listarServicios();
+  await listarProcedimientos();
+
+    document.getElementById('id_contrato2').value=id_contrato;
     document.getElementById('btn_registrar').style.display = 'block';
     document.getElementById('btn_actualizar').style.display = 'none';
+
+    document.getElementById('btn_registrar_acuerdo').style.display = 'block';
+    document.getElementById('btn_actualizar_acuerdo').style.display = 'none';
+    
 
     await listarAcuerdos(id_contrato);
 
@@ -482,11 +488,11 @@ function listarAcuerdos(id_contrato){
    
 }
 
-function listarProcedimientos(id_servicio){
+function listarProcedimientos(){
     
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
-    fetch(`/procedimientoActivoServicioId/${id_servicio}`, {
+    fetch(`/procedimientoActivoServicioId`, {
                method:'get',
                headers: {
                 'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
@@ -505,14 +511,14 @@ function listarProcedimientos(id_servicio){
            .then(data => {
               let html=`<option value='0'>Seleccione una opción</option>`;
                data.procedimientos.forEach(element => {
-               html+=`<option value='${element.id_procedimiento}'> ${element.cups.nombre} => $${element.precio}</option>`;
+               html+=`<option value=${element.id_procedimiento}> ${element.cups.nombre} => $${element.precio}</option>`;
                });   
                document.getElementById('procedimientos').innerHTML = html;  
            });
 
 }
 
-
+/*
 function listarServicios(){
 
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
@@ -542,7 +548,7 @@ function listarServicios(){
                document.getElementById('servicios').innerHTML = html;  
            });
 }
-
+*/
 
 function activarAcuerdo(id_acuerdo,estado){
 
@@ -639,6 +645,91 @@ let id_contrato=document.getElementById('id_contrato').value;
 
 }
 
-function buscarAcuerdo(id_acuerdo){
-    alert(id_acuerdo);
+ function buscarAcuerdo(id_acuerdo){
+   
+    const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+
+    fetch(`/busar_acuerdo/${id_acuerdo}`, {
+        method:'get',
+        headers: {
+            'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+            'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
+        }
+    })
+    .then(response => {
+        // Verificar si la respuesta es JSON
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return response.json();
+        } else {
+            window.location.href = "/";
+        }
+    })
+    .then(async data => {
+
+        document.getElementById('id_acuerdo').value= await data[0].id_acuerdo;
+        document.getElementById('procedimientos').value= data[0].procedimiento.id_procedimiento;
+        document.getElementById('precio').value= data[0].precio;
+        document.getElementById('btn_registrar_acuerdo').style.display = 'none';
+        document.getElementById('btn_actualizar_acuerdo').style.display = 'block';
+
+    });
+        
+
+}
+
+function actualizarAcuerdo(){
+
+
+    let datos= new URLSearchParams();
+
+    let id_contrato= document.getElementById('id_contrato').value;
+
+    datos.append('id_acuerdo',document.getElementById('id_acuerdo').value);
+    datos.append('procedimiento',document.getElementById('procedimientos').value);
+    datos.append('precio',document.getElementById('precio').value);
+    
+  
+    const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+   
+    fetch(`/acuerdo/${document.getElementById('id_acuerdo').value}`,
+        {
+            method: 'PUT',
+            body:datos,
+            headers: {
+                'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+                'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
+            }
+        })
+        .then(response => {
+            // Verificar si la respuesta es JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                window.location.href = "/";
+            }
+        })
+    .then(data=>{
+      
+
+        if(data.status==403){window.location.href = "/";}
+        
+        if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
+        
+        listarAcuerdos(document.getElementById('id_contrato2').value);
+        document.getElementById('id_acuerdo').value='';
+        document.getElementById('procedimientos').value='';
+        document.getElementById('precio').value='';
+        document.getElementById('btn_registrar_acuerdo').style.display = 'block';
+    document.getElementById('btn_actualizar_acuerdo').style.display = 'none';
+
+        }
+ 
+        if(data.status==500){Mensaje.fire({icon: 'error',title: data.message});}
+
+    });
+
+   
+
 }

@@ -25,7 +25,7 @@ route.put('/procedimiento/:id_procedimiento',validarToken,actualizarProcedimient
 route.delete('/procedimiento/:id_procedimiento',validarToken,estadoProcedimientoId);
 route.get('/procedimiento/:id_procedimiento',validarToken,buscarProcedimientoId);
 route.get('/procedimientoServicioId/:id_servicio',validarToken,procedimientoServicioId);
-route.get('/procedimientoActivoServicioId/:id_servicio',validarToken,procedimientoActivoServicioId);
+route.get('/procedimientoActivoServicioId',validarToken,procedimientoActivoServicioId);
 
 
 route.post('/parametro',validarToken,registrarParametro);

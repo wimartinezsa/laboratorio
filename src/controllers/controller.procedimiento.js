@@ -182,11 +182,11 @@ export  const procedimientoServicioId=async(req,resp)=>{
 // se listan todos los procedimientos activos asociados al servicio 
 export  const procedimientoActivoServicioId=async(req,resp)=>{
     try{
-        const id_servicio= req.params.id_servicio;
+       // const id_servicio= req.params.id_servicio;
        
         const procedimientos = await prisma.Procedimiento.findMany(
             {
-                where:{servicioId:Number(id_servicio),estado:'Activo'},
+           
                 include:{
                     servicio:true,
                     cups:true

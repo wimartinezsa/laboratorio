@@ -169,7 +169,8 @@
           </button>
         </div>
         <div class="modal-body">
-          <input type="number" id='id_contrato' readonly="true" hidden="true">
+          <input type="number" id='id_acuerdo' readonly="true" hidden="true" >
+          <input type="number" id='id_contrato2' readonly="true"  hidden="true">
         
           <div class="row">
             <div class="col-8">
@@ -196,14 +197,10 @@
             <div class="col-4">
 
               <div class="row">
-                <div class="col-12">
-                  <label for="message-text" class="col-form-label">Servicio:</label>
-                  <select class="form-control" id='servicios' onchange="listarProcedimientos(this.value)" required >
-                  </select>
-               </div>
+                
                <div class="col-12">
-                  <label for="message-text" class="col-form-label">Procedimientos:</label>
-                  <select class="form -control select2bs4" style="width: 100%;" id='procedimientos' required >
+                  <label for="message-text" class="col-form-label" >Procedimientos:</label>
+                  <select id='procedimientos' class="form-control" required >
                   </select>
                 </div>
             </div>
@@ -220,8 +217,10 @@
           </div>
           <div class="row mt-2 justify-content-center">
 
-              <button type="button" id="btn_registrar" class="btn btn-primary " onclick="agregarAcuerdo()">Agregar</button>
-          </div>
+              <button type="button" id="btn_registrar_acuerdo" class="btn btn-primary " onclick="agregarAcuerdo()">Agregar</button>
+              <button type="button" id="btn_actualizar_acuerdo" class="btn btn-primary " onclick="actualizarAcuerdo()">Actualizar</button>
+          
+            </div>
 
             </div>
           </div>

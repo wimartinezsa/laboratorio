@@ -30,42 +30,29 @@ export  const listarAcuerdos=async(req,resp)=>{
     }
 }
 
+
+
 export  const buscarAcuerdoId=async(req,resp)=>{
     try{
         const id= await req.params.id_acuerdo;
-        const acuerdo = await prisma.Acuerdo.findFirst(
-            {
-                where: { id_acuerdo: Number(id) },
-                select:{
-                    id_acuerdo: true,
-                    estado: true,
-                    precio: true,
-                    iva: true,
-                    contratoId: true,
-                    servicioId: true,
-                contrato:{
-                    select:{
-                        id_contrato:true,
-                        fecha_inicio:true,
-                        fecha_fin:true,
-                        empresa:{
-                            select:{
-                            nombre:true,
-                            sigla:true,
-                            municipio:{
-                                select:{
-                                    nombre:true
-                                }
-                            }
-                        }
-                        },
-                      
-                        }
-                    }
-    
-                    }
-            }
-        );
+        const acuerdo = await prisma.Acuerdo.findMany({
+            where: {id_acuerdo: Number(id) },
+            include: {
+                contrato: {
+                    include: {
+                        empresa: true,
+                    },
+                },
+                procedimiento: {
+                    include: {
+                        servicio: true,
+                        cups: true,
+                    },
+                },
+            },
+        });
+
+       //console.log(acuerdo);
         return resp.status(200).json(acuerdo);
     }catch(error){
         console.log("Error en controller.acuerdo.js :"+error);
@@ -74,10 +61,13 @@ export  const buscarAcuerdoId=async(req,resp)=>{
 }
 
 
+
+
+
 export  const registrarAcuerdo=async(req,resp)=>{
     try{
         const datos= await req.body;
-        console.log(datos);
+       // console.log(datos);
         
         const acuerdo = await prisma.Acuerdo.create(
             {
@@ -103,23 +93,22 @@ export  const registrarAcuerdo=async(req,resp)=>{
 export  const actualizarAcuerdoId=async(req,resp)=>{
     try{
         const datos= await req.body;
+
+       // console.log(datos);
         const id= await req.params.id_acuerdo;
         const existencia = await prisma.Acuerdo.findUnique({
             where: { id_acuerdo: Number(id)},
           });
           if (!existencia) {
-            return resp.status(501).json({"status":200,"message":"EL aceurdo no existe en el sistema"});
+            return resp.status(501).json({"status":200,"message":"EL acuerdo no existe en el sistema"});
           }
           else{
             const acuerdo = await prisma.Acuerdo.update(
                 {
                     where:{id_acuerdo:Number(id)},
                     data:{
-                        estado: datos.estado,
                         precio: datos.precio,
-                        iva: datos.iva,
-                        contratoId:datos.contratoId,
-                        servicioId: datos.servicioId
+                        procedimientoId: Number(datos.procedimiento)
                     }
                 }  
             );
