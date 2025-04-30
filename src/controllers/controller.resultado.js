@@ -88,7 +88,7 @@ export  const listarExamenesPorArea=async(req,resp)=>{
             }
         });
         
-  
+  //console.log(examenes.resultado);
       
         return resp.status(200).json({"status":200,examenes});
 
@@ -280,7 +280,7 @@ export const registrarFormularioAutomaticos = async (req, resp) => {
         let actualizado = 0;
         let noEncontrados = 0;
 
-       // console.log(json_resultados);
+       //console.log(json_resultados);
 
         if (!Array.isArray(json_resultados)) {
             return resp.status(400).json({ message: "El cuerpo de la solicitud debe ser un array." });
@@ -301,8 +301,8 @@ export const registrarFormularioAutomaticos = async (req, resp) => {
                     batchQueries.push(
                         prisma.$executeRaw`
                             UPDATE resultados 
-                            SET resultado = ${element.resultado}, estado = 'Pendiente'
-                            WHERE id_resultado = ${resultados[0].id_resultado} AND estado = 'Pendiente';
+                            SET resultado = ${element.resultado}, estado = 'Finalizado'
+                            WHERE id_resultado = ${resultados[0].id_resultado};
                         `
                     );
                     actualizado++;

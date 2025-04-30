@@ -432,7 +432,10 @@ function listarAcuerdos(id_contrato){
  data.forEach(element => {
 
     estadoBTN =  element.estado=='Activo' ? 
-                ` <a class="btn btn-success" href="javascript:activarAcuerdo(${element.id_acuerdo},'Inactivo')" title='Desactivar Servicio'><i class="nav-icon fas fa-times-circle"></i></a>`
+                ` <a class="btn btn-success" href="javascript:activarAcuerdo(${element.id_acuerdo},'Inactivo')" title='Desactivar Servicio'><i class="nav-icon fas fa-times-circle"></i></a>
+                  <a class="btn btn-success" href="javascript:buscarAcuerdo(${element.id_acuerdo})" title='Actualizar Acuerdo'><i class="nav-icon fas fa-edit"></i></a>
+               
+                `
                 :
                 `<a class="btn btn-danger" href="javascript:activarAcuerdo(${element.id_acuerdo},'Activo')" title='Activar Servicio'><i class="nav-icon fas fa-check-circle"></i></a>`;
 
@@ -634,4 +637,8 @@ let id_contrato=document.getElementById('id_contrato').value;
     
     });
 
+}
+
+function buscarAcuerdo(id_acuerdo){
+    alert(id_acuerdo);
 }

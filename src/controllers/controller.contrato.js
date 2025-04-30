@@ -86,8 +86,18 @@ export  const registrarContrato=async(req,resp)=>{
                     estado:'Activo',
                     empresaId:Number(datos.empresaId)
                 }
-            } 
+            }   
         );
+
+
+        if(contrato){
+                console.log(contrato.id_contrato);
+
+
+                
+        }
+
+
         return resp.status(200).json({"status":200,"message":"Contrato registrado en el sistema"});
     }catch(error){
         console.log("Error en controller.contrato.js :"+error);

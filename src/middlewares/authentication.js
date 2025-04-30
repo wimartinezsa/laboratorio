@@ -65,7 +65,7 @@ export  const validarUsuario=async(req,resp)=>{
         }
     } catch (error) {
         console.log("Error en controller.usuario.js :"+error);
-        resp.status(500).json({ error: 'Error al validar usurio' });
+        resp.status(500).json({ error: 'Error al validar usuario' });
     }
 }
 

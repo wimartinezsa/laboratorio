@@ -119,6 +119,8 @@ function listarExamenesPorArea(){
       
         
         resultados.forEach(item=>{
+
+         // console.log(item);
           
           if (item.parametro.estado === 'Activo') {
               let btn_parametro='';
