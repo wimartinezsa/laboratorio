@@ -78,9 +78,7 @@ export  const registrarAcuerdo=async(req,resp)=>{
                     contratoId:Number(datos.contratoId),
                     iva:0
                 }
-            } 
-
-            
+            }  
         );
         
         return resp.status(200).json({"status":200,"message":"Acuerdo registrada en el sistema"});
@@ -89,6 +87,111 @@ export  const registrarAcuerdo=async(req,resp)=>{
         resp.status(500).json({"status":200, "message": 'Error al registrar el acuerdo' });
     }  
 }
+
+
+export const registrarTodosExamenesContrato = async (req, resp) => {
+    try {
+        const contrato = Number(req.body.contratoId);
+
+        const examenes = await prisma.procedimiento.findMany({
+            where: { estado: 'Activo' },
+            include: { acuerdo: true }
+        });
+
+        for (const element of examenes) {
+            const existencia = await prisma.acuerdo.findFirst({
+                where: {
+                    AND: [
+                        { procedimientoId: element.id_procedimiento },
+                        { contratoId: contrato }
+                    ]
+                }
+            });
+
+            if (!existencia) {
+                const acuerdo = await prisma.acuerdo.create({
+                    data: {
+                        estado: "Activo",
+                        precio: 0,
+                        procedimientoId: element.id_procedimiento,
+                        contratoId: contrato,
+                        iva: 0
+                    }
+                });
+
+               // console.log(acuerdo);
+            }
+        }
+
+        return resp.status(200).json({ "status": 200, "message": "Acuerdos registrados correctamente" });
+
+    } catch (error) {
+        console.log("Error en controller.acuerdo.js: " + error);
+        return resp.status(500).json({ "status": 500, "message": "Error al registrar los acuerdos" });
+    }
+};
+
+
+
+
+/*
+export  const registrarTodosExamenesContrato=async(req,resp)=>{
+    try{
+        const contrato= await req.body.contratoId;
+      
+       //
+
+       const examenes = await prisma.procedimiento.findMany({
+        where:{estado:'Activo'},
+        include: {
+            acuerdo:true, 
+        }
+    });
+    examenes.forEach(async element => {
+
+
+        const existencia = await prisma.acuerdo.findFirst({
+            where:{
+                AND:[
+                        {procedimientoId:Number(element.id_procedimiento)},
+                        {contratoId:Number(contrato)},
+                        {estado:'Activo'}
+                    ]
+                 }
+        });
+
+     
+        if(!existencia){
+            
+            const acuerdo =await prisma.Acuerdo.create(
+                {
+                    data: {
+                        estado: "Activo",
+                        precio: 0,
+                        procedimientoId:Number(element.id_procedimiento),
+                        contratoId:Number(contrato),
+                        iva:0
+                    }
+                }  
+            );
+            
+          //  console.log(acuerdo);
+        }// fin del if existencia
+       
+
+    });
+
+        return resp.status(200).json({"status":200,"message":"Examenes registrados al contrato"});
+    }catch(error){
+        console.log("Error en controller.tarifa.js :"+error);
+        resp.status(500).json({"status":200, "message": 'Error al registrar el acuerdo' });
+    }  
+}
+
+*/
+
+
+
 
 export  const actualizarAcuerdoId=async(req,resp)=>{
     try{

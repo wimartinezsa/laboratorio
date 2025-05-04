@@ -722,14 +722,90 @@ function actualizarAcuerdo(){
         document.getElementById('procedimientos').value='';
         document.getElementById('precio').value='';
         document.getElementById('btn_registrar_acuerdo').style.display = 'block';
-    document.getElementById('btn_actualizar_acuerdo').style.display = 'none';
-
+        document.getElementById('btn_actualizar_acuerdo').style.display = 'none';
         }
- 
         if(data.status==500){Mensaje.fire({icon: 'error',title: data.message});}
 
     });
 
-   
+}
+
+
+
+function confirmaRegistrarTodosExamenes(){
+
+    
+    Swal.fire({
+        title: 'Desea registrar todos los examenes al contrato',
+        showDenyButton: true,
+        confirmButtonText: 'Si',
+        denyButtonText: `No`,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            registrarTodosExamenesContrato();
+        } else if (result.isDenied) {
+            Mensaje.fire({
+                icon: 'warning',
+                title: 'Operación cancelada'
+                });
+        }                       
+    });
+
+
+}
+
+function registrarTodosExamenesContrato(){
+
+    alert('registrar todos los examenes');
+
+    let id_contrato=document.getElementById('id_contrato2').value;
+    let datos= new URLSearchParams();
+
+    datos.append('contratoId',id_contrato);
+    
+    const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+    
+    fetch('/registrarTodosExamenesContrato',
+        {
+            method: 'POST',
+            body:datos,
+            headers: {
+                'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+                'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
+            } 
+        })
+        .then(response => {
+            // Verificar si la respuesta es JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                window.location.href = "/";
+            }
+        })
+    .then(data=>{
+      
+
+        if(data.status==403){window.location.href = "/";}
+        
+        if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
+            listarAcuerdos(document.getElementById('id_contrato2').value);
+            Mensaje.fire({
+                icon: 'success',
+                title: data.message
+                });
+        }
+
+        if(data.status==404){Mensaje.fire({icon: 'warning',title: data.message});}
+ 
+        if(data.status==500){Mensaje.fire({icon: 'error',title: data.message});}
+       
+    
+    });
+
+
+
+
+
 
 }
