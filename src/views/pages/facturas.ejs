@@ -178,7 +178,7 @@
             <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
               <div class="row">
                 <div class="col-12">
-                  <div id="tabla_factura"></div>
+                  <div id="tabla_factura" style=" max-height: 300px; overflow-y: auto;"></div>
                 </div>
             </div>
 
@@ -204,7 +204,7 @@
               </div>
           <hr>
               <div class="row">
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="tabla_examenes_factura">
                   <thead>
                     <tr>
                       <th scope="col">Código</th>
@@ -218,9 +218,7 @@
                       <th scope="col">Admin</th>
                     </tr>
                   </thead>
-                 
-                  <tbody id="tabla_examenes_factura">          
-                  </tbody>
+                
                 </table>
                
               </div>

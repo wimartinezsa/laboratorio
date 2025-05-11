@@ -84,11 +84,7 @@ moment.defineLocale('es', {
     }
   
 
-    /*
-    nombre_firma= firma_bacteriologo.nombre;
-    cedula_firma= firma_bacteriologo.identificacion;
-    imagen_firma= firma_bacteriologo.firma;
-    */
+   
 
     await  fetch('/generarLaboratorio/' + id_autorizacion, {
             method: 'get',
@@ -189,15 +185,26 @@ moment.defineLocale('es', {
                         }
     
                         const examenes = element.examen;
+                        let texto_area='';
                         for (const examen of examenes) {
                             // Título del examen
                            
                             y += 5;
+
+                            
+                            if (y > pageHeight - margin) {
+                                doc.addPage();
+                                y = 35;
+                            }
                           
                                 // Centrar el texto del CUPS en la página
                                 const pageWidth = 210; // Ancho típico para A4 en mm
                                 
                                 const cupsText = examen.procedimiento.area.nombre.toUpperCase();
+
+                                if (cupsText != texto_area){
+                                    texto_area= examen.procedimiento.area.nombre.toUpperCase();
+                                
 
                                // const cupsText = examen.procedimiento.cups.nombre.toUpperCase();
                                 const fontSize = 12; // Tamaño de fuente para el título del CUPS
@@ -216,7 +223,7 @@ moment.defineLocale('es', {
                                 // Imprimir el texto centrado dentro del rectángulo
                                 doc.setFontSize(fontSize); // Establecer el tamaño de la fuente
                                 doc.text(centeredX, y, cupsText);
-
+                            }
                             
                                 // Línea horizontal debajo del nombre del CUPS
 
@@ -241,7 +248,7 @@ moment.defineLocale('es', {
                                 
                             if (y > pageHeight - margin) {
                                 doc.addPage();
-                                y = 10;
+                                y = 35;
                             }
     
                             // Resultados
@@ -279,6 +286,7 @@ moment.defineLocale('es', {
                                     y += 6;
                                 }
 
+                               
 
                                 doc.text(13, y, `${resultado.parametro.nombre.toLocaleLowerCase().replace(/\b\w/g, letra => letra.toLocaleUpperCase())}`); // Columna 1
                                 doc.text(70, y, `${resultado.resultado}`);     // Columna 2
@@ -292,7 +300,7 @@ moment.defineLocale('es', {
 
                                 if (y > pageHeight - margin) {
                                     doc.addPage();
-                                    y = 10;
+                                    y = 35;
                                 }
                               
                                
@@ -311,6 +319,11 @@ moment.defineLocale('es', {
                            
                             doc.text(10, y, `NOTA : * ${examen.observacion}`);  
                             y+=2; 
+
+                            if (y > pageHeight - margin) {
+                                doc.addPage();
+                                y = 35;
+                            }
                            
                         }
 
@@ -335,7 +348,10 @@ moment.defineLocale('es', {
                         return (pageWidth - textWidth) / 2;
                     }
 
-                    
+                    if (y > pageHeight - margin) {
+                        doc.addPage();
+                        y = 35;
+                    }
 
                     // Firma del primer bacteriologo
                     let text = `${nombre_bacteriologo1}`;

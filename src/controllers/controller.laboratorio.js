@@ -33,7 +33,8 @@ export  const listarLaboratoriosPaciente=async(req,resp)=>{
     try{
        let identificacion= req.user.identificacion;
 
-        const examenes = await prisma.$queryRaw ` SELECT 
+        const examenes = await prisma.$queryRaw `
+         SELECT 
                     pa.identificacion,pa.nombres,ex.id_examen,cu.nombre AS cups,ex.estado,fact.autorizacion,ex.observacion,
                     fact.fecha,cont.nombre AS contrato,ex.resultado_pdf,proc.resultado_laboratorio
                     FROM facturas fact
@@ -139,6 +140,17 @@ export  const generarLaboratorio=async(req,resp)=>{
             } 
         );
         //console.log(examenes);
+
+        //console.log(Array.isArray(examenes[0].examen));
+
+       examenes.sort((a, b) => {
+        const areaA = a.examen[0]?.procedimiento?.area?.nombre || '';
+        const areaB = b.examen[0]?.procedimiento?.area?.nombre || '';
+        return areaA.localeCompare(areaB);
+        });
+
+
+        
         return resp.status(200).json(examenes);
     }catch(error){
         console.log("Error en controller.laboratorio.js :"+error);

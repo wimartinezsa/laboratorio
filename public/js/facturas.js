@@ -775,11 +775,6 @@ function actualizarFactura(){
 
 
 
-
-
-
-
-
 function listarServiciosContrato(){
     let id_contrato= document.getElementById('contratos').value;
 
@@ -927,27 +922,57 @@ function listarProcedimientoContratados(){
     }
 })
   .then(data => {
-          let html =``;
-          data.forEach(element => {
-            html += `<tr>`;
 
-            html += `<td>${element.id_examen}</td>`;
-            html += `<td>${element.servicio}</td>`;
-            html += `<td>${element.cups}</td>`;
-            html += `<td>${element.procedimiento}</td>`;
-            html += `<td>${element.cantidad}</td>`;
-            html += `<td>${element.precio}</td>`;
-            html += `<td>${element.contrato}</td>`;
-            html += `<td>${element.estado.replace(/_/g, " ")}</td>`;
-            html += `<td> <a class="btn btn-danger" href="javascript:eliminarExamenFactura(${element.id_examen})" title='Eliminar Examen'><i class="nav-icon fas fa-trash"></i></a>`;
-            html += `&nbsp<a class="btn btn-success" href="javascript:gestionarEstadoExamenFactura(${element.id_examen})" title='Cambiar Estado Examen'><i class="nav-icon fas fa-vial"></i></a></td>`;
-            html += `</tr>`;
-          });
-         
-          document.getElementById('tabla_examenes_factura').innerHTML = html;  
+    let accionBTN='';
+    let arrayDatos=[];
+    data.forEach(element => {
 
-  })
-  .catch(error => console.error("Error en la solicitud fetch:", error));
+        accionBTN =`<a class="btn btn-danger" href="javascript:eliminarExamenFactura(${element.id_examen})" title='Eliminar Examen'><i class="nav-icon fas fa-trash"></i></a>
+                    <a class="btn btn-success" href="javascript:gestionarEstadoExamenFactura(${element.id_examen})" title='Cambiar Estado Examen'><i class="nav-icon fas fa-vial"></i></a>`;
+
+
+        let dato = {
+            id_examen : element.id_examen,
+            servicio :element.servicio,
+            cups :element.cups,
+            procedimiento :element.procedimiento,
+            cantidad :element.cantidad,
+            precio :element.precio,
+            contrato :element.contrato,
+            estado : element.estado.replace(/_/g, " "),                                   
+            Accion :accionBTN
+        }
+       arrayDatos.push(dato)
+       });
+
+       console.log(arrayDatos);
+
+       
+       let table = $('#tabla_examenes_factura').DataTable({
+        "bInfo" : false,
+        searching: true,
+        paging: true,
+        pageLength: 5, 
+        autoWidth: false,
+        destroy: true,
+        responsive: true,
+        data: arrayDatos,
+        columns: [
+                    {"data": "id_examen"},
+                    {"data": "servicio"},
+                    {"data": "cups"},
+                    {"data": "procedimiento"},
+                    {"data": "cantidad"},
+                    {"data": "precio"},
+                    {"data": "contrato"},
+                    {"data": "estado"},
+                    {"data": "Accion"}
+                ]
+
+                            });
+
+    
+  });
   
   }
 
