@@ -297,7 +297,7 @@ function gestionarMuestras(id_prestacion,observacion){
 
 function gestionarTomaMuestra(){
     Swal.fire({
-        title: 'Se ha Realizado la Toma de Muestra',
+        title: 'Se Realizó la Toma de Muestra, ¿desea que continue al area de resultados?',
         showDenyButton: true,
         confirmButtonText: 'Si',
         denyButtonText: `No`,
@@ -305,10 +305,7 @@ function gestionarTomaMuestra(){
         if (result.isConfirmed) {
             confirmarTomaMuestra();
         } else if (result.isDenied) {
-            Mensaje.fire({
-                icon: 'warning',
-                title: 'No se realizaron cambios en el estado'
-                });
+            noConfirmarTomaMuestra();
         }                       
     })
 
@@ -363,6 +360,54 @@ function confirmarTomaMuestra(){
 
 }
 
+
+function noConfirmarTomaMuestra(){
+
+    let id_prestacion= document.getElementById('id_prestacion').value;
+  
+    let datos= new URLSearchParams();
+    datos.append('fecha',document.getElementById('fecha_muestra').value);
+    datos.append('observacion',document.getElementById('observacion').value);
+  
+    const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+
+        fetch(`/noConfirmarTomaMuestra/${id_prestacion}`,
+            {
+                method: 'PUT',
+                body:datos,
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+                    'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
+                }
+            })
+            .then(response => {
+                // Verificar si la respuesta es JSON
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json();
+                } else {
+                    window.location.href = "/";
+                }
+            })
+        .then(data=>{
+            if(data.status==403){window.location.href = "/";}
+        
+            if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
+           
+            listarExamenesTomaMuestra();
+               Frm_muestras.hide();
+
+               
+             
+            }
+    
+            if(data.status==404){Mensaje.fire({icon: 'warning',title: data.message});}
+    
+            if(data.status==500){Mensaje.fire({icon: 'error',title: data.message});}
+          
+        });
+
+}
 
 
 

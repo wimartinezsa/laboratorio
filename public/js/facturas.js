@@ -945,7 +945,7 @@ function listarProcedimientoContratados(){
        arrayDatos.push(dato)
        });
 
-       console.log(arrayDatos);
+      // console.log(arrayDatos);
 
        
        let table = $('#tabla_examenes_factura').DataTable({
@@ -970,8 +970,6 @@ function listarProcedimientoContratados(){
                 ]
 
                             });
-
-    
   });
   
   }

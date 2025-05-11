@@ -174,5 +174,40 @@ export  const confirmarTomaMuestra=async(req,resp)=>{
 }
 
 
+export  const noConfirmarTomaMuestra=async(req,resp)=>{
+    try{
+        const id= await req.params.id_prestacion;
+        const datos= await req.body;
+        const existencia = await prisma.Examen.findUnique({
+            where: { id_examen: Number(id)}
+          });
+
+          if (!existencia) {
+            return resp.status(404).json({"status":404,"message":"No existe examen en la factura"});
+          }
+          else{
+            // se 
+            const prestacion = await prisma.Examen.update(
+                {
+                    where:{id_examen: Number(id)},
+                    data:{
+                        fecha_muestra: new  Date(datos.fecha),
+                        observacion: datos.observacion,
+                        estado:"En_Toma_de_Muestra"                     
+                    }
+                }  
+            );
+            return resp.status(200).json({"status":200,"message":"Se registro la observación de la toma de muestra"});
+        }
+
+       
+    }catch(error){
+        console.log("Error en controller.factura.js :"+error);
+        resp.status(500).json({ "status":500,"message":'Error a registrar la observación de la toma de muestra' });
+    }  
+}
+
+
+
 
 

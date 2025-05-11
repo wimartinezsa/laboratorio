@@ -140,7 +140,6 @@ export  const generarLaboratorio=async(req,resp)=>{
             } 
         );
         //console.log(examenes);
-
         //console.log(Array.isArray(examenes[0].examen));
 
        examenes.sort((a, b) => {
