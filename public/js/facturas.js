@@ -952,7 +952,7 @@ function listarProcedimientoContratados(){
         "bInfo" : false,
         searching: true,
         paging: true,
-        pageLength: 5, 
+        pageLength: 3, 
         autoWidth: false,
         destroy: true,
         responsive: true,
