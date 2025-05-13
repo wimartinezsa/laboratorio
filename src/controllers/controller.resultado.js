@@ -368,8 +368,7 @@ export const registrarResulatadosAutomaticos = async (req, resp) => {
                         prisma.$executeRaw`
                             UPDATE resultados 
                             SET resultado = ${element.valor}, estado = 'Pendiente'
-                            WHERE autorizacion = ${resultados[0].autorizacion} and codigo_maquina= ${resultados[0].codigo_maquina}
-                            AND estado = 'Pendiente';
+                            WHERE autorizacion = ${resultados[0].autorizacion} and codigo_maquina= ${resultados[0].codigo_maquina};
                         `
                     );
                     actualizado++;
