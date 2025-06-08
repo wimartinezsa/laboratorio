@@ -5,6 +5,9 @@ import prisma from '../libs/prisma.js'
 export  const agregarExamenesFactura=async(req,resp)=>{
     try{
         const datos= await req.body;
+
+
+          //console.log(datos);
         const examen = await prisma.Examen.create(
             {
                 data: {
@@ -22,6 +25,7 @@ export  const agregarExamenesFactura=async(req,resp)=>{
                 }
             } 
         );
+      
         if(examen){
             const paremetros = await prisma.procedimiento.findMany({
                 where: { id_procedimiento:Number(examen.procedimientoId)},

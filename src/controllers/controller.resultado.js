@@ -280,7 +280,7 @@ export const registrarFormularioAutomaticos = async (req, resp) => {
         let actualizado = 0;
         let noEncontrados = 0;
 
-       //console.log(json_resultados);
+       console.log(json_resultados);
 
         if (!Array.isArray(json_resultados)) {
             return resp.status(400).json({ message: "El cuerpo de la solicitud debe ser un array." });
@@ -346,7 +346,7 @@ export const registrarResulatadosAutomaticos = async (req, resp) => {
         let actualizado = 0;
         let noEncontrados = 0;
 
-       // console.log(json_resultados);
+    //  console.log(json_resultados);
 
         if (!Array.isArray(json_resultados)) {
             return resp.status(400).json({ message: "El cuerpo de la solicitud debe ser un array." });
@@ -356,14 +356,15 @@ export const registrarResulatadosAutomaticos = async (req, resp) => {
             let batchQueries = [];
 
             for (const element of json_resultados) {
-                const resultados = await prisma.$queryRaw`
-                    SELECT res.id_resultado, res.resultado, pa.nombre as parametro, res.codigo_maquina, res.autorizacion
+
+              
+                const resultados = await prisma.$queryRaw `SELECT res.id_resultado, res.resultado, pa.nombre as parametro, res.codigo_maquina, res.autorizacion
                     FROM resultados res
                     JOIN parametros pa ON pa.id_parametro = res.parametroId
-                    WHERE res.autorizacion = ${element.muestra} AND res.codigo_maquina = ${element.parametro}
-                `;
+                    WHERE res.autorizacion = ${element.muestra} AND res.codigo_maquina = ${element.parametro}`;
 
                 if (resultados.length > 0) {
+
                     batchQueries.push(
                         prisma.$executeRaw`
                             UPDATE resultados 

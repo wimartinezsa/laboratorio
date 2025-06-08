@@ -244,6 +244,46 @@ fileInput.addEventListener("change", (event) => {
 
 
 
+
+async function leerArchivoAnalisisCompletos(tipo_analisis) {
+  if (!fileContent || fileContent.trim() === "") {
+    if (tipo_analisis === "Quimica") {
+      Mensaje.fire({ icon: 'warning', title: `Por favor cargar el archivo .txt de la maquina de Quimica` });
+    }
+    return;
+  }
+
+  const resultado_txt = [];
+
+  if (tipo_analisis === "Quimica") {
+    const rows = fileContent
+      .trim()
+      .split("\n")
+      .filter(row => row.trim() !== "");
+
+    for (const row of rows) {
+      const parts = row.trim().split("\t"); // usar tabulaciones como separador
+
+      if (parts.length >= 4 && !isNaN(Number(parts[0]))) {
+        const muestra = parts[0];
+        const parametro = parts[1]; // ejemplo: "CREATININE SER"
+        const valor = parts[3];
+
+        resultado_txt.push({ muestra, parametro, valor });
+      } else {
+        console.warn("Línea no válida o incompleta:", row);
+      }
+    }
+
+ 
+    if (resultado_txt.length > 0) {
+      await registrarResulatadosAutomaticos(resultado_txt); // <-- usa tu función aquí
+    }
+  }
+}
+
+
+/*
 async function leerArchivoAnalisisCompletos(tipo_analisis){
   const rows = fileContent.trim().split("\n");
   let codMuestras;
@@ -267,7 +307,7 @@ async function leerArchivoAnalisisCompletos(tipo_analisis){
            
         );
         }
-       
+       //console.log(resultado_txt);
         registrarResulatadosAutomaticos(resultado_txt);
        
     })
@@ -277,6 +317,8 @@ async function leerArchivoAnalisisCompletos(tipo_analisis){
  
 
 }
+
+*/
 
 
 //Función para leer el archivo plano de los resultados txt de la maquina Quimica
@@ -367,7 +409,8 @@ function registrarFormularioAutomaticos(resultados){
 function registrarResulatadosAutomaticos(resultados){
   const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
-  
+  //console.log(resultados);
+
   fetch('registrarResulatadosAutomaticos', {
       method:'put',
       body: JSON.stringify(resultados),
@@ -387,7 +430,7 @@ function registrarResulatadosAutomaticos(resultados){
   })
   .then(data => {
 
-   console.log(data);
+   //console.log(data);
 
        if(data.status==403){window.location.href = "/";}
        
@@ -484,9 +527,6 @@ function subirResultadoLaboratorio() {
 
 
 
-
-
-
 async function crearFormularioDinamico(id_examen){
 
   const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
@@ -516,9 +556,6 @@ async function crearFormularioDinamico(id_examen){
       });
 
 }
-
-
-
 
 
 
@@ -697,9 +734,6 @@ function finzalizarResultados(id_examen){
   });
 
 }
-
-
-
 
 
 
