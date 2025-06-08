@@ -228,9 +228,10 @@ moment.defineLocale('es', {
                                 // Línea horizontal debajo del nombre del CUPS
 
                                y += 7;
-                               
+                                doc.setFontSize(12);
                                doc.text(10, y, `${examen.procedimiento.cups.nombre.toUpperCase()}`);
                                y += 2;
+                                
                                 doc.line(10, y, 200, y); // Línea horizontal completa del documento
                                 y += 5;
                             
