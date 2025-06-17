@@ -446,7 +446,7 @@ function listarEmpresasActivas(){
 
 function listarContratos(){
   let id_empresa= document.getElementById('empresas').value;
- 
+
 
   const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 

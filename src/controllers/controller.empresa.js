@@ -37,8 +37,8 @@ export  const listarEmpresasActivas=async(req,resp)=>{
             {
                 where:{estado:'Activo'},
                 orderBy: {
-                nombre: 'asc' // Orden ascendente por el campo 'nombre' de la empresa
-                        }
+                nombre: 'asc'
+  }
             }
         );
         

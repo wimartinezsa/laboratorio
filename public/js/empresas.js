@@ -57,6 +57,7 @@ function listarEmpresas(){
 
     
         let dato = {
+        id: element.id_empresa,
         codigo : element.codigo,
         nit :element.nit,
         nombre :element.nombre,
@@ -76,7 +77,7 @@ function listarEmpresas(){
                destroy: true,
                responsive: true,
                data: arrayDatos,
-               columns: [
+               columns: [   {"data": "id"},
                            {"data": "codigo"},
                            {"data": "nit"},
                            {"data": "nombre"},
