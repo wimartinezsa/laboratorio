@@ -393,15 +393,16 @@ function buscarPacienteId(){
        }
         
         document.getElementById("tabla_busqueda").innerHTML=tabla;
-
-       
+        document.getElementById('autorizacion').disabled = true; // Desactiva el input
+          document.getElementById('autorizacion').value = 0; // Desactiva el input
+  /*     
         if(id_empresa ==='1'){
             document.getElementById('autorizacion').disabled = true; // Desactiva el input
             document.getElementById('autorizacion').value = 0; // Desactiva el input
         }else{
             document.getElementById('autorizacion').disabled = false; // Desactiva el input
         }
-
+*/
 
        
     });
@@ -719,8 +720,8 @@ function buscarFactura(id_factura){
         document.getElementById('autorizacion2').value=data[0].autorizacion;
         document.getElementById('via_ingreso2').value=data[0].via_ingreso;
 
+        document.getElementById('autorizacion2').disabled = true; // Desactiva el input
         
-       
     });
 
 

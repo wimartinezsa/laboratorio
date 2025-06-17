@@ -2,7 +2,7 @@ cantidadPacientes();
 cantidadEmpresas();
 cantidadContratos();
 examenesTomaMuestra();
-examenesProcesoAnalisis();
+//examenesProcesoAnalisis();
 examenesResultadosListos();
 examenesResultadosEntregados();
 cantidadExamenesPorDiaEmpresa();
@@ -158,7 +158,7 @@ function examenesTomaMuestra(){
     });
 }
 
-
+/*
 function examenesProcesoAnalisis(){
     fetch('/examenesProcesoAnalisis',
         {
@@ -177,7 +177,7 @@ function examenesProcesoAnalisis(){
          document.getElementById('examenesProcesoAnalisis').innerHTML=`${data[0].cantidad}`;
     });
 }
-
+*/
 
 function examenesResultadosListos(){
     fetch('/examenesResultadosListos',

@@ -129,7 +129,7 @@ export  const registrarFactura=async(req,resp)=>{
         // se actualiza la autorización 
         if (factura){
             // se crea una nueva autorización solo para los particulares
-            if(datos.id_empresa ==='1'){
+           // if(datos.id_empresa ==='1'){
                
                 const factura2 = await prisma.Factura.update(
                     {    where:{id_factura:factura.id_factura},
@@ -140,7 +140,7 @@ export  const registrarFactura=async(req,resp)=>{
                 );
 
 
-            }
+         //   }
 
             //se crear el usuario con rol de invitado
             // se consulta en la tabla de pacientes los datos
@@ -263,8 +263,8 @@ export  const listarServiciosContrato=async(req,resp)=>{
         FROM acuerdos ac
         JOIN procedimientos pro ON pro.id_procedimiento= ac.procedimientoId
         JOIN servicios se ON se.id_servicio = pro.servicioId
-        WHERE ac.contratoId=${id_contrato} and se.estado='Activo'
-        `;
+        WHERE ac.contratoId=${id_contrato} and se.estado='Activo' order by se.nombre ASC`;
+        
         return resp.status(200).json(contratos);
     }catch(error){
         console.log("Error en controller.facturas.js :"+error);
@@ -284,7 +284,7 @@ export  const listarProcedimientoContratados=async(req,resp)=>{
         FROM acuerdos ac
         JOIN procedimientos pro ON pro.id_procedimiento= ac.procedimientoId
         JOIN cups cu ON cu.id_cups = pro.cupsId
-        WHERE pro.servicioId =${id_servicio} and ac.contratoId=${id_contrato} and ac.estado='Activo';
+        WHERE pro.servicioId =${id_servicio} and ac.contratoId=${id_contrato} and ac.estado='Activo' ORDER BY cu.nombre ASC;
         `;
         
         return resp.status(200).json(contratos);

@@ -36,6 +36,7 @@ import laboratorio from './src/routes/route.laboratorio.js'
 import estadistica from './src/routes/route.estadistica.js'
 import vinculacion from './src/routes/route.vinculacion.js'
 import cuenta_cobro from './src/routes/route.cuenta_cobro.js'
+import reporte from './src/routes/route.reporte.js'
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -86,7 +87,7 @@ app.use(laboratorio);
 app.use(estadistica);
 app.use(vinculacion);
 app.use(cuenta_cobro);
- 
+app.use(reporte); 
 
 
 app.listen(port, () => {

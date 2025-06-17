@@ -35,7 +35,10 @@ export  const listarEmpresasActivas=async(req,resp)=>{
     try{
         const empresas = await prisma.Empresa.findMany(
             {
-                where:{estado:'Activo'}
+                where:{estado:'Activo'},
+                orderBy: {
+                nombre: 'asc' // Orden ascendente por el campo 'nombre' de la empresa
+                        }
             }
         );
         

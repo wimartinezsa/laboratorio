@@ -75,6 +75,12 @@ route.get('/laboratorio_invitado',(req,resp)=>{
 
 
 
+route.get('/reporteAtendidos',(req,resp)=>{
+    resp.render("pages/reportes/reporte_atendidos.ejs");
+});
+
+
+
 
 
 
