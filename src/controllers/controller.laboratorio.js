@@ -101,44 +101,51 @@ export  const generarLaboratorio=async(req,resp)=>{
     try{
        
         const autorizacion= await req.params.autorizacion;
-        const examenes = await prisma.Factura.findMany(
-            { 
-                where:{autorizacion:autorizacion},
-                        include:{
-                            paciente:{
-                                include:{
-                                    eps:true
-                                }
-                            },
-                            contrato:{
-                                include:{
-                                    empresa:true
-                                }
-                            },
-                            examen:{
-                                include:{
-                                    resultado:{
-                                        include:{
-                                            parametro:{
-                                                include:{
-                                                    tipo_parametro:true
-                                                }
-                                            }
-                                        }       
-                                },
-                                procedimiento:{
-                                include:{
-                                    cups:true,
-                                    area:true
+        
+        const examenes = await prisma.Factura.findMany({
+  where: {
+    autorizacion: autorizacion
+  },
+  include: {
+    paciente: {
+      include: {
+        eps: true
+      }
+    },
+    contrato: {
+      include: {
+        empresa: true
+      }
+    },
+    examen: {
+      where: {
+        procedimiento: {
+          resultado_laboratorio: "Automatico"
+        }
+      },
+      include: {
+        resultado: {
+          include: {
+            parametro: {
+              include: {
+                tipo_parametro: true
+              }
+            }
+          }
+        },
+        procedimiento: {
+          include: {
+            cups: true,
+            area: true
+          }
+        }
+      }
+    }
+  }
+});
 
-                                }
-                            }
-                                }
-                                
-                            }
-                        }  
-            } 
-        );
+
+
         //console.log(examenes);
         //console.log(Array.isArray(examenes[0].examen));
 
