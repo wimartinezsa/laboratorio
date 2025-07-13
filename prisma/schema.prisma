@@ -355,7 +355,7 @@ model Acuerdo {
   contratoId      Int
   contrato        Contrato      @relation(fields: [contratoId], references: [id_contrato])
   procedimiento   Procedimiento @relation(fields: [procedimientoId], references: [id_procedimiento])
-
+  
   @@unique([contratoId, procedimientoId])
   @@index([contratoId], map: "acuerdos_contratoId_fkey")
   @@index([procedimientoId], map: "acuerdos_procedimientoId_fkey")

@@ -41,57 +41,41 @@ export  const listarExamenesTomaMuestra=async(req,resp)=>{
                 }         
             } 
         );
-
-      
-
-      
+           
         return resp.status(200).json({"status":200,examenes});
 
        }else{
-
+//En_Toma_de_Muestra
         
-        const examenes = await prisma.Examen.findMany({
-            where: {
-            estado: 'En_Toma_de_Muestra',
-            procedimiento: {
-                area: {
-                vinculacion: {
-                    some: {
-                    usuario: {
-                        id_usuario: id_usuario, // Filtra por el ID del usuario
+        const examenes = await prisma.Examen.findMany(
+            { 
+                where: {
+                    estado: { 
+                        in: ['En_Toma_de_Muestra'] // Filtra por estado
+                      }          
+                  },
+                include:{
+                    factura:{
+                        include:{
+                            paciente:true,
+                            contrato:true
+                        }
                     },
+                    resultado:{
+                        include:{
+                            parametro:true
+                        }
                     },
-                },
-                },
-            },
-            },
-            include: {
-            factura: {
-                include: {
-                paciente: true,
-                },
-            },
-            resultado: {
-                include: {
-                    parametro: true
-                }
-            },
-            procedimiento: {
-                include: {
-                cups: true,
-                area: {
-                    include: {
-                    vinculacion: {
-                        include: {
-                        usuario: true,
-                        },
-                    },
-                    },
-                },
-                },
-            },
-            },
-        });
+                    procedimiento:{
+                        include:{
+                            cups:true,
+                            area:true
+                        }
+                    }
+                    
+                }         
+            } 
+        );
        
         return resp.status(200).json({"status":200,examenes});
 
