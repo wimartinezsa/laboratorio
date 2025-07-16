@@ -598,9 +598,8 @@ function activarAcuerdo(id_acuerdo,estado){
 
 
 function agregarAcuerdo(){
-let id_contrato=document.getElementById('id_contrato').value;
+    let id_contrato=document.getElementById('id_contrato2').value;
     let datos= new URLSearchParams();
-
     datos.append('contratoId',id_contrato);
     datos.append('procedimientoId',document.getElementById('procedimientos').value);
     datos.append('precio',document.getElementById('precio').value);
@@ -642,6 +641,8 @@ let id_contrato=document.getElementById('id_contrato').value;
        
     
     });
+
+    
 
 }
 

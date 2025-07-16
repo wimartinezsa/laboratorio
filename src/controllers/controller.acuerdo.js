@@ -67,9 +67,9 @@ export  const buscarAcuerdoId=async(req,resp)=>{
 export  const registrarAcuerdo=async(req,resp)=>{
     try{
         const datos= await req.body;
-       // console.log(datos);
+       console.log(datos);
         
-        const acuerdo = await prisma.Acuerdo.create(
+        const acuerdo = await prisma.acuerdo.create(
             {
                 data: {
                     estado: "Activo",
