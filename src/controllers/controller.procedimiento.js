@@ -190,6 +190,11 @@ export  const procedimientoActivoServicioId=async(req,resp)=>{
                 include:{
                     servicio:true,
                     cups:true
+                },
+                orderBy: {
+                cups: {
+                            nombre: 'asc'
+                        }
                 }
             }
         );

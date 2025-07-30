@@ -114,7 +114,9 @@ export  const registrarPaciente=async(req,resp)=>{
                     fecha_nacimiento: new Date(datos.fecha_nacimiento),
                     sexo: datos.sexo,
                     direccion: datos.direccion,
-                    email: datos.email,
+                    email: datos.email && datos.email.trim() !== '' 
+                    ? datos.email 
+                    : String(datos.identificacion) + '@gmail.com',
                     telefono:datos.telefono,
                     tipo_paciente: datos.tipo_paciente,
                     estado:"Activo",
