@@ -150,7 +150,7 @@ fetch('/listarLaboratoriosPaciente', {
 })
 .then(data => {
 
-   
+   console.log(data);
     let accionBTN='';
     let arrayDatos=[];
 
@@ -163,7 +163,7 @@ fetch('/listarLaboratoriosPaciente', {
       }
 
       if(element.resultado_laboratorio==='Manual'){
-        accionBTN =`<a class="btn btn-primary" href="${element.resultado_pdf}" download title='Descargar Resultados'><i class='fas fa-cloud-download-alt' style='font-size:20px'></i></a>`;
+        accionBTN =`<a class="btn btn-primary" href="laboratorios/${element.resultado_pdf}" download title='Descargar Resultados'><i class='fas fa-cloud-download-alt' style='font-size:20px'></i></a>`;
       }
     
 
