@@ -363,7 +363,7 @@ moment.defineLocale('es', {
                     doc.text(30, y, text);
                     y += 3;
                     
-                    text = `Bacteriólogo(a) UCMC`;
+                    text = `Bacteriólogo(a)`;
                     doc.text(30, y, text);
                     y -= 6;
 
@@ -376,7 +376,7 @@ moment.defineLocale('es', {
                      doc.text(135, y, text);
                      y += 3;
                      
-                     text = `Bacteriólogo(a) UCMC`;
+                     text = `Bacteriólogo(a)`;
                      doc.text(135, y, text);
 
                         
