@@ -4,6 +4,10 @@ listarEmpresasActivas();
 //listarTodasFacturasContrato();
 
 
+
+
+
+
 const Mensaje = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -45,18 +49,15 @@ var Frm_estado_prestacion = new bootstrap.Modal(document.getElementById('Frm_est
 
 
 
-$(function () {
-    //Initialize Select2 Elements
-    $('.select2').select2()
 
-    //Initialize Select2 Elements
-    $('.select2bs4').select2({
-      theme: 'bootstrap4'
-    })
-
-});
-
-
+function autoCompletadoProcedimientos(){
+    const selectElement = document.getElementById('procedimiento_acordados');
+    const choices = new Choices(selectElement, {
+      searchEnabled: true,
+      placeholderValue: 'Escribe para buscar...',
+      shouldSort: false
+    });
+}
 
 
 function listarFacturasContrato(){
@@ -802,7 +803,12 @@ function listarServiciosContrato(){
           data.forEach(element => {
               html += `<option value="${element.id_servicio}">${element.servicio}</option>`;
           });
-          document.getElementById('servicios').innerHTML = html;  
+          document.getElementById('servicios').innerHTML = html; 
+          
+          
+
+  
+
   })
   .catch(error => console.error("Error en la solicitud fetch:", error));
   
@@ -840,6 +846,11 @@ function listarProcedimientoContratados(){
               html += `<option value="${element.id_procedimiento}">${element.nombre} <${element.precio}></option>`;
           });
           document.getElementById('procedimiento_acordados').innerHTML = html;  
+
+          autoCompletadoProcedimientos();
+
+
+
   })
   .catch(error => console.error("Error en la solicitud fetch:", error));
   
