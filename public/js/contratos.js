@@ -488,6 +488,16 @@ function listarAcuerdos(id_contrato){
    
 }
 
+
+function autoCompletadoProcedimientos(){
+    const selectElement = document.getElementById('procedimientos');
+    const choices = new Choices(selectElement, {
+      searchEnabled: true,
+      placeholderValue: 'Escribe para buscar...',
+      shouldSort: false
+    });
+} 
+
 function listarProcedimientos(){
     
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
@@ -514,6 +524,7 @@ function listarProcedimientos(){
                html+=`<option value=${element.id_procedimiento}> ${element.cups.nombre} => $${element.precio}</option>`;
                });   
                document.getElementById('procedimientos').innerHTML = html;  
+               autoCompletadoProcedimientos();
            });
 
 }

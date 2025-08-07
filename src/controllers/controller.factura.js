@@ -6,8 +6,8 @@ export  const listarFacturas=async(req,resp)=>{
     try{
        
         const contratos = await prisma.$queryRaw`
-        SELECT fa.id_factura,DATE(fa.fecha) AS fecha,pa.identificacion,pa.primer_nombre,co.nombre AS contrato,
-        em.nombre AS empresa,fa.total,fa.estado
+        SELECT fa.id_factura,DATE(fa.fecha) AS fecha,pa.identificacion,co.nombre AS contrato,
+        em.nombre AS empresa,fa.total,fa.estado,(select nombre from sedes where id_sede=${req.user.sede}) as sede
         FROM facturas fa
         JOIN pacientes pa ON pa.id_paciente = fa.pacienteId
         JOIN contratos co ON co.id_contrato = fa.contratoId
@@ -83,18 +83,36 @@ export  const actualizarFactura=async(req,resp)=>{
 export  const listarFacturasContratos=async(req,resp)=>{
     try{
        let id_contrato=req.params.id_contrato;
-        const contratos = await prisma.$queryRaw`
-        SELECT fa.id_factura,DATE(fa.fecha) AS fecha,pa.identificacion,pa.nombres,co.nombre AS contrato,
-        em.nombre AS empresa,SUM(ex.precio) AS total,fa.estado,fa.autorizacion
-        FROM facturas fa
-        LEFT JOIN examenes ex ON ex.facturaId = fa.id_factura
-        JOIN pacientes pa ON pa.id_paciente = fa.pacienteId
-        JOIN contratos co ON co.id_contrato = fa.contratoId
-        JOIN empresas em ON em.id_empresa = co.empresaId
-        WHERE co.id_contrato=${id_contrato} 
-        GROUP BY id_factura
+      let contratos = '';
+       if(req.user.sede===1){
+
+         contratos = await prisma.$queryRaw`
+            SELECT fa.id_factura,DATE(fa.fecha) AS fecha,pa.identificacion,pa.nombres,co.nombre AS contrato,
+            em.nombre AS empresa,SUM(ex.precio) AS total,fa.estado,fa.autorizacion,(select nombre from sedes where fa.sedeId=id_sede) as sede
+            FROM facturas fa
+            LEFT JOIN examenes ex ON ex.facturaId = fa.id_factura
+            JOIN pacientes pa ON pa.id_paciente = fa.pacienteId
+            JOIN contratos co ON co.id_contrato = fa.contratoId
+            JOIN empresas em ON em.id_empresa = co.empresaId
+            WHERE co.id_contrato=${id_contrato} 
+            GROUP BY id_factura `;
+       }else{
+
+        contratos = await prisma.$queryRaw`
+            SELECT fa.id_factura,DATE(fa.fecha) AS fecha,pa.identificacion,pa.nombres,co.nombre AS contrato,
+            em.nombre AS empresa,SUM(ex.precio) AS total,fa.estado,fa.autorizacion,(select nombre from sedes where fa.sedeId=id_sede) as sede
+            FROM facturas fa
+            LEFT JOIN examenes ex ON ex.facturaId = fa.id_factura
+            JOIN pacientes pa ON pa.id_paciente = fa.pacienteId
+            JOIN contratos co ON co.id_contrato = fa.contratoId
+            JOIN empresas em ON em.id_empresa = co.empresaId
+            WHERE co.id_contrato=${id_contrato} and fa.sedeId=${req.user.sede}
+            GROUP BY id_factura `;
+       }
+
+       
       
-        `;
+       
         
         return resp.status(200).json(contratos);
     }catch(error){
@@ -108,9 +126,9 @@ export  const registrarFactura=async(req,resp)=>{
     try{
         const datos= await req.body;
 
-        
+        //console.log(req.user);
 
-        const factura = await prisma.Factura.create(
+     const factura = await prisma.Factura.create(
             {
                 data: {
                 
@@ -121,6 +139,7 @@ export  const registrarFactura=async(req,resp)=>{
                     autorizacion:datos.autorizacion,
                     total:0,
                     estado:'Pendiente_Emision',
+                    sedeId:req.user.sede
                   
                 }
             }  
@@ -162,7 +181,7 @@ export  const registrarFactura=async(req,resp)=>{
                 const encriptPassword = bcrypt.hashSync(String(Paciente.identificacion), 12)
                 if(Usuario) console.log('Ya existe');
                 else{
-                    // se crea el usuro con rol de invitado
+                    // se crea el usuario con rol de invitado
                     const new_user=await  prisma.Usuario.create({
                         data: {
                             identificacion:Paciente.identificacion,
@@ -173,18 +192,16 @@ export  const registrarFactura=async(req,resp)=>{
                             rol: 'Invitado',
                             cargo:'Invitado',
                             autoriza: 'No'
+
                         }
                     })
-
                 }
-
             }
             else{
                 console.log(usuario_invitado);
         }
             
-
-        }
+    }
 
 
 

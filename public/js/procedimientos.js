@@ -32,16 +32,7 @@ var Frm_tipo_resultado = new bootstrap.Modal(document.getElementById('Frm_tipo_r
 });
 
 
-$(function () {
-    //Initialize Select2 Elements
-    $('.select2').select2()
 
-    //Initialize Select2 Elements
-    $('.select2bs4').select2({
-      theme: 'bootstrap4'
-    })
-
-});
 
 document.getElementById('codigo_maquina').disabled =true;
 function activarCodigoMaquiena(){
@@ -241,6 +232,16 @@ function activarProcediemiento(id_procedimiento,estado){
 }
 
 
+
+function autoCompletadoCups(){
+    const selectElement = document.getElementById('cups');
+    const choices = new Choices(selectElement, {
+      searchEnabled: true,
+      placeholderValue: 'Escribe para buscar...',
+      shouldSort: false
+    });
+}
+
 function listarCups(){
   
     fetch(`/cups`, {
@@ -261,7 +262,8 @@ function listarCups(){
                data.forEach(element => {
                html+=`<option value='${element.id_cups}'> ${element.nombre}</option>`;
                });   
-               document.getElementById('cups').innerHTML = html;  
+               document.getElementById('cups').innerHTML = html; 
+               autoCompletadoCups(); 
            });
 }
 

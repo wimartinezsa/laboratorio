@@ -7,7 +7,8 @@ import {
     listarUsuarios,
     registrarFirma,
     cargarImagen,
-    estadoUsuarioId
+    estadoUsuarioId,
+    listarSedes
 } 
 from "../controllers/controller.usuario.js";
 
@@ -22,6 +23,11 @@ route.get('/cerrrar_sesion/:id_usuario',cerrrar_sesion);
 
 
 route.get('/usuario/:id_usuario',validarToken,buscarUsuarioId);
+
+
+route.get('/sedes',listarSedes);
+
+
 route.post('/usuario',validarToken,registrarUsuario);
 route.put('/usuario/:id_usuario',actualizarUsuarioId);
 

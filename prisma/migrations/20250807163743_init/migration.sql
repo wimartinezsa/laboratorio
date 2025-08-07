@@ -51,7 +51,7 @@ CREATE TABLE `facturas` (
     `via_ingreso` ENUM('01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14') NOT NULL,
     `fecha` DATETIME(3) NOT NULL,
     `total` DECIMAL(10, 2) NOT NULL,
-    `estado` ENUM('Pendiente_Emision', 'Factura_Emitida', 'Pendiente_Pago', 'Pagado', 'Anulado') NOT NULL DEFAULT 'Pendiente_Emision',
+    `estado` ENUM('Pendiente_Emision', 'Factura_Emitida', 'Pendiente_Pago', 'Cobro', 'Pagado', 'Anulado') NOT NULL DEFAULT 'Pendiente_Emision',
     `contratoId` INTEGER NOT NULL,
     `pacienteId` INTEGER NOT NULL,
 
@@ -63,6 +63,8 @@ CREATE TABLE `facturas` (
 -- CreateTable
 CREATE TABLE `resultados` (
     `id_resultado` INTEGER NOT NULL AUTO_INCREMENT,
+    `autorizacion` VARCHAR(50) NULL,
+    `codigo_maquina` VARCHAR(50) NULL,
     `resultado` VARCHAR(200) NULL,
     `estado` ENUM('Pendiente', 'Finalizado') NOT NULL,
     `examenId` INTEGER NOT NULL,
@@ -81,8 +83,14 @@ CREATE TABLE `examenes` (
     `fecha_muestra` DATETIME(3) NULL,
     `fecha_analisis` DATETIME(3) NULL,
     `fecha_resultado` DATETIME(3) NULL,
-    `estado` ENUM('Solicitado', 'En_Toma_de_Muestra', 'Muestra_Recibida', 'En_Proceso_de_Analisis', 'Analisis_Completo', 'Resultados_Listos', 'Resultados_Entregados') NOT NULL DEFAULT 'Solicitado',
+    `profesional` VARCHAR(50) NULL,
+    `firma` VARCHAR(100) NULL,
+    `estado` ENUM('Solicitado', 'En_Toma_de_Muestra', 'Muestra_Recibida', 'En_Proceso_de_Analisis', 'Analisis_Completo', 'Resultados_Listos', 'Resultados_Entregados') NULL DEFAULT 'Solicitado',
+    `estado_pago` ENUM('Pendiente_Pago', 'Cobro', 'Pagado') NULL DEFAULT 'Pendiente_Pago',
+    `fecha_cobro` DATETIME(3) NULL,
+    `fecha_pago` DATETIME(3) NULL,
     `observacion` VARCHAR(200) NULL,
+    `resultado_pdf` VARCHAR(100) NULL,
     `procedimientoId` INTEGER NOT NULL,
     `facturaId` INTEGER NOT NULL,
 
@@ -168,13 +176,24 @@ CREATE TABLE `tipo_resultados` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `tipo_parametros` (
+    `id_tipo_parametro` INTEGER NOT NULL AUTO_INCREMENT,
+    `nombre` VARCHAR(50) NOT NULL,
+
+    PRIMARY KEY (`id_tipo_parametro`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `parametros` (
     `id_parametro` INTEGER NOT NULL AUTO_INCREMENT,
     `nombre` VARCHAR(50) NOT NULL,
     `metodo` VARCHAR(30) NOT NULL,
     `unidad` VARCHAR(30) NULL,
     `valor_referencia` VARCHAR(300) NULL,
+    `estado` ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
+    `codigo_maquina` VARCHAR(50) NULL,
     `procedimientoId` INTEGER NOT NULL,
+    `tipo_parametroId` INTEGER NOT NULL,
 
     INDEX `parametros_procedimientoId_fkey`(`procedimientoId`),
     PRIMARY KEY (`id_parametro`)
@@ -184,6 +203,7 @@ CREATE TABLE `parametros` (
 CREATE TABLE `procedimientos` (
     `id_procedimiento` INTEGER NOT NULL AUTO_INCREMENT,
     `estado` ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
+    `resultado_laboratorio` ENUM('Automatico', 'Manual') NULL DEFAULT 'Automatico',
     `tecnica` VARCHAR(50) NULL,
     `servicioId` INTEGER NOT NULL,
     `finalidadId` INTEGER NOT NULL,
@@ -199,13 +219,13 @@ CREATE TABLE `procedimientos` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `areas` (
-    `id_area` INTEGER NOT NULL AUTO_INCREMENT,
-    `nombre` VARCHAR(30) NOT NULL,
+CREATE TABLE `sedes` (
+    `id_sede` INTEGER NOT NULL AUTO_INCREMENT,
+    `nombre` VARCHAR(12) NOT NULL,
     `prestadorId` INTEGER NULL,
 
-    INDEX `areas_prestadorId_fkey`(`prestadorId`),
-    PRIMARY KEY (`id_area`)
+    UNIQUE INDEX `sedes_nombre_key`(`nombre`),
+    PRIMARY KEY (`id_sede`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -220,6 +240,24 @@ CREATE TABLE `prestadores` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `areas` (
+    `id_area` INTEGER NOT NULL AUTO_INCREMENT,
+    `nombre` VARCHAR(30) NOT NULL,
+    `prestadorId` INTEGER NULL,
+
+    PRIMARY KEY (`id_area`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `vinculaciones` (
+    `id_vinculacion` INTEGER NOT NULL AUTO_INCREMENT,
+    `usuarioId` INTEGER NOT NULL,
+    `areaId` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id_vinculacion`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `usuarios` (
     `id_usuario` INTEGER NOT NULL AUTO_INCREMENT,
     `tipo_identificacion` ENUM('CC', 'CE', 'CD', 'PA', 'SC', 'PE', 'RC', 'TI', 'CN', 'AS', 'MS') NOT NULL,
@@ -227,15 +265,15 @@ CREATE TABLE `usuarios` (
     `nombre` VARCHAR(30) NOT NULL,
     `cargo` VARCHAR(50) NOT NULL,
     `firma` VARCHAR(100) NULL,
-    `rol` ENUM('Administrador', 'Facturacion', 'Bacteriologo', 'Auxiliar') NOT NULL,
+    `autoriza` VARCHAR(10) NULL,
+    `rol` ENUM('Administrador', 'Facturacion', 'Bacteriologo', 'Auxiliar', 'Invitado') NOT NULL,
     `email` VARCHAR(50) NOT NULL,
     `password` VARCHAR(100) NOT NULL,
     `estado` ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
     `token` VARCHAR(500) NULL,
-    `areaId` INTEGER NOT NULL,
+    `sedeId` INTEGER NULL,
 
     UNIQUE INDEX `usuarios_identificacion_key`(`identificacion`),
-    INDEX `usuarios_areaId_fkey`(`areaId`),
     PRIMARY KEY (`id_usuario`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -246,7 +284,7 @@ CREATE TABLE `empresas` (
     `codigo` VARCHAR(20) NOT NULL,
     `nombre` VARCHAR(50) NOT NULL,
     `sigla` VARCHAR(50) NOT NULL,
-    `tipo` ENUM('Particular', 'Empresa', 'Eps', 'Esess') NOT NULL,
+    `tipo` ENUM('Particular', 'Empresa', 'Eps', 'Ese') NULL,
     `estado` ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
     `municipioId` INTEGER NOT NULL,
 
@@ -279,6 +317,7 @@ CREATE TABLE `acuerdos` (
 
     INDEX `acuerdos_contratoId_fkey`(`contratoId`),
     INDEX `acuerdos_procedimientoId_fkey`(`procedimientoId`),
+    UNIQUE INDEX `acuerdos_contratoId_procedimientoId_key`(`contratoId`, `procedimientoId`),
     PRIMARY KEY (`id_acuerdo`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -328,6 +367,9 @@ ALTER TABLE `tipo_resultados` ADD CONSTRAINT `tipo_resultados_parametroId_fkey` 
 ALTER TABLE `parametros` ADD CONSTRAINT `parametros_procedimientoId_fkey` FOREIGN KEY (`procedimientoId`) REFERENCES `procedimientos`(`id_procedimiento`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `parametros` ADD CONSTRAINT `parametros_tipo_parametroId_fkey` FOREIGN KEY (`tipo_parametroId`) REFERENCES `tipo_parametros`(`id_tipo_parametro`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `procedimientos` ADD CONSTRAINT `procedimientos_areaId_fkey` FOREIGN KEY (`areaId`) REFERENCES `areas`(`id_area`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -340,10 +382,19 @@ ALTER TABLE `procedimientos` ADD CONSTRAINT `procedimientos_finalidadId_fkey` FO
 ALTER TABLE `procedimientos` ADD CONSTRAINT `procedimientos_servicioId_fkey` FOREIGN KEY (`servicioId`) REFERENCES `servicios`(`id_servicio`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `sedes` ADD CONSTRAINT `sedes_prestadorId_fkey` FOREIGN KEY (`prestadorId`) REFERENCES `prestadores`(`id_prestador`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `areas` ADD CONSTRAINT `areas_prestadorId_fkey` FOREIGN KEY (`prestadorId`) REFERENCES `prestadores`(`id_prestador`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `usuarios` ADD CONSTRAINT `usuarios_areaId_fkey` FOREIGN KEY (`areaId`) REFERENCES `areas`(`id_area`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `vinculaciones` ADD CONSTRAINT `vinculaciones_usuarioId_fkey` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios`(`id_usuario`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `vinculaciones` ADD CONSTRAINT `vinculaciones_areaId_fkey` FOREIGN KEY (`areaId`) REFERENCES `areas`(`id_area`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `usuarios` ADD CONSTRAINT `usuarios_sedeId_fkey` FOREIGN KEY (`sedeId`) REFERENCES `sedes`(`id_sede`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `empresas` ADD CONSTRAINT `empresas_municipioId_fkey` FOREIGN KEY (`municipioId`) REFERENCES `municipios`(`id_municipio`) ON DELETE RESTRICT ON UPDATE CASCADE;

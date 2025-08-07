@@ -120,7 +120,8 @@ function listarFacturasContrato(){
         contrato :element.contrato,
         autorizacion :element.autorizacion,
         total :element.total,
-        estado : element.estado.replace(/_/g, " "),                                   
+        estado : element.estado.replace(/_/g, " "),   
+        sede: element.sede,                                
         Accion :accionBTN
    }
        arrayDatos.push(dato)
@@ -143,6 +144,7 @@ function listarFacturasContrato(){
                            {"data": "autorizacion"},
                            {"data": "total"},
                            {"data": "estado"},
+                           {"data": "sede"},
                            {"data": "Accion"}
                        ]
       
@@ -241,9 +243,8 @@ function listarTodasFacturasContrato(){
         contrato :element.contrato,
         empresa :element.empresa,
         total :0,
-        estado : element.estado,
-                                            
-       Accion :accionBTN
+        estado : element.estado,                                
+        Accion :accionBTN
    }
        arrayDatos.push(dato)
        });

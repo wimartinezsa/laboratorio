@@ -261,6 +261,36 @@ function agregarVinculacionUsuario(){
 
 
 
+function listarSedes(){
+  
+    fetch(`/sedes`, {
+               method:'get'    
+           })
+           .then(response => {
+            // Verificar si la respuesta es JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                window.location.href = "/";
+            }
+          })
+           .then(data => {
+             console.log(data);
+              let html=`<option value='0' selected='true' disabled='true'>Seleccione una sede</option>`;
+              
+              data.sedes.forEach(element => {
+               html+=`<option value='${element.id_sede}'> ${element.nombre}</option>`;
+               });   
+               
+               document.getElementById('sedes').innerHTML = html;  
+           });
+}
+
+
+
+
+
 function listarAreas(){
   
     fetch(`/area`, {
@@ -293,6 +323,7 @@ function listarAreas(){
 async function gestionarUsuario(){
     await limpiarFormularioUsuario();
     await listarAreas();
+    await listarSedes();
    
     document.getElementById('id_usuario').value=0;
     document.getElementById('btn_registrar').style.display = 'block';
@@ -314,7 +345,10 @@ function registrarUsuario(){
     datos.append('cargo',document.getElementById('cargo').value);
     datos.append('rol',document.getElementById('rol').value);
     datos.append('autoriza',document.getElementById('autoriza').value);
-    
+    datos.append('sede',document.getElementById('sedes').value);
+
+
+
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
     fetch('/usuario',
@@ -415,6 +449,9 @@ function buscarUsaurioId(id_usuario){
         document.getElementById('rol').value= data.rol;
         document.getElementById('areas').value= data.autoriza;
         document.getElementById('areas').value= nombreDeArea;
+        document.getElementById('sedes').value= data.sedeId;
+
+        
    
     });
 
@@ -437,6 +474,7 @@ function actualizarUsuario(){
     datos.append('rol',document.getElementById('rol').value);
     datos.append('area',document.getElementById('areas').value);
     datos.append('autoriza',document.getElementById('autoriza').value);
+    datos.append('sede',document.getElementById('sedes').value);
     
     
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta

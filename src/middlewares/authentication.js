@@ -36,7 +36,7 @@ export  const validarUsuario=async(req,resp)=>{
                 
               
                 const token = jwt.sign(
-                    { id: existenciaLogin.id_usuario,identificacion:existenciaLogin.identificacion,email: existenciaLogin.email, rol: existenciaLogin.rol}, // Datos que quieras incluir en el token
+                    { id: existenciaLogin.id_usuario,identificacion:existenciaLogin.identificacion,email: existenciaLogin.email, rol: existenciaLogin.rol,sede:existenciaLogin.sedeId}, // Datos que quieras incluir en el token
                     process.env.SECRET_TOKEN,
                     { expiresIn: '8h' } 
                 );
@@ -56,7 +56,7 @@ export  const validarUsuario=async(req,resp)=>{
                     "message": "Login exitoso",
                     token,
                     "status":200,
-                    user: { id: existenciaLogin.id_usuario,identificacion:existenciaLogin.identificacion,nombre:existenciaLogin.nombre ,email: existenciaLogin.email, rol: existenciaLogin.rol}
+                    user: { id: existenciaLogin.id_usuario,identificacion:existenciaLogin.identificacion,nombre:existenciaLogin.nombre ,email: existenciaLogin.email, rol: existenciaLogin.rol,sede:existenciaLogin.sedeId}
                 });
 
             }else{

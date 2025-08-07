@@ -18,7 +18,7 @@ const route = Router();
 route.get('/factura',validarToken,listarFacturas);
 
 route.get('/facturaContrato/:id_contrato',validarToken,listarFacturasContratos);
-route.post('/factura',registrarFactura);
+route.post('/factura',validarToken,registrarFactura);
 
 route.get('/servicioContrato/:id_contrato',validarToken,listarServiciosContrato);
 

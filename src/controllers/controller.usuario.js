@@ -18,6 +18,21 @@ export const cargarImagen=upload.single('img');
 
 
 
+export  const listarSedes=async(req,resp)=>{
+    try{
+        
+        const sedes = await prisma.sede.findMany();
+          //console.log(usuarios);
+          return resp.status(200).json({"status":200,sedes}); 
+          
+    }catch(error){
+        console.log("Error en controller.usuario.js :"+error);
+        resp.status(500).json({ error: 'Error al listar las sedes' });
+    }  
+}
+
+
+
 
 export  const listarUsuarios=async(req,resp)=>{
     try{
@@ -38,6 +53,7 @@ export  const listarUsuarios=async(req,resp)=>{
               estado: true,
               firma: true,
               autoriza: true,
+              sede:true,
               vinculacion: {
                 select: {
                   id_vinculacion: true,
@@ -63,14 +79,10 @@ export  const listarUsuarios=async(req,resp)=>{
 
 
 
-
-
-
-
 export  const registrarUsuario=async(req,resp)=>{
     try {
       
-        const { identificacion,tipo_identificacion,nombre, email,rol,cargo,area,autoriza} = req.body;
+        const { identificacion,tipo_identificacion,nombre, email,rol,cargo,area,autoriza,sede} = req.body;
       /*
         if (!identificacion || !nombre || !email || !password || !rol || !cargo) {
             return resp.status(400).json({ "status": 400, "message": "Todos los datos son obligatorios" });
@@ -100,7 +112,8 @@ export  const registrarUsuario=async(req,resp)=>{
                     password: encriptPassword,
                     rol: rol,
                     cargo:cargo,
-                    autoriza: autoriza
+                    autoriza: autoriza,
+                    sedeId:Number(sede)// 👈 Esta es la clave
                 }
             })
             
@@ -156,7 +169,9 @@ export  const actualizarUsuarioId=async(req,resp)=>{
                         password: encriptPassword,
                         rol: datos.rol,
                         cargo:datos.cargo,
-                        autoriza: datos.autoriza
+                        autoriza: datos.autoriza,
+                        sedeId:Number(datos.sede)// 👈 Esta es la clave
+                                 
                     }
                 }  
 
@@ -191,6 +206,7 @@ export  const buscarUsuarioId=async(req,resp)=>{
                 rol: true,
                 email: true,
                 estado: true,
+                sedeId:true,
                 vinculacion: { // Carga la relación vinculacion
                     select: {
                       area: { // Dentro de vinculacion, selecciona el área

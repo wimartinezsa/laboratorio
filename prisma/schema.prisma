@@ -71,6 +71,7 @@ model Factura {
   estado       Estado_Factura @default(Pendiente_Emision)
   contratoId   Int
   pacienteId   Int
+  sedeId       Int
   examen       Examen[]
   contrato     Contrato       @relation(fields: [contratoId], references: [id_contrato])
   paciente     Paciente       @relation(fields: [pacienteId], references: [id_paciente])
@@ -263,16 +264,29 @@ model Procedimiento {
 
 
 
+model Sede {
+  id_sede Int        @id @default(autoincrement())
+  nombre       String     @unique @db.VarChar(12)
+  prestadorId   Int?
+  prestador     Prestador?      @relation(fields: [prestadorId], references: [id_prestador])
+
+  usuario    Usuario[]
+  @@map("sedes")
+}
+
+
+
 model Prestador {
   id_prestador Int        @id @default(autoincrement())
   codigo       String     @unique @db.VarChar(12)
   nit          String     @db.VarChar(30)
   razon_social String     @db.VarChar(50)
   area         Area[]
+  sede         Sede[]
   servicio     Servicio[]
-
   @@map("prestadores")
 }
+
 
 model Area {
   id_area       Int             @id @default(autoincrement())
@@ -311,7 +325,10 @@ model Usuario {
   token               String?    @db.VarChar(500)
 
   vinculacion Vinculacion[]
- 
+
+  sedeId   Int?
+  sede     Sede?      @relation(fields: [sedeId], references: [id_sede])
+
   @@map("usuarios")
 }
 
