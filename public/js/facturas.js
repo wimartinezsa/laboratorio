@@ -60,6 +60,15 @@ function autoCompletadoProcedimientos(){
 }
 
 
+function autoCompletadoEmpresa(){
+    const selectElement = document.getElementById('empresas');
+    const choices = new Choices(selectElement, {
+      searchEnabled: true,
+      placeholderValue: 'Escribe para buscar...',
+      shouldSort: false
+    });
+}
+
 function listarFacturasContrato(){
 
     let id_contrato= document.getElementById('contratos').value;
@@ -441,6 +450,7 @@ function listarEmpresasActivas(){
         html +=`<option value=${element.id_empresa}>${element.nombre}</option>`;
        });
        document.getElementById('empresas').innerHTML=html;
+       autoCompletadoEmpresa();
     });
 
 

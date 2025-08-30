@@ -321,14 +321,19 @@ function listarAreas(){
 
 
 async function gestionarUsuario(){
+
+    
+
+    await listarSedes();
     await limpiarFormularioUsuario();
     await listarAreas();
-    await listarSedes();
    
     document.getElementById('id_usuario').value=0;
     document.getElementById('btn_registrar').style.display = 'block';
     document.getElementById('btn_actualizar').style.display = 'none';
 
+
+    
     await Frm_usuario.show();
    }
 
@@ -395,6 +400,7 @@ function limpiarFormularioUsuario(){
 async function editarUsuario(id_usuario){
     await limpiarFormularioUsuario();
     await listarAreas();
+    await listarSedes();
     await buscarUsaurioId(id_usuario);
     
     document.getElementById('id_usuario').value=id_usuario;
