@@ -243,7 +243,7 @@ function dibujarEncabezado(doc,empresa,contrato,nit,f1,f2) {
 
     var x1 = 3, x2 = 15, x3 = 65, x4 = 85, x5 = 100, x6 = 160, x7 = 175, x8 = 190;
     doc.setFontSize(10);
-    doc.text((x1),30, "EPRESA :"+empresa); 
+    doc.text((x1),30, "EMPRESA :"+empresa); 
      doc.text((x1),35, "NIT :"+nit); 
     doc.text((x1),40, "CONTRATO :"+contrato); 
     doc.text((x1),45, "PERIODO : DESDE EL "+f1+" HASTA EL "+f2); 
