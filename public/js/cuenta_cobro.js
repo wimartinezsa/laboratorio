@@ -118,6 +118,7 @@ function listarCuentasPendientePago(){
         contrato : element.factura.contrato.nombre,
         precio : element.procedimiento.acuerdo[0].precio,
         autorizacion : element.factura.autorizacion,
+        sede:element.factura.sedeId===1? 'Principal':'Isnos',
         fecha :moment(element.factura.fecha).format('DD-MM-YYYY'),
         estado: element.estado_pago,
         Accion :accionBTN
@@ -145,6 +146,7 @@ function listarCuentasPendientePago(){
                            {"data": "contrato"},
                            {"data": "precio"},
                            {"data": "autorizacion"}, 
+                            {"data": "sede"}, 
                            {"data": "estado"}, 
                            { 
                             "data": null, 
@@ -305,6 +307,7 @@ function listarCuentasCobradas(){
         contrato : element.factura.contrato.nombre,
         precio : element.procedimiento.acuerdo[0].precio,
         autorizacion : element.factura.autorizacion,
+        sede:element.factura.sedeId===1? 'Principal':'Isnos',
         fecha :moment(element.factura.fecha).format('DD-MM-YYYY'),
         estado: element.estado_pago,
         Accion :accionBTN
@@ -344,6 +347,7 @@ function listarCuentasCobradas(){
                            {"data": "contrato"},
                            {"data": "precio"},
                            {"data": "autorizacion"}, 
+                           {"data": "sede"}, 
                            {"data": "estado"},
                            { 
                             "data": null, 
@@ -503,6 +507,7 @@ function listarCuentasPagadas(){
         contrato : element.factura.contrato.nombre,
         precio : element.procedimiento.acuerdo[0].precio,
         autorizacion : element.factura.autorizacion,
+        sede:element.factura.sedeId===1? 'Principal':'Isnos',
         fecha :moment(element.factura.fecha).format('DD-MM-YYYY'),
         estado: element.estado_pago,
         Accion :accionBTN
@@ -542,6 +547,7 @@ function listarCuentasPagadas(){
                            {"data": "contrato"},
                            {"data": "precio"},
                            {"data": "autorizacion"}, 
+                           {"data": "sede"}, 
                            {"data": "estado"}
                        ]
                        

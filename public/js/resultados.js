@@ -164,7 +164,7 @@ function listarExamenesPorArea(){
     }// fin del if del reulstado_procedimiento
 
 else{
-  tabla=`<a href="laboratorios/${element.resultado_pdf}">Descargar Resultado</a> `;
+  tabla=`Recuerde adjuntar el archivo`;
 }
      
 
@@ -178,6 +178,7 @@ else{
         observacion:element.observacion,
         autoriazacion:`<span class="badge badge-pill badge-success" style="font-size: 0.8rem;">${  element.factura.autorizacion}</span>`,
         area :element.procedimiento.area.nombre.toUpperCase(),
+        sede:element.factura.sedeId===1? 'Principal':'Isnos',
         estado :accionBTN ,
                         }
                         arrayDatos.push(dato)
@@ -201,6 +202,7 @@ else{
                            {"data": "autoriazacion"},  
                            {"data": "resultado"},
                            {"data": "area"},
+                           {"data": "sede"},
                            {"data": "estado"}    
                        ]
                         });
@@ -281,79 +283,6 @@ async function leerArchivoAnalisisCompletos(tipo_analisis) {
     }
   }
 }
-
-
-/*
-async function leerArchivoAnalisisCompletos(tipo_analisis){
-  const rows = fileContent.trim().split("\n");
-  let codMuestras;
-  
-  if(tipo_analisis==="Quimica"){
-    
-    if (!fileContent) {
-      Mensaje.fire({icon: 'warning',title:`Por favor cargar el archivo .txt de la maquina de Quimica`});
-      return;
-    }
-    const rows =await fileContent.split("\n").filter(row => row.trim() !== "");
-    
-    const resultado_txt = [];
-
-    await rows.forEach(async (row) => {
-      const cells = row.split(/\s+/); // Dividir por espacios
-     if(!isNaN(Number(cells[0]))){
-     
-      resultado_txt.push(
-        {"muestra": cells[0],"parametro":cells[1],"valor":cells[3]}
-           
-        );
-        }
-       //console.log(resultado_txt);
-        registrarResulatadosAutomaticos(resultado_txt);
-       
-    })
-   
-  }// fin del if tipo_analisis
-
- 
-
-}
-
-*/
-
-
-//Función para leer el archivo plano de los resultados txt de la maquina Quimica
-/*
-async function leerResultadosAutorizacion(){
-
-      if (!fileContent) {
-        Mensaje.fire({icon: 'warning',title:`Por favor cargar el archivo .txt de la maquina de Quimica`});
-        return;
-      }
-      const rows =await fileContent.split("\n").filter(row => row.trim() !== "");
-
-      
-     
-      const resultado_txt = [];
-
-      await rows.forEach(async (row) => {
-        const cells = row.split(/\s+/); // Dividir por espacios
-       if(!isNaN(Number(cells[0]))){
-        console.log(cells[0]);
-       
-        resultado_txt.push(
-          {"muestra": cells[0],"parametro":cells[1],"valor":cells[3]}
-             
-          );
-          }
-         
-      })
-      //console.log(resultado_txt);
-     
-    // await registrarResulatadosAutomaticos(resultado_txt);
-      
-}
-
-*/
 
 
 

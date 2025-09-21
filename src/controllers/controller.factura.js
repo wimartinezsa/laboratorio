@@ -111,7 +111,7 @@ export  const listarFacturasContratos=async(req,resp)=>{
        }
 
        
-      
+      //console.log(contratos);
        
         
         return resp.status(200).json(contratos);

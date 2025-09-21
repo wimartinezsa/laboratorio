@@ -123,7 +123,7 @@ function listarFacturasContrato(){
   
     let dato = {
         id_factura : element.id_factura,
-        fecha :moment(element.fecha).format('LL'),
+        fecha :moment.utc(element.fecha).format("YYYY-MM-DD"),
         identificacion :element.identificacion,
         nombre :element.nombres,
         contrato :element.contrato,
@@ -238,7 +238,7 @@ function listarTodasFacturasContrato(){
     .then(data => {
         let accionBTN='';
         let arrayDatos=[];
-       
+       //console.log(data);
     
     data.forEach(element => {
     accionBTN =` `;

@@ -69,7 +69,7 @@ function listarExamenesTomaMuestra(){
 
         let accionBTN='';
         let arrayDatos=[];
-        let estadoBTN='';
+      
 
 
         if(data.status==403){window.location.href = "/";}
@@ -77,7 +77,7 @@ function listarExamenesTomaMuestra(){
           //for que recorrelos examenes
         data.examenes.forEach(element => {
 
-           // console.log(element.factura.contrato.nombre);
+           // console.log(element);
 
           if (element.estado==='En_Toma_de_Muestra'){
            accionBTN =`<a class="badge badge-pill badge-danger" style="font-size: 0.8rem;" 
@@ -87,65 +87,7 @@ function listarExamenesTomaMuestra(){
           }
  
         
-   
-     // let resultados = element.resultado;
-/*
-      let tabla=`<table style="border-collapse: collapse; width: 100%;">
-                <thead>
-                    <tr>
-                     <th scope="col">METODO</th>
-                      <th scope="col">PARAMETRO</th>
-                      <th scope="col">RESULTADO</th>
-                      <th scope="col">ESTADO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  `;
-        let resultados = element.resultado;
-        
-        resultados.forEach(item=>{
-          
-          if (item.parametro.estado === 'Activo') {
-              let btn_parametro='';
-              let estado_parametro='';
-          
-                if(item.estado==='Pendiente'){
-                  btn_parametro=`<a class="btn btn-warning" 
-                  href="javascript:cambiarEstadoResultado(${item.id_resultado},'${item.estado}')" 
-                  title='Finalizar Resultado'> <i class='fas fa-thumbs-down'></i></a>`;
-                }
-
-                
-                if(item.estado==='Finalizado'){
-                  btn_parametro=`<a class="btn btn-success" href="javascript:cambiarEstadoResultado(${item.id_resultado},'${item.estado}')" title='Resultado Pendiente'> <i class='fas fa-thumbs-up'></i></a>`;
-                
-                }
-               
-              
-                tabla+=`
-                  <tr>
-                
-                  <td>${item.parametro.metodo}</td>
-                    <td>${item.parametro.nombre}</td>
-                    <td>${item.resultado}</td>
-                    <td>${item.estado}</td>
-                  </tr>`;    
-                  
-              
-
-              }
-
-
-      });
-     tabla+='</tbody></table>'
-
-     */
-
-
-
-      //console.log(element);
-
-     
+       
 
         let dato = {
         examen:element.id_examen,
@@ -156,6 +98,7 @@ function listarExamenesTomaMuestra(){
         observacion:element.observacion,
         autoriazacion:`<span class="badge badge-pill badge-success" style="font-size: 0.8rem;">${element.factura.autorizacion}</span>`,  
         area :element.procedimiento.area.nombre.toUpperCase(),
+        sede:element.factura.sedeId===1? 'Principal':'Isnos',
         estado :accionBTN ,
                         }
                         arrayDatos.push(dato)
@@ -179,6 +122,7 @@ function listarExamenesTomaMuestra(){
                            {"data": "observacion"},
                            {"data": "autoriazacion"},  
                            {"data": "area"},
+                           {"data": "sede"},
                            {"data": "estado"}    
                        ]
                         });

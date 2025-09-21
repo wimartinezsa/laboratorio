@@ -6,7 +6,7 @@ import {
 
 const route = Router();
 
-route.get('/reporteUsuariosAtendidos/:fecha_inicio/:fecha_fin',reporteUsuariosAtendidos);
+route.get('/reporteUsuariosAtendidos/:fecha_inicio/:fecha_fin/:empresa',reporteUsuariosAtendidos);
 
 
 
