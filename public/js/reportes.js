@@ -180,8 +180,10 @@ function reporteUsuariosAtendidosImprimir() {
 
             var x1 = 3, x2 = 15, x3 = 65, x4 = 85, x5 = 100, x6 = 160, x7 = 175, x8 = 190;
             let aux_ident='', V_Subtotal=0, cant_exist=0, suma_total=0;
+            let primeraVez = true;
 
             data.forEach(element => {
+                 const precio = Number(String(element.precio).replace(/,/g, '')) || 0;
                 if (y > 270) {
                     doc.addPage();
                     doc.addImage(imgLogo, 'JPEG', 2, 1, 30, 20); // <-- redibuja logo en cada página
@@ -189,24 +191,33 @@ function reporteUsuariosAtendidosImprimir() {
                 }
 
                 if(aux_ident != element.identificacion){
-                    if(cant_exist == 0){ 
-                        doc.setFontSize(9);
+                        if(!primeraVez){  // 👈 solo imprime subtotal a partir del 2do grupo
+                            doc.setFontSize(9);
+                        // Línea superior
+                         doc.line(x1, y, x8+10, y);  
+                        y += 5;
+                        // Texto del total
                         doc.text((x5), y, "SUBTOTAL : "); 
                         doc.text((x7), y, ""+V_Subtotal); 
-                        doc.setFontSize(7);
-                        V_Subtotal = 0;
-                        y += 5;
-                    }
-                    doc.text((x1), y, ""+element.autorizacion);
-                    doc.text((x2), y, ""+element.nombres); 
-                    doc.text((x3), y, ""+element.identificacion); 
-                    aux_ident = element.identificacion;
-                    cant_exist++;
-                }
-                if(aux_ident === element.identificacion){
-                    V_Subtotal += Number(element.precio);
-                    cant_exist = 0;
-                }
+                        // Línea inferior
+                        y += 2;
+                         doc.line(x1, y, x8+10, y); 
+                            doc.setFontSize(7);
+                            V_Subtotal = 0;
+                            y += 5;
+                        } else {
+                            primeraVez = false; // 👈 la primera vez solo desactiva la bandera
+                        }
+
+                doc.text((x1), y, ""+element.autorizacion);
+                doc.text((x2), y, ""+element.nombres); 
+                doc.text((x3), y, ""+element.identificacion); 
+                aux_ident = element.identificacion;
+                cant_exist++;
+    }
+
+
+
 
                 doc.text((x4), y, ""+element.codigo); 
                 doc.text((x5), y, ""+element.examen.substring(0,40)); 
@@ -215,10 +226,23 @@ function reporteUsuariosAtendidosImprimir() {
                 doc.text((x8), y, ""+element.sede); 
 
                 suma_total += Number(element.precio);
+                V_Subtotal += Number(element.precio);
                 y += 5;
             });
 
-            doc.text((x6), y, "TOTAL EMPRESA :" + suma_total);
+           
+                // Línea superior
+            doc.line(x1, y, x8+10, y);  
+            y += 5;
+
+            // Texto del total
+            doc.text((x6), y, "TOTAL EMPRESA : " + suma_total);
+
+            // Línea inferior
+            y += 2;
+            doc.line(x1, y, x8+10, y); 
+
+
 
             doc.save("Reporte.pdf");
         };
