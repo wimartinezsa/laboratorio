@@ -55,6 +55,48 @@ function listarEmpresas(){
 
 
 
+listarSedes();
+function listarSedes(){
+
+    const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+
+    fetch('/listarSedes', {
+        method:'get',
+        headers: {
+            'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+            'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
+        }
+    })
+    .then(response => {
+        // Verificar si la respuesta es JSON
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return response.json();
+        } else {
+            window.location.href = "/";
+        }
+    })
+    .then(data => {
+    
+        let html='';
+
+        
+        data.forEach(element => {
+
+       html +=`<option value=${element.id_sede}>${element.nombre}</option>`;
+                        
+                        });
+   
+         document.getElementById('sedes').innerHTML=html;
+                       
+      
+      
+        
+    });
+   
+}
+
+
 
 
 
@@ -65,9 +107,9 @@ function reporteUsuariosAtendidos(){
     let fecha_inicio = document.getElementById('fecha_inicio').value;
     let fecha_fin = document.getElementById('fecha_fin').value;
     let empresa = document.getElementById('empresas').value;
+    let sedes = document.getElementById('sedes').value;
 
-
-    fetch(`/reporteUsuariosAtendidos/${fecha_inicio}/${fecha_fin}/${empresa}`, {
+    fetch(`/reporteUsuariosAtendidos/${fecha_inicio}/${fecha_fin}/${empresa}/${sedes}`, {
         method:'get',
         headers: {
             'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
@@ -85,15 +127,10 @@ function reporteUsuariosAtendidos(){
     })
     .then(data => {
 
-        //console.log(data);
-
-   
-        let arrayDatos=[];
+    let arrayDatos=[];
    
     data = Array.isArray(data) ? data : [data];
-   
- // console.log(data);
-       data.forEach(element => {
+    data.forEach(element => {
       
     let dato = {
        identificacion :element.identificacion,
@@ -155,8 +192,8 @@ function reporteUsuariosAtendidosImprimir() {
     let fecha_inicio = document.getElementById('fecha_inicio').value;
     let fecha_fin = document.getElementById('fecha_fin').value;
     let empresa = document.getElementById('empresas').value;
-
-    fetch(`/reporteUsuariosAtendidos/${fecha_inicio}/${fecha_fin}/${empresa}`, {
+    let sedes = document.getElementById('sedes').value;
+    fetch(`/reporteUsuariosAtendidos/${fecha_inicio}/${fecha_fin}/${empresa}/${sedes}`, {
         method:'get',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -192,7 +229,7 @@ function reporteUsuariosAtendidosImprimir() {
 
                 if(aux_ident != element.identificacion){
                         if(!primeraVez){  // 👈 solo imprime subtotal a partir del 2do grupo
-                            doc.setFontSize(9);
+                            doc.setFontSize(7);
                         // Línea superior
                          doc.line(x1, y, x8+10, y);  
                         y += 5;
@@ -234,15 +271,13 @@ function reporteUsuariosAtendidosImprimir() {
                 // Línea superior
             doc.line(x1, y, x8+10, y);  
             y += 5;
-
+            doc.setFontSize(9);
             // Texto del total
             doc.text((x6), y, "TOTAL EMPRESA : " + suma_total);
 
             // Línea inferior
             y += 2;
             doc.line(x1, y, x8+10, y); 
-
-
 
             doc.save("Reporte.pdf");
         };
