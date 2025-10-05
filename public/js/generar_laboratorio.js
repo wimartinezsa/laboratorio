@@ -99,7 +99,7 @@ moment.defineLocale('es', {
                 
                 if (data) {
 
-                   
+                   console.log(data);
                     const doc = new jsPDF();
                     
 
@@ -212,7 +212,7 @@ moment.defineLocale('es', {
                                 const centeredX = (pageWidth - textWidth) / 2;
 
                                 // Configurar color de relleno (gris claro)
-                                doc.setFillColor(51, 184, 255); // RGB para gris claro
+                                doc.setFillColor(25,60, 184); // RGB para gris claro
                                 const rectHeight = 7; // Altura del rectángulo
                                 const rectX = 0; // Inicia en el borde izquierdo de la hoja
                                 const rectY = y - 5; // Posición Y del rectángulo
@@ -221,30 +221,41 @@ moment.defineLocale('es', {
                                 doc.rect(rectX, rectY, pageWidth, rectHeight, 'F'); // 'F' para relleno
 
                                 // Imprimir el texto centrado dentro del rectángulo
+                                doc.setTextColor(255, 255, 255); // Color blanco para el texto
                                 doc.setFontSize(fontSize); // Establecer el tamaño de la fuente
                                 doc.text(centeredX, y, cupsText);
-                            }
-                            
-                                // Línea horizontal debajo del nombre del CUPS
 
-                               y += 7;
-                                doc.setFontSize(12);
-                               doc.text(10, y, `${examen.procedimiento.cups.nombre.toUpperCase()}`);
-                               y += 2;
+
+                                 y += 2;
                                 
                                 doc.line(10, y, 200, y); // Línea horizontal completa del documento
                                 y += 5;
-                            
+                                doc.setTextColor(0, 0, 0); // Color blanco para el texto
                                 doc.setFontSize(9);
+                                doc.setFont("helvetica", "bold");
                                 doc.text(10, y, 'PARÁMETROS');
                                 doc.text(70, y, 'RESULTADOS');
                                 doc.text(110, y, 'UNIDADES');
                                 doc.text(135, y, 'VALOR DE REFERENCIA');
+                                doc.text(180, y, 'METODO');
+                                doc.setFont("helvetica", "normal"); // Opcional: vuelve a fuente normal después
                                 doc.setFontSize(8); // Tamaño de fuente estándar
 
                                 y += 2;
                                 doc.line(10, y, 200, y); // Línea horizontal completa del documento
                                 y += 5;
+
+
+
+
+                            }
+                            
+                                // Línea horizontal debajo del nombre del CUPS
+
+                               y += 3;
+                                doc.setFontSize(11);
+                               doc.text(10, y, `${examen.procedimiento.cups.nombre.toUpperCase()}`);
+                              y += 5;
                                 const resultados = examen.resultado; 
                                 
                             if (y > pageHeight - margin) {
@@ -292,7 +303,8 @@ moment.defineLocale('es', {
                                 doc.text(13, y, `${resultado.parametro.nombre.toLocaleLowerCase().replace(/\b\w/g, letra => letra.toLocaleUpperCase())}`); // Columna 1
                                 doc.text(70, y, `${resultado.resultado}`);     // Columna 2
                                 doc.text(110, y, `${resultado.parametro.unidad}`);                       // Columna 3 (Placeholder)
-                                doc.text(135, y, `${formattedValorReferencia}`);                       // Columna 4 (Placeholder)
+                                doc.text(135, y, `${formattedValorReferencia}`);
+                                doc.text(180, y, `${examen.procedimiento.tecnica ===null ? '':examen.procedimiento.tecnica}`);                        // Columna 4 (Placeholder)
                                     // Dibujar línea horizontal después de la fila
 
                                
@@ -309,16 +321,16 @@ moment.defineLocale('es', {
                             }
                         
                             doc.line(10, y, 200, y); // Línea horizontal completa del documento
-                            y+=3; 
-                            doc.text(10, y, `Metodo : ${examen.procedimiento.tecnica ===null ? '':examen.procedimiento.tecnica}`);  
-                            y+=3; 
+                           // y+=3; 
+                            //doc.text(10, y, `Metodo : ${examen.procedimiento.tecnica ===null ? '':examen.procedimiento.tecnica}`);  
+                            //y+=3; 
                            // doc.text(10, y, `Fecha/Hora Resultado : ${moment(examen.fecha_resultado).format('LLLL') }`);  
                            // y+=3; 
                            
-                            doc.text(10, y, `Validó : ${examen.profesional}`);  
+                            //doc.text(10, y, `Validó : ${examen.profesional}`);  
                             y+=5; 
                            
-                            doc.text(10, y, `NOTA : * ${examen.observacion}`);  
+                            doc.text(10, y, `Nota : ${examen.observacion}`);  
                             y+=2; 
 
                             if (y > pageHeight - margin) {
@@ -365,8 +377,15 @@ moment.defineLocale('es', {
                     
                     text = `Bacteriólogo(a)`;
                     doc.text(30, y, text);
-                    y -= 6;
+                   
+                    y += 3;
+                    text = `Área Microscopía-Hematología-Microbiología `;
+                    doc.text(30, y, text);
 
+
+                    
+
+                     y -= 6;
                      // Firma del segundo bacteriologo
                     text = `${nombre_bacteriologo2}`;
                      doc.text(135, y, text);
@@ -379,6 +398,9 @@ moment.defineLocale('es', {
                      text = `Bacteriólogo(a)`;
                      doc.text(135, y, text);
 
+                    y += 3;
+                    text = `Química-Inmunología-Pruebas Especiales`;
+                     doc.text(135, y, text);
                         
                     // Se definen las URLs de las imágenes
                     const imgUrlFirma1 = `/img/firmas/${imagen_bacteriologo1}`;
@@ -398,8 +420,8 @@ moment.defineLocale('es', {
                             imagenesCargadas++;
                             if (imagenesCargadas === 2) {
                                 // Una vez que ambas imágenes están cargadas, agrégalas al PDF
-                               doc.addImage(imgFirma1, 'JPEG', 30, y - 30, 40, 20); // Ajusta las posiciones y tamaños según necesites
-                             doc.addImage(imgFirma2, 'JPEG', 135, y - 30, 40, 20); // Ajusta las posiciones y tamaños según necesites
+                               doc.addImage(imgFirma1, 'JPEG', 30, y - 35, 40, 20); // Ajusta las posiciones y tamaños según necesites
+                             doc.addImage(imgFirma2, 'JPEG', 135, y - 35, 40, 20); // Ajusta las posiciones y tamaños según necesites
                                 
                                 doc.addImage(imgLogo, 'JPEG',2,1,30, 20);      // Ejemplo de otra posición
                                 // Guardar o continuar trabajando con el PDF
