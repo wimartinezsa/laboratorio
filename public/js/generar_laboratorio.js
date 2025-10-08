@@ -158,7 +158,11 @@ moment.defineLocale('es', {
               doc.text(10, y, 'PARÁMETROS');
               doc.text(70, y, 'RESULTADOS');
               doc.text(110, y, 'UNIDADES');
+
+              
               doc.text(135, y, 'VALOR DE REFERENCIA');
+
+
               doc.text(180, y, 'METODO');
               doc.setFont("helvetica", "normal");
               doc.setFontSize(8);
@@ -183,9 +187,20 @@ moment.defineLocale('es', {
               doc.text(13, y, `${resultado.parametro.nombre}`);
               doc.text(70, y, `${resultado.resultado}`);
               doc.text(110, y, `${resultado.parametro.unidad}`);
-              doc.text(135, y, `${resultado.parametro.valor_referencia}`);
               doc.text(180, y, `${examen.procedimiento.tecnica || ''}`);
-              y += 4;
+              const valorReferenciaMaxWidth = 40;
+              // Por estas líneas:
+              const valorReferencia = `${resultado.parametro.valor_referencia}`;
+              const valorReferenciaLines = doc.splitTextToSize(valorReferencia, valorReferenciaMaxWidth);
+              doc.text(135, y, valorReferenciaLines);
+
+              // Si el texto ocupa más de una línea, ajusta y para la siguiente fila:
+              const lineCount = valorReferenciaLines.length;
+              y += 4 * (lineCount > 1 ? lineCount : 1); 
+
+
+             
+              //y += 4;
 
               if (y > pageHeight - margin) {
                 doc.addPage();
