@@ -208,7 +208,7 @@ moment.defineLocale('es', {
                 y = dibujarEncabezado(doc, element);
               }
             }// fin del for de resultados
-            notas+=' '+examen.observacion;
+            notas+=' - '+examen.observacion;
            
             y += 2;
 
