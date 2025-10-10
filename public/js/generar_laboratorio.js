@@ -97,7 +97,7 @@ moment.defineLocale('es', {
   .then(res => res.json())
   .then(data => {
     if (data) {
-      console.log(data);
+     // console.log(data);
       const doc = new jsPDF();
 
       const imgUrlLogo = `/img/logo.jpg`;
@@ -115,7 +115,7 @@ moment.defineLocale('es', {
       // Esperar a que el logo cargue antes de generar el contenido
       imgLogo.onload = () => {
         let y = 10;
-
+         let notas='';
         data.forEach(element => {
           // Dibuja logo y encabezado en la primera página
           dibujarLogo(doc);
@@ -207,10 +207,9 @@ moment.defineLocale('es', {
                 dibujarLogo(doc); // logo en nueva página
                 y = dibujarEncabezado(doc, element);
               }
-            }
-
-            y += 5;
-            doc.text(10, y, `Nota : ${examen.observacion}`);
+            }// fin del for de resultados
+            notas+=' '+examen.observacion;
+           
             y += 2;
 
             if (y > pageHeight - margin) {
@@ -218,7 +217,10 @@ moment.defineLocale('es', {
               dibujarLogo(doc); // logo en nueva página
               y = dibujarEncabezado(doc, element);
             }
-          }
+          }// fin del forde examenes
+
+           y += 5;
+            doc.text(10, y, `Nota : ${notas}`);
         });
 
         // === FIRMAS Y PIE DE PÁGINA ===
