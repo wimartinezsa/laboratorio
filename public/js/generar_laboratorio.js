@@ -115,7 +115,8 @@ moment.defineLocale('es', {
       // Esperar a que el logo cargue antes de generar el contenido
       imgLogo.onload = () => {
         let y = 10;
-         let notas='';
+      
+
         data.forEach(element => {
           // Dibuja logo y encabezado en la primera página
           dibujarLogo(doc);
@@ -208,8 +209,12 @@ moment.defineLocale('es', {
                 y = dibujarEncabezado(doc, element);
               }
             }// fin del for de resultados
-            notas+=' - '+examen.observacion;
            
+           if (examen.observacion && examen.observacion.trim() !== '') {
+                y += 5;
+                doc.text(10, y, `Nota : ${examen.observacion}`);
+              }
+                          
             y += 2;
 
             if (y > pageHeight - margin) {
@@ -219,8 +224,7 @@ moment.defineLocale('es', {
             }
           }// fin del forde examenes
 
-           y += 5;
-            doc.text(10, y, `Nota : ${notas}`);
+         
         });
 
         // === FIRMAS Y PIE DE PÁGINA ===
