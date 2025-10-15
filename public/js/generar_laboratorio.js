@@ -61,29 +61,55 @@ moment.defineLocale('es', {
     let cedula_bacteriologo2='';
     let imagen_bacteriologo2='';
 
+    let nombre_admin='';
+    let cedula_admin='';
+    let imagen_admin='';
+
 
     const token = localStorage.getItem('token'); 
     const firma_bacteriologo = await firmaLaboratorioBacteriologo(token);
 
+    //console.log(firma_bacteriologo);
+
+
     if(firma_bacteriologo.length>0){
-        for( i=0;i<firma_bacteriologo.length;i++){
-            if(i===0){
-                nombre_bacteriologo1=firma_bacteriologo[0].nombre;
-                cedula_bacteriologo1=firma_bacteriologo[0].identificacion;
-                imagen_bacteriologo1=firma_bacteriologo[0].firma;
+      
+      
+      if (firma_bacteriologo.length > 0) {
+  for (let i = 0; i < firma_bacteriologo.length; i++) {
+    const f = firma_bacteriologo[i];
+    if (f.rol === 'Bacteriologo') {
+      if (!nombre_bacteriologo1) {
+        nombre_bacteriologo1 = f.nombre;
+        cedula_bacteriologo1 = f.identificacion;
+        imagen_bacteriologo1 = f.firma;
+      } else {
+        nombre_bacteriologo2 = f.nombre;
+        cedula_bacteriologo2 = f.identificacion;
+        imagen_bacteriologo2 = f.firma;
+      }
+    }
+    if (f.rol === 'Administrador') {
+      nombre_admin = f.nombre;
+      cedula_admin = f.identificacion;
+      imagen_admin = f.firma;
+    }
+  }
 
-            }
-            if(i===1){
-                nombre_bacteriologo2=firma_bacteriologo[1].nombre;
-                cedula_bacteriologo2=firma_bacteriologo[1].identificacion;
-                imagen_bacteriologo2=firma_bacteriologo[1].firma;
+  console.log('✅ Bacteriólogo 1:', nombre_bacteriologo1);
+  console.log('✅ Bacteriólogo 2:', nombre_bacteriologo2);
+  console.log('✅ Administrador:', nombre_admin);
+}
 
-            }
-           
-        }
-        firma_bacteriologo.forEach(element=>{
-            
-        })
+
+
+
+
+
+
+
+
+        
     }
   
 
@@ -227,41 +253,99 @@ moment.defineLocale('es', {
          
         });
 
-        // === FIRMAS Y PIE DE PÁGINA ===
-        const imgUrlFirma1 = `/img/firmas/${imagen_bacteriologo1}`;
-        const imgUrlFirma2 = `/img/firmas/${imagen_bacteriologo2}`;
-        const imgFirma1 = new Image();
-        const imgFirma2 = new Image();
 
-        imgFirma1.src = imgUrlFirma1;
-        imgFirma2.src = imgUrlFirma2;
 
-        imgFirma1.onload = imgFirma2.onload = () => {
-          let yFirmas = 245;
-          doc.setFontSize(10);
 
-          // Firma izquierda
-          doc.addImage(imgFirma1, 'JPEG', 25, yFirmas - 20, 50, 20);
-          doc.text(30, yFirmas + 5, `${nombre_bacteriologo1}`);
-          doc.text(30, yFirmas + 9, `C.C. ${cedula_bacteriologo1}`);
-          doc.text(30, yFirmas + 13, `Bacteriólogo(a)`);
+      // === FIRMAS Y PIE DE PÁGINA ===
+const imgUrls = [
+  `/img/firmas/${imagen_bacteriologo1}`,
+  `/img/firmas/${imagen_bacteriologo2}`,
+  `/img/firmas/${imagen_admin}`
+];
 
-          // Firma derecha
-          doc.addImage(imgFirma2, 'JPEG', 130, yFirmas - 20, 50, 20);
-          doc.text(135, yFirmas + 5, `${nombre_bacteriologo2}`);
-          doc.text(135, yFirmas + 9, `C.C. ${cedula_bacteriologo2}`);
-          doc.text(135, yFirmas + 13, `Bacteriólogo(a)`);
+const nombres = [nombre_bacteriologo1, nombre_bacteriologo2, nombre_admin];
+const cedulas = [cedula_bacteriologo1, cedula_bacteriologo2, cedula_admin];
+const roles = ["Bacteriólogo(a)", "Bacteriólogo(a)", "Administrador"];
 
-          // Pie de página
-          const pageWidth = doc.internal.pageSize.width;
-          const text = `CALLE 5 N. 1 A 57 Aguablanca 8353365 - PITALITO - HUILA`;
-          const textWidth =
-            (doc.getStringUnitWidth(text) * doc.internal.getFontSize()) / doc.internal.scaleFactor;
-          const centeredX = (pageWidth - textWidth) / 2;
-          doc.text(centeredX, 290, text);
+function cargarImagen(url, nombre) {
+  return new Promise((resolve) => {
+    if (!url) return resolve(null);
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = () => {
+      console.warn(`❌ No se pudo cargar la imagen: ${url}`);
+      resolve(null);
+    };
+    img.src = url;
+  });
+}
 
-          doc.save(`${data[0].autorizacion}.pdf`);
-        };
+Promise.all([
+  cargarImagen(imgUrls[0], "Bacteriólogo 1"),
+  cargarImagen(imgUrls[1], "Bacteriólogo 2"),
+  cargarImagen(imgUrls[2], "Administrador")
+]).then(([img1, img2, img3]) => {
+  const pageHeight = doc.internal.pageSize.height;
+  const pageWidth = doc.internal.pageSize.width;
+  const marginBottom = 30;
+
+  let yActual = doc.lastAutoTable?.finalY || 0;
+
+  if (yActual > pageHeight - marginBottom - 80) {
+    doc.addPage();
+    yActual = 20;
+  }
+
+  const yFirmas = pageHeight - 75; // ⬆️ Subimos las firmas (antes era -45)
+  const firmaWidth = 50;
+
+  doc.setFontSize(10);
+
+  // === Firma izquierda ===
+  if (img1) doc.addImage(img1, 'PNG', 25, yFirmas - 20, firmaWidth, 20);
+  doc.text(30, yFirmas + 1, `Validado por`);
+  doc.text(30, yFirmas + 5, `${nombres[0] || ''}`);
+  doc.text(30, yFirmas + 9, `C.C. ${cedulas[0] || ''}`);
+  doc.text(30, yFirmas + 13, `${roles[0]}`);
+  doc.text(30, yFirmas + 17, `Área: Microscopía-Hematología-Microbiología`);
+
+  // === Firma derecha ===
+  if (img2) doc.addImage(img2, 'PNG', 130, yFirmas - 20, firmaWidth, 20);
+   doc.text(133, yFirmas + 1, `Validado por`);
+  doc.text(133, yFirmas + 5, `${nombres[1] || ''}`);
+  doc.text(133, yFirmas + 9, `C.C. ${cedulas[1] || ''}`);
+  doc.text(133, yFirmas + 13, `${roles[1]}`);
+  doc.text(133, yFirmas + 17, `Área: Química-Inmunología-Pruebas Especiales`);
+
+  // === Firma centrada (Administrador) ===
+  const xCentrada = (pageWidth - firmaWidth) / 2;
+  const yAdmin = yFirmas + 25;
+
+  if (img3) doc.addImage(img3, 'PNG', xCentrada, yAdmin - 12, firmaWidth, 20);
+  doc.text(xCentrada + 5, yAdmin + 10, `Verificado por`);
+  doc.text(xCentrada + 5, yAdmin + 14, `${nombres[2] || ''}`);
+  doc.text(xCentrada + 5, yAdmin + 18, `C.C. ${cedulas[2] || ''}`);
+  doc.text(xCentrada + 5, yAdmin + 22, `${roles[2]}`);
+
+  // === Pie de página centrado ===
+  const footerText = `CALLE 5 N. 1 A 57 Aguablanca 8353365 - PITALITO - HUILA`;
+  const textWidth = (doc.getStringUnitWidth(footerText) * doc.internal.getFontSize()) / doc.internal.scaleFactor;
+  const centeredX = (pageWidth - textWidth) / 2;
+  doc.text(centeredX, pageHeight - 15, footerText); // ⬆️ Subido un poco también
+
+  doc.save(`${data[0].autorizacion}.pdf`);
+});
+
+
+
+
+
+
+
+
+
+
       };
     }
   });

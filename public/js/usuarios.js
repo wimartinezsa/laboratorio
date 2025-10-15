@@ -65,7 +65,7 @@ function listarUsuarios(){
         accionBTN =` <a class="btn btn-primary" href="javascript:editarUsuario(${element.id_usuario})" title='Editar Usuario'><i class='fas fa-edit'></i></a>`;
         
         
-        if(element.rol==='Bacteriologo' || element.rol==='Auxiliar' ){
+        if((element.rol==='Bacteriologo' || element.rol==='Administrador') && element.autoriza==='Si'){
             firmaBTN=` <a class="btn btn-primary" href="javascript:gestionarFirma(${element.id_usuario})" title='Cargar Firma'><i class='fas fa-id-card'></i></a>`
             
             
