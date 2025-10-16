@@ -117,30 +117,34 @@ export  const generarLaboratorio=async(req,resp)=>{
         empresa: true
       }
     },
-    examen: {
-      where: {
-        procedimiento: {
-          resultado_laboratorio: "Automatico"
-        }
-      },
+   examen: {
+  where: {
+    procedimiento: { resultado_laboratorio: "Automatico" }
+  },
+  include: {
+    resultado: {
       include: {
-        resultado: {
-          include: {
-            parametro: {
-              include: {
-                tipo_parametro: true
-              }
-            }
-          }
-        },
-        procedimiento: {
-          include: {
-            cups: true,
-            area: true
-          }
+        parametro: {
+          include: { tipo_parametro: true }
         }
       }
+    },
+    procedimiento: {
+      include: {
+        cups: true,
+        area: true
+      }
     }
+  },
+  orderBy: {
+    procedimiento: {
+      area: {
+        nombre: 'asc'
+      }
+    }
+  }
+}
+
   }
 });
 

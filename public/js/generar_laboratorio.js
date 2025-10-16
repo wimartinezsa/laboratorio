@@ -256,7 +256,7 @@ moment.defineLocale('es', {
 
 
 
-      // === FIRMAS Y PIE DE PÁGINA ===
+     // === FIRMAS Y PIE DE PÁGINA ===
 const imgUrls = [
   `/img/firmas/${imagen_bacteriologo1}`,
   `/img/firmas/${imagen_bacteriologo2}`,
@@ -288,55 +288,58 @@ Promise.all([
 ]).then(([img1, img2, img3]) => {
   const pageHeight = doc.internal.pageSize.height;
   const pageWidth = doc.internal.pageSize.width;
-  const marginBottom = 30;
-
-  let yActual = doc.lastAutoTable?.finalY || 0;
-
-  if (yActual > pageHeight - marginBottom - 80) {
-    doc.addPage();
-    yActual = 20;
-  }
-
-  const yFirmas = pageHeight - 75; // ⬆️ Subimos las firmas (antes era -45)
   const firmaWidth = 50;
 
+  // 🔹 Altura total que ocuparán las firmas
+  const alturaFirmas = 80;
+
+  // 🔹 Determinar posición actual del cursor (hasta dónde se imprimió)
+  let yActual = y + 20; // "y" es la última posición usada en el contenido
+
+  // 🔹 Si no hay suficiente espacio, crear nueva página
+  if (yActual + alturaFirmas > pageHeight - 20) {
+    doc.addPage();
+    yActual = 30; // reinicia margen superior
+  }
+
+  // === FIRMAS ===
   doc.setFontSize(10);
 
-  // === Firma izquierda ===
-  if (img1) doc.addImage(img1, 'PNG', 25, yFirmas - 20, firmaWidth, 20);
-  doc.text(30, yFirmas + 1, `Validado por`);
-  doc.text(30, yFirmas + 5, `${nombres[0] || ''}`);
-  doc.text(30, yFirmas + 9, `C.C. ${cedulas[0] || ''}`);
-  doc.text(30, yFirmas + 13, `${roles[0]}`);
-  doc.text(30, yFirmas + 17, `Área: Microscopía-Hematología-Microbiología`);
+  // Firma izquierda
+  if (img1) doc.addImage(img1, 'PNG', 25, yActual, firmaWidth, 20);
+  let yTexto = yActual + 25;
+  doc.text(30, yTexto, `Validado por`);
+  doc.text(30, yTexto + 5, `${nombres[0] || ''}`);
+  doc.text(30, yTexto + 10, `C.C. ${cedulas[0] || ''}`);
+  doc.text(30, yTexto + 15, `${roles[0]}`);
+  doc.text(30, yTexto + 20, `Área: Microscopía-Hematología-Microbiología`);
 
-  // === Firma derecha ===
-  if (img2) doc.addImage(img2, 'PNG', 130, yFirmas - 20, firmaWidth, 20);
-   doc.text(133, yFirmas + 1, `Validado por`);
-  doc.text(133, yFirmas + 5, `${nombres[1] || ''}`);
-  doc.text(133, yFirmas + 9, `C.C. ${cedulas[1] || ''}`);
-  doc.text(133, yFirmas + 13, `${roles[1]}`);
-  doc.text(133, yFirmas + 17, `Área: Química-Inmunología-Pruebas Especiales`);
+  // Firma derecha
+  if (img2) doc.addImage(img2, 'PNG', 130, yActual, firmaWidth, 20);
+  doc.text(133, yTexto, `Validado por`);
+  doc.text(133, yTexto + 5, `${nombres[1] || ''}`);
+  doc.text(133, yTexto + 10, `C.C. ${cedulas[1] || ''}`);
+  doc.text(133, yTexto + 15, `${roles[1]}`);
+  doc.text(133, yTexto + 20, `Área: Química-Inmunología-Pruebas Especiales`);
 
-  // === Firma centrada (Administrador) ===
+  // Firma central (Administrador)
   const xCentrada = (pageWidth - firmaWidth) / 2;
-  const yAdmin = yFirmas + 25;
-
+  const yAdmin = yTexto + 35;
   if (img3) doc.addImage(img3, 'PNG', xCentrada, yAdmin - 12, firmaWidth, 20);
   doc.text(xCentrada + 5, yAdmin + 10, `Verificado por`);
   doc.text(xCentrada + 5, yAdmin + 14, `${nombres[2] || ''}`);
   doc.text(xCentrada + 5, yAdmin + 18, `C.C. ${cedulas[2] || ''}`);
   doc.text(xCentrada + 5, yAdmin + 22, `${roles[2]}`);
 
-  // === Pie de página centrado ===
+  // === PIE DE PÁGINA ===
   const footerText = `CALLE 5 N. 1 A 57 Aguablanca 8353365 - PITALITO - HUILA`;
   const textWidth = (doc.getStringUnitWidth(footerText) * doc.internal.getFontSize()) / doc.internal.scaleFactor;
   const centeredX = (pageWidth - textWidth) / 2;
-  doc.text(centeredX, pageHeight - 15, footerText); // ⬆️ Subido un poco también
+  doc.text(centeredX, pageHeight - 15, footerText);
 
+  // 🔹 Guardar el PDF
   doc.save(`${data[0].autorizacion}.pdf`);
 });
-
 
 
 
