@@ -329,7 +329,7 @@ Promise.all([
   doc.text(xCentrada + 5, yAdmin + 10, `Verificado por`);
   doc.text(xCentrada + 5, yAdmin + 14, `${nombres[2] || ''}`);
   doc.text(xCentrada + 5, yAdmin + 18, `C.C. ${cedulas[2] || ''}`);
-  doc.text(xCentrada + 5, yAdmin + 22, `${roles[2]}`);
+  doc.text(xCentrada + 5, yAdmin + 22, `Bacteriólogo(a)`);
 
   // === PIE DE PÁGINA ===
   const footerText = `CALLE 5 N. 1 A 57 Aguablanca 8353365 - PITALITO - HUILA`;
