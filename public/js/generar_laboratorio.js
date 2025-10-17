@@ -404,48 +404,55 @@ function dibujarEncabezado(doc, element, yInicial = 10) {
     y += 5;
     doc.text(90, y, 'N.I.T. 901832735-3');
 
-    doc.setFontSize(10);
-    doc.setFontSize(12);
-    doc.text(180, y + 2, element.autorizacion);
-    doc.line(178, y + 3, 190, y + 3); // horizontal line
-    y += 10;
+  doc.setFontSize(10);
+  doc.setFontSize(12);
+  doc.text(180, y + 2, element.autorizacion);
+  // Línea horizontal de lado a lado después del encabezado
+  doc.setDrawColor(60, 60, 60);
+  doc.setLineWidth(0.5);
+  doc.line(10, y + 7, 200, y + 7); // línea de lado a lado
+  y += 12; // espaciado extra debajo de la línea
 
-    doc.setFontSize(9);
+  doc.setFontSize(9);
 
-    //primera fila del encabezado
-    doc.text(10, y, 'Identificación :');
-    doc.text(35, y, element.paciente.identificacion);
-    doc.text(80, y, 'Email :');
-    doc.text(95, y, element.paciente.email.slice(0, 23));
-    doc.text(150, y, 'Fecha :');
-    doc.text(170, y, moment(element.fecha).format('DD-MM-YYYY HH:mm:ss'));
-    y += 5;
-    //segunda fila del encabezado
-    doc.text(10, y, 'Nombres :');
-    doc.text(35, y, element.paciente.nombres.slice(0, 22));
-    doc.text(80, y, 'Edad :');
-    let edad = calcularEdad(element.paciente.fecha_nacimiento);
-    doc.text(95, y, `${edad.años} Años, ${edad.meses} Meses`);
-    doc.text(150, y, 'Empresa :');
-    doc.text(170, y, element.contrato.empresa.nombre);
-    y += 5;
-    //tercera fila del encabezado
-    doc.text(10, y, 'Telefono :');
-    doc.text(35, y, element.paciente.telefono);
-    doc.text(80, y, 'Sexo :');
-    doc.text(95, y, element.paciente.sexo);
-    doc.text(150, y, 'Contrato :');
-    doc.text(170, y, element.contrato.nombre);
-    y += 5;
-    //cuarta fila del encabezado
-    doc.text(10, y, 'Dirección :');
-    doc.text(35, y, element.paciente.direccion.slice(0, 22));
-    doc.text(80, y, 'Eps :');
-    doc.text(95, y, element.paciente.eps.nombre);
-    doc.text(150, y, 'Tipo :');
-    doc.text(170, y, element.paciente.tipo_paciente.replace(/_/g, " "));
-    y += 5;
-    return y;
+  //primera fila del encabezado
+  doc.text(10, y, 'Identificación :');
+  doc.text(35, y, element.paciente.identificacion);
+  doc.text(80, y, 'Email :');
+  doc.text(95, y, element.paciente.email.slice(0, 23));
+  doc.text(150, y, 'Fecha :');
+  doc.text(170, y, moment(element.fecha).format('DD-MM-YYYY HH:mm:ss'));
+  y += 5;
+  //segunda fila del encabezado
+  doc.text(10, y, 'Nombres :');
+  doc.text(35, y, element.paciente.nombres.slice(0, 22));
+  doc.text(80, y, 'Edad :');
+  let edad = calcularEdad(element.paciente.fecha_nacimiento);
+  doc.text(95, y, `${edad.años} Años, ${edad.meses} Meses`);
+  doc.text(150, y, 'Empresa :');
+  doc.text(170, y, element.contrato.empresa.nombre);
+  y += 5;
+  //tercera fila del encabezado
+  doc.text(10, y, 'Telefono :');
+  doc.text(35, y, element.paciente.telefono);
+  doc.text(80, y, 'Sexo :');
+  doc.text(95, y, element.paciente.sexo);
+  doc.text(150, y, 'Contrato :');
+  doc.text(170, y, element.contrato.nombre);
+  y += 5;
+  //cuarta fila del encabezado
+  doc.text(10, y, 'Dirección :');
+  doc.text(35, y, element.paciente.direccion.slice(0, 22));
+  doc.text(80, y, 'Eps :');
+  doc.text(95, y, element.paciente.eps.nombre);
+  doc.text(150, y, 'Tipo :');
+  doc.text(170, y, element.paciente.tipo_paciente.replace(/_/g, " "));
+  // Línea horizontal de lado a lado después de 'Tipo'
+  doc.setDrawColor(60, 60, 60);
+  doc.setLineWidth(0.5);
+  doc.line(10, y + 4, 200, y + 4);
+  y += 10; // espaciado extra debajo de la línea
+  return y;
 }
 
 
