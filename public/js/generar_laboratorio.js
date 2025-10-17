@@ -185,11 +185,7 @@ moment.defineLocale('es', {
               doc.text(10, y, 'PARÁMETROS');
               doc.text(70, y, 'RESULTADOS');
               doc.text(110, y, 'UNIDADES');
-
-              
               doc.text(135, y, 'VALOR DE REFERENCIA');
-
-
               doc.text(180, y, 'METODO');
               doc.setFont("helvetica", "normal");
               doc.setFontSize(8);
@@ -207,7 +203,6 @@ moment.defineLocale('es', {
                 doc.setFont("helvetica", "bold");
                 doc.text(10, y, `${resultado.parametro.tipo_parametro.nombre.toUpperCase()}`);
                 doc.setFont("helvetica", "normal");
-                tipo_parametro = resultado.parametro.tipo_parametro.nombre;
                 y += 6;
               }
 
@@ -288,13 +283,18 @@ Promise.all([
 ]).then(([img1, img2, img3]) => {
   const pageHeight = doc.internal.pageSize.height;
   const pageWidth = doc.internal.pageSize.width;
+  // tamaño original: 50x20 -> reducir 30%
   const firmaWidth = 50;
+  const firmaHeight = 20;
+  const scale = 0.7; // reducción del 30%
+  const firmaW = Math.round(firmaWidth * scale);
+  const firmaH = Math.round(firmaHeight * scale);
 
-  // 🔹 Altura total que ocuparán las firmas
-  const alturaFirmas = 80;
+  // 🔹 Altura total que ocuparán las firmas (ajustada)
+  const alturaFirmas = Math.round(80 * scale);
 
   // 🔹 Determinar posición actual del cursor (hasta dónde se imprimió)
-  let yActual = y + 20; // "y" es la última posición usada en el contenido
+  let yActual = y + 30; // "y" es la última posición usada en el contenido
 
   // 🔹 Si no hay suficiente espacio, crear nueva página
   if (yActual + alturaFirmas > pageHeight - 20) {
@@ -303,33 +303,63 @@ Promise.all([
   }
 
   // === FIRMAS ===
-  doc.setFontSize(10);
+  // Reducir la fuente de los textos de firma un 20% y mantener posición relativa
+  const originalFirmaFont = 9;
+  const fontScale = 0.8; // reducir texto 20%
+  const firmaFontSize = Math.max(6, Math.round(originalFirmaFont * fontScale));
+  doc.setFontSize(firmaFontSize);
 
-  // Firma izquierda
-  if (img1) doc.addImage(img1, 'PNG', 25, yActual, firmaWidth, 20);
-  let yTexto = yActual + 25;
+  // Firma izquierda (movida ligeramente hacia abajo para quedar más cerca del texto)
+  const imgOffsetDown = Math.round(8 * scale); // cuánto bajar la imagen
+  if (img1) doc.addImage(img1, 'PNG', 25, yActual + imgOffsetDown, firmaW, firmaH);
+  // colocar el texto inmediatamente debajo de la imagen (ajustado para la nueva posición)
+  let yTexto = yActual + imgOffsetDown + firmaH + 4;
+  // Espaciado entre líneas basado en la reducción de fuente para conservar proporciones
+  const originalLineStep = 4; // antes se usaban incrementos de 4
+  const lineStep = Math.max(3, Math.round(originalLineStep * fontScale));
+
   doc.text(30, yTexto, `Validado por`);
-  doc.text(30, yTexto + 5, `${nombres[0] || ''}`);
-  doc.text(30, yTexto + 10, `C.C. ${cedulas[0] || ''}`);
-  doc.text(30, yTexto + 15, `${roles[0]}`);
-  doc.text(30, yTexto + 20, `Área: Microscopía-Hematología-Microbiología`);
+  doc.text(30, yTexto + lineStep, `${nombres[0] || ''}`);
+  doc.text(30, yTexto + lineStep * 2, `C.C. ${cedulas[0] || ''}`);
+  doc.text(30, yTexto + lineStep * 3, `${roles[0]}`);
+  doc.text(30, yTexto + lineStep * 4, `Área: Microscopía-Hematología-Microbiología`);
 
-  // Firma derecha
-  if (img2) doc.addImage(img2, 'PNG', 130, yActual, firmaWidth, 20);
+  // Firma derecha (movida ligeramente hacia abajo para quedar más cerca del texto)
+  if (img2) doc.addImage(img2, 'PNG', 130, yActual + imgOffsetDown, firmaW, firmaH);
   doc.text(133, yTexto, `Validado por`);
-  doc.text(133, yTexto + 5, `${nombres[1] || ''}`);
-  doc.text(133, yTexto + 10, `C.C. ${cedulas[1] || ''}`);
-  doc.text(133, yTexto + 15, `${roles[1]}`);
-  doc.text(133, yTexto + 20, `Área: Química-Inmunología-Pruebas Especiales`);
+  doc.text(133, yTexto + lineStep, `${nombres[1] || ''}`);
+  doc.text(133, yTexto + lineStep * 2, `C.C. ${cedulas[1] || ''}`);
+  doc.text(133, yTexto + lineStep * 3, `${roles[1]}`);
+  doc.text(133, yTexto + lineStep * 4, `Área: Química-Inmunología-Pruebas Especiales`);
 
-  // Firma central (Administrador)
-  const xCentrada = (pageWidth - firmaWidth) / 2;
-  const yAdmin = yTexto + 35;
-  if (img3) doc.addImage(img3, 'PNG', xCentrada, yAdmin - 12, firmaWidth, 20);
-  doc.text(xCentrada + 5, yAdmin + 10, `Verificado por`);
-  doc.text(xCentrada + 5, yAdmin + 14, `${nombres[2] || ''}`);
-  doc.text(xCentrada + 5, yAdmin + 18, `C.C. ${cedulas[2] || ''}`);
-  doc.text(xCentrada + 5, yAdmin + 22, `Bacteriólogo(a)`);
+  // Firma central (Administrador) — bajar posición y centrar texto
+  const xCentrada = (pageWidth - firmaW) / 2;
+  // bajar imagen central más para evitar superposición con el texto
+  const extraDownAdmin = Math.round(20 * scale);
+  // colocar la imagen al menos dos renglones por debajo del bloque de texto "Validado por"
+  // el bloque izquierdo/derecho ocupa hasta yTexto + lineStep * 4, así que posicionamos img3 debajo
+  // subir img3 tres renglones (intento), pero garantizar que no se solape con el bloque de firmas
+  const desiredUpLines = 3;
+  const candidateImg3Y = yTexto + lineStep * 6 + extraDownAdmin - (1 * lineStep) - (desiredUpLines * lineStep);
+  // mínimo: una línea por debajo del bloque de firmas (que llega hasta yTexto + lineStep*4)
+  const minImg3Y = yTexto + lineStep * 5;
+  const img3Y = Math.max(candidateImg3Y, minImg3Y);
+  if (img3) doc.addImage(img3, 'PNG', xCentrada, img3Y, firmaW, firmaH);
+  // colocar el texto justo debajo de la imagen y centrar cada línea
+  // colocar el texto justo debajo de la imagen (subido un renglón en conjunto)
+  const textStartY = img3Y + firmaH + 6 - lineStep;
+  const linesAdmin = [
+    `Verificado por`,
+    `${nombres[2] || ''}`,
+    `C.C. ${cedulas[2] || ''}`,
+    `Bacteriólogo(a)`
+  ];
+  for (let i = 0; i < linesAdmin.length; i++) {
+    const line = linesAdmin[i];
+    const tw = (doc.getStringUnitWidth(line) * doc.internal.getFontSize()) / doc.internal.scaleFactor;
+    const xLine = (pageWidth - tw) / 2;
+    doc.text(xLine, textStartY + i * lineStep, line);
+  }
 
   // === PIE DE PÁGINA ===
   const footerText = `CALLE 5 N. 1 A 57 Aguablanca 8353365 - PITALITO - HUILA`;

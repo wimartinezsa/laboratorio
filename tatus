@@ -1,0 +1,97 @@
+* [33m4a71f11[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/devwilson[m[33m, [m[1;32mdevwilson[m[33m)[m ajuste en elcargo
+* [33me98f1eb[m corregir firmas
+* [33m4e3cd11[m colocar tres firmas en el pdf de laboratorio
+* [33m7b1f911[m se modifio la nota en el reporte pdf
+* [33md5745fa[m guion en repostes
+* [33m1573e04[m organizar las notas en los reportes
+* [33m045710a[m se ajusto la lineas al generarl el laboratorio
+* [33m6919186[m eliminar firma
+* [33m7d53435[m encabezado del reporte
+* [33m5537da2[m titulos de lor exames
+* [33m89af643[m reporte subtotal
+* [33md66566d[m doble linea en reporte
+* [33mfaf43a4[m reporte1
+* [33mf150457[m reporteUsuariosAtendidos2
+* [33m5dc88a3[m reporteUsuariosAtendidos
+* [33mec1822b[m listarSede
+* [33m1d6b416[m migracion1
+* [33md0a27cd[m act. por sedes
+* [33mad4c1cd[m autocompletado
+* [33mae77bbf[m ucmd
+* [33maa7ca3e[m descargar pdf
+* [33m04c8af8[m ordenar de forma asc procedimiento
+* [33m9bbb2b7[m registrar acuerdo
+* [33m0ed0b97[m listar examenes del auxliar
+* [33m8afd7b4[m axamenes autaticos
+* [33mce326a2[m menu cuantes en facturación
+* [33m760cd4c[m palabra buscar
+* [33m8532124[m id de empresa
+* [33me47bf71[m reporte de clientes atendidios
+* [33m82953df[m tamaño de letra
+* [33m019904b[m tamaño de letra laboratorio
+* [33m4932ba5[m uric acid
+* [33m8046da7[m registrar resultados automaticos txt
+* [33m34c84b5[m cancelar toma de muetra
+* [33m14121b4[m maximo tres registro en factura
+* [33m6ed466c[m borrar imagen de firma
+* [33mfa7ca28[m ordenar resultados de examan por area
+* [33mfe31079[m registrar todos los examens al contrato
+* [33m4c7eb0e[m actualizar acuerdos del contrato
+* [33m3e8b186[m ajuste en lsitar los resultados
+* [33m5063d04[m cambios de abril 2
+* [33m5bfbef9[m cambios de abril
+* [33m0066dae[m estado del laboratorio
+* [33m21b4f7d[m rol de invitado modificado
+* [33m38f8b95[m formulario dinamico
+* [33mb7e081d[m modulo del usuario invitado
+* [33m0e1772a[m modulo cuentas de cobro
+* [33m02b3ae4[m solición de problema al listar examenes
+* [33m022679d[m reportes cuentas por cobrar
+* [33m849372e[m modulo cuentas por cobrar 1
+* [33meace3f5[m select en acuerdos del contrato
+* [33m3e8da74[m cambios select factura
+* [33m6d4c535[m cambiar el select
+* [33md440dce[m formulario dinamico  con select
+* [33mdcb8489[m se elimina firma
+* [33mb8c7276[m tipo_parametro en pdf
+* [33m5132994[m nota en rporte de laboratorio pdf
+* [33mfe8e75f[m firmapdf
+* [33m1227221[m select dinamico en formulario de resultado
+* [33m73217e0[m formulario dinamico 1
+* [33me308b72[m precio factura particular
+* [33mdaab2b0[m estadistica cantidadEpresas
+* [33m5a73073[m tipo resutaldo
+* [33m97ae394[m unque modelo acuerdos
+* [33mae2059a[m correcion modelo en tipo empresa
+* [33m9c68a34[m generar cogigo autorización a particular
+* [33m61484cc[m nuevo modelo 3
+* [33m0b1b086[m pruebo schema
+* [33m4f2fa4a[m borrar firma
+* [33me2e3df2[m conf. bsd remota aws
+* [33mdd4d95b[m modulo de vinculacion de los usuarios
+* [33md4ef4eb[m migracion 1
+* [33m3e77a55[m primera migracion
+* [33mc64f95d[m corregir error de listar servicios
+* [33m59e961a[m actualizar schema cliente
+* [33m13f4e49[m imagen firma
+* [33m6fc5512[m correcciones modulo de servicios-precio
+* [33m2390704[m nueva mirgacion
+* [33m5327ee2[m nuevo modelo
+* [33m4f59f88[m prueba error modelo
+* [33m658872e[m regenerar esquema
+* [33maa21392[m mod del modelo
+* [33m044a117[m mod modelo
+* [33m77f7f08[m corregir todos os modelos primeraletra mayuscula
+* [33m5d963dc[m modelo usuario
+* [33md093f11[m act modelo 5
+* [33m8c54b36[m act modelo2
+* [33m8f40c2a[m act. modelo
+* [33mfcd4df7[m corregir modelo empresa.
+* [33mc19e8ad[m modelo
+* [33m0b55cb4[m varialbes de entorno
+* [33m26a64fe[m[33m ([m[1;32mdevjhon[m[33m)[m mysql
+* [33m6d086c0[m bd postgres
+* [33mcf5b379[m prueba aws
+* [33m8430fb9[m prueba aws
+* [33m17b01d6[m prueba con bd aws
+* [33m332eccf[m primer commit
