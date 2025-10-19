@@ -54,63 +54,43 @@ moment.defineLocale('es', {
         var fechaFormat = dia + "/" + mes + "/" + ano;
         /* ===================================================== */
     let nombre_bacteriologo1='';
-    let cedula_bacteriologo1='';
-    let imagen_bacteriologo1='';
-
-    let nombre_bacteriologo2='';
-    let cedula_bacteriologo2='';
-    let imagen_bacteriologo2='';
-
-    let nombre_admin='';
-    let cedula_admin='';
-    let imagen_admin='';
-
 
     const token = localStorage.getItem('token'); 
     const firma_bacteriologo = await firmaLaboratorioBacteriologo(token);
 
-    //console.log(firma_bacteriologo);
+    const firmas = {
+      bacteriologos: [],
+      administrador: null
+    };
 
-
-    if(firma_bacteriologo.length>0){
-      
-      
-      if (firma_bacteriologo.length > 0) {
-  for (let i = 0; i < firma_bacteriologo.length; i++) {
-    const f = firma_bacteriologo[i];
-    if (f.rol === 'Bacteriologo') {
-      if (!nombre_bacteriologo1) {
-        nombre_bacteriologo1 = f.nombre;
-        cedula_bacteriologo1 = f.identificacion;
-        imagen_bacteriologo1 = f.firma;
-      } else {
-        nombre_bacteriologo2 = f.nombre;
-        cedula_bacteriologo2 = f.identificacion;
-        imagen_bacteriologo2 = f.firma;
-      }
+    if (firma_bacteriologo && firma_bacteriologo.length > 0) {
+      firma_bacteriologo.forEach(f => {
+        if (f.rol === 'Bacteriologo' && firmas.bacteriologos.length < 2) {
+          firmas.bacteriologos.push({
+            nombre: f.nombre,
+            cedula: f.identificacion,
+            imagen: f.firma
+          });
+        }
+        if (f.rol === 'Administrador' && !firmas.administrador) {
+          firmas.administrador = {
+            nombre: f.nombre,
+            cedula: f.identificacion,
+            imagen: f.firma
+          };
+        }
+      });
     }
-    if (f.rol === 'Administrador') {
-      nombre_admin = f.nombre;
-      cedula_admin = f.identificacion;
-      imagen_admin = f.firma;
+
+    // Aseguramos que siempre haya 2 bacteriólogos y 1 admin, aunque sea con datos vacíos
+    while (firmas.bacteriologos.length < 2) {
+      firmas.bacteriologos.push({ nombre: '', cedula: '', imagen: null });
     }
-  }
-
-  console.log('✅ Bacteriólogo 1:', nombre_bacteriologo1);
-  console.log('✅ Bacteriólogo 2:', nombre_bacteriologo2);
-  console.log('✅ Administrador:', nombre_admin);
-}
-
-
-
-
-
-
-
-
-
-        
+    if (!firmas.administrador) {
+      firmas.administrador = { nombre: '', cedula: '', imagen: null };
     }
+    
+    console.log('✅ Firmas procesadas:', firmas);
   
 
    await fetch('/generarLaboratorio/' + id_autorizacion, {
@@ -138,6 +118,13 @@ moment.defineLocale('es', {
         doc.addImage(imgLogo, 'JPEG', 2, 1, 30, 20); // esquina superior izquierda
       };
 
+      // === Función para añadir nueva página con encabezado ===
+      const nuevaPagina = (doc, element) => {
+        doc.addPage();
+        dibujarLogo(doc);
+        return dibujarEncabezado(doc, element); // Dibuja el encabezado y devuelve la nueva posición 'y'
+      };
+
       // Esperar a que el logo cargue antes de generar el contenido
       imgLogo.onload = () => {
         let y = 10;
@@ -155,9 +142,7 @@ moment.defineLocale('es', {
             y += 5;
 
             if (y > pageHeight - margin) {
-              doc.addPage();
-              dibujarLogo(doc); // dibuja logo en nueva página
-              y = dibujarEncabezado(doc, element);
+              y = nuevaPagina(doc, element);
             }
 
             const pageWidth = 210;
@@ -199,6 +184,7 @@ moment.defineLocale('es', {
               if (resultado.estado === 'Pendiente') continue;
 
               if (resultado.parametro.tipo_parametro.nombre.trim() !== tipo_parametro.trim()) {
+                tipo_parametro= resultado.parametro.tipo_parametro.nombre.trim();
                 y += 2;
                 doc.setFont("helvetica", "bold");
                 doc.text(10, y, `${resultado.parametro.tipo_parametro.nombre.toUpperCase()}`);
@@ -225,9 +211,7 @@ moment.defineLocale('es', {
               //y += 4;
 
               if (y > pageHeight - margin) {
-                doc.addPage();
-                dibujarLogo(doc); // logo en nueva página
-                y = dibujarEncabezado(doc, element);
+                y = nuevaPagina(doc, element);
               }
             }// fin del for de resultados
            
@@ -239,9 +223,7 @@ moment.defineLocale('es', {
             y += 2;
 
             if (y > pageHeight - margin) {
-              doc.addPage();
-              dibujarLogo(doc); // logo en nueva página
-              y = dibujarEncabezado(doc, element);
+              y = nuevaPagina(doc, element);
             }
           }// fin del forde examenes
 
@@ -251,134 +233,86 @@ moment.defineLocale('es', {
 
 
 
-     // === FIRMAS Y PIE DE PÁGINA ===
-const imgUrls = [
-  `/img/firmas/${imagen_bacteriologo1}`,
-  `/img/firmas/${imagen_bacteriologo2}`,
-  `/img/firmas/${imagen_admin}`
-];
+        // === FIRMAS Y PIE DE PÁGINA ===
+        const imgUrls = [
+          firmas.bacteriologos[0]?.imagen ? `/img/firmas/${firmas.bacteriologos[0].imagen}` : null,
+          firmas.bacteriologos[1]?.imagen ? `/img/firmas/${firmas.bacteriologos[1].imagen}` : null,
+          firmas.administrador?.imagen ? `/img/firmas/${firmas.administrador.imagen}` : null,
+        ];
 
-const nombres = [nombre_bacteriologo1, nombre_bacteriologo2, nombre_admin];
-const cedulas = [cedula_bacteriologo1, cedula_bacteriologo2, cedula_admin];
-const roles = ["Bacteriólogo(a)", "Bacteriólogo(a)", "Administrador"];
+        function cargarImagen(url) {
+          return new Promise((resolve) => {
+            if (!url) return resolve(null);
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = () => resolve(img);
+            img.onerror = () => {
+              console.warn(`❌ No se pudo cargar la imagen: ${url}`);
+              resolve(null);
+            };
+            img.src = url;
+          });
+        }
 
-function cargarImagen(url, nombre) {
-  return new Promise((resolve) => {
-    if (!url) return resolve(null);
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => resolve(img);
-    img.onerror = () => {
-      console.warn(`❌ No se pudo cargar la imagen: ${url}`);
-      resolve(null);
-    };
-    img.src = url;
-  });
-}
+        Promise.all(imgUrls.map(cargarImagen)).then(([img1, img2, img3]) => {
+          const pageHeight = doc.internal.pageSize.height;
+          const pageWidth = doc.internal.pageSize.width;
+          const firmaW = 35;
+          const firmaH = 14;
+          const alturaFirmas = 60;
+          let yActual = y + 30;
 
-Promise.all([
-  cargarImagen(imgUrls[0], "Bacteriólogo 1"),
-  cargarImagen(imgUrls[1], "Bacteriólogo 2"),
-  cargarImagen(imgUrls[2], "Administrador")
-]).then(([img1, img2, img3]) => {
-  const pageHeight = doc.internal.pageSize.height;
-  const pageWidth = doc.internal.pageSize.width;
-  // tamaño original: 50x20 -> reducir 30%
-  const firmaWidth = 50;
-  const firmaHeight = 20;
-  const scale = 0.7; // reducción del 30%
-  const firmaW = Math.round(firmaWidth * scale);
-  const firmaH = Math.round(firmaHeight * scale);
+          if (yActual + alturaFirmas > pageHeight - 20) {
+            yActual = nuevaPagina(doc, data[0]); // Usamos la nueva función y yActual ahora tiene la posición correcta después del encabezado.
+          }
 
-  // 🔹 Altura total que ocuparán las firmas (ajustada)
-  const alturaFirmas = Math.round(80 * scale);
+          doc.setFontSize(7);
+          const lineStep = 3.5;
 
-  // 🔹 Determinar posición actual del cursor (hasta dónde se imprimió)
-  let yActual = y + 30; // "y" es la última posición usada en el contenido
+          const dibujarFirma = (img, data, x, y, areaText) => {
+            if (img) doc.addImage(img, 'PNG', x, y, firmaW, firmaH);
+            const yTexto = y + firmaH + 4;
+            doc.text(x + 2, yTexto, `Validado por`);
+            doc.text(x + 2, yTexto + lineStep, `${data.nombre || ''}`);
+            doc.text(x + 2, yTexto + lineStep * 2, `C.C. ${data.cedula || ''}`);
+            doc.text(x + 2, yTexto + lineStep * 3, `Bacteriólogo(a)`);
+            if (areaText) {
+              doc.text(x + 2, yTexto + lineStep * 4, areaText);
+            }
+          };
 
-  // 🔹 Si no hay suficiente espacio, crear nueva página
-  if (yActual + alturaFirmas > pageHeight - 20) {
-    doc.addPage();
-    yActual = 30; // reinicia margen superior
-  }
+          // Firma Izquierda
+          dibujarFirma(img1, firmas.bacteriologos[0], 25, yActual, `Área: Microscopía-Hematología-Microbiología`);
 
-  // === FIRMAS ===
-  // Reducir la fuente de los textos de firma un 20% y mantener posición relativa
-  const originalFirmaFont = 9;
-  const fontScale = 0.8; // reducir texto 20%
-  const firmaFontSize = Math.max(6, Math.round(originalFirmaFont * fontScale));
-  doc.setFontSize(firmaFontSize);
+          // Firma Derecha
+          dibujarFirma(img2, firmas.bacteriologos[1], 130, yActual, `Área: Química-Inmunología-Pruebas Especiales`);
 
-  // Firma izquierda (movida ligeramente hacia abajo para quedar más cerca del texto)
-  const imgOffsetDown = Math.round(8 * scale); // cuánto bajar la imagen
-  if (img1) doc.addImage(img1, 'PNG', 25, yActual + imgOffsetDown, firmaW, firmaH);
-  // colocar el texto inmediatamente debajo de la imagen (ajustado para la nueva posición)
-  let yTexto = yActual + imgOffsetDown + firmaH + 4;
-  // Espaciado entre líneas basado en la reducción de fuente para conservar proporciones
-  const originalLineStep = 4; // antes se usaban incrementos de 4
-  const lineStep = Math.max(3, Math.round(originalLineStep * fontScale));
+          // Firma Central (Administrador)
+          const xCentrada = (pageWidth - firmaW) / 2;
+          const yAdmin = yActual + 25;
+          if (img3) doc.addImage(img3, 'PNG', xCentrada, yAdmin, firmaW, firmaH);
+          const yTextoAdmin = yAdmin + firmaH + 4;
+          const linesAdmin = [
+            `Verificado por`,
+            `${firmas.administrador.nombre || ''}`,
+            `C.C. ${firmas.administrador.cedula || ''}`,
+            `Bacteriólogo(a)`
+          ];
+          for (let i = 0; i < linesAdmin.length; i++) {
+            const line = linesAdmin[i];
+            const tw = (doc.getStringUnitWidth(line) * doc.internal.getFontSize()) / doc.internal.scaleFactor;
+            const xLine = (pageWidth - tw) / 2;
+            doc.text(xLine, yTextoAdmin + i * lineStep, line);
+          }
 
-  doc.text(30, yTexto, `Validado por`);
-  doc.text(30, yTexto + lineStep, `${nombres[0] || ''}`);
-  doc.text(30, yTexto + lineStep * 2, `C.C. ${cedulas[0] || ''}`);
-  doc.text(30, yTexto + lineStep * 3, `${roles[0]}`);
-  doc.text(30, yTexto + lineStep * 4, `Área: Microscopía-Hematología-Microbiología`);
+          // === PIE DE PÁGINA ===
+          const footerText = `CALLE 5 N. 1 A 57 Aguablanca 8353365 - PITALITO - HUILA`;
+          const textWidth = (doc.getStringUnitWidth(footerText) * doc.internal.getFontSize()) / doc.internal.scaleFactor;
+          const centeredX = (pageWidth - textWidth) / 2;
+          doc.text(centeredX, pageHeight - 15, footerText);
 
-  // Firma derecha (movida ligeramente hacia abajo para quedar más cerca del texto)
-  if (img2) doc.addImage(img2, 'PNG', 130, yActual + imgOffsetDown, firmaW, firmaH);
-  doc.text(133, yTexto, `Validado por`);
-  doc.text(133, yTexto + lineStep, `${nombres[1] || ''}`);
-  doc.text(133, yTexto + lineStep * 2, `C.C. ${cedulas[1] || ''}`);
-  doc.text(133, yTexto + lineStep * 3, `${roles[1]}`);
-  doc.text(133, yTexto + lineStep * 4, `Área: Química-Inmunología-Pruebas Especiales`);
-
-  // Firma central (Administrador) — bajar posición y centrar texto
-  const xCentrada = (pageWidth - firmaW) / 2;
-  // bajar imagen central más para evitar superposición con el texto
-  const extraDownAdmin = Math.round(20 * scale);
-  // colocar la imagen al menos dos renglones por debajo del bloque de texto "Validado por"
-  // el bloque izquierdo/derecho ocupa hasta yTexto + lineStep * 4, así que posicionamos img3 debajo
-  // subir img3 tres renglones (intento), pero garantizar que no se solape con el bloque de firmas
-  const desiredUpLines = 3;
-  const candidateImg3Y = yTexto + lineStep * 6 + extraDownAdmin - (1 * lineStep) - (desiredUpLines * lineStep);
-  // mínimo: una línea por debajo del bloque de firmas (que llega hasta yTexto + lineStep*4)
-  const minImg3Y = yTexto + lineStep * 5;
-  const img3Y = Math.max(candidateImg3Y, minImg3Y);
-  if (img3) doc.addImage(img3, 'PNG', xCentrada, img3Y, firmaW, firmaH);
-  // colocar el texto justo debajo de la imagen y centrar cada línea
-  // colocar el texto justo debajo de la imagen (subido un renglón en conjunto)
-  const textStartY = img3Y + firmaH + 6 - lineStep;
-  const linesAdmin = [
-    `Verificado por`,
-    `${nombres[2] || ''}`,
-    `C.C. ${cedulas[2] || ''}`,
-    `Bacteriólogo(a)`
-  ];
-  for (let i = 0; i < linesAdmin.length; i++) {
-    const line = linesAdmin[i];
-    const tw = (doc.getStringUnitWidth(line) * doc.internal.getFontSize()) / doc.internal.scaleFactor;
-    const xLine = (pageWidth - tw) / 2;
-    doc.text(xLine, textStartY + i * lineStep, line);
-  }
-
-  // === PIE DE PÁGINA ===
-  const footerText = `CALLE 5 N. 1 A 57 Aguablanca 8353365 - PITALITO - HUILA`;
-  const textWidth = (doc.getStringUnitWidth(footerText) * doc.internal.getFontSize()) / doc.internal.scaleFactor;
-  const centeredX = (pageWidth - textWidth) / 2;
-  doc.text(centeredX, pageHeight - 15, footerText);
-
-  // 🔹 Guardar el PDF
-  doc.save(`${data[0].autorizacion}.pdf`);
-});
-
-
-
-
-
-
-
-
-
+          doc.save(`${data[0].autorizacion}.pdf`);
+        });
       };
     }
   });
@@ -491,8 +425,3 @@ function dibujarEncabezado(doc, element, yInicial = 10) {
             meses: meses
         };
     }
-
-
-
-
-
