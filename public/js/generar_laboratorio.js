@@ -140,18 +140,23 @@ moment.defineLocale('es', {
 
           for (const examen of examenes) {
             y += 5;
-
+           
             if (y > pageHeight - margin) {
               y = nuevaPagina(doc, element);
             }
 
             const pageWidth = 210;
-            const cupsText = examen.procedimiento.area.nombre.toUpperCase();
+            const areaText = examen.procedimiento.area.nombre.toUpperCase();
+            const cupsText = examen.procedimiento.cups.nombre.toUpperCase();
 
-            if (cupsText !== texto_area) {
-              texto_area = cupsText;
+            if (areaText !== texto_area) {
+
+              
+              
+
+              texto_area = areaText;
               const fontSize = 12;
-              const textWidth = (doc.getStringUnitWidth(cupsText) * fontSize) / doc.internal.scaleFactor;
+              const textWidth = (doc.getStringUnitWidth(areaText) * fontSize) / doc.internal.scaleFactor;
               const centeredX = (pageWidth - textWidth) / 2;
 
               doc.setFillColor(25, 60, 184);
@@ -161,9 +166,17 @@ moment.defineLocale('es', {
 
               doc.setTextColor(255, 255, 255);
               doc.setFontSize(fontSize);
-              doc.text(centeredX, y, cupsText);
+              doc.text(centeredX, y, areaText);
 
               y += 7;
+              doc.setFont("helvetica", "bold");
+              doc.setFontSize(11);
+              doc.setTextColor(0, 0, 0);
+              doc.text(3, y, cupsText);
+              //console.log(cupsText);
+           
+
+              y += 5;
               doc.setTextColor(0, 0, 0);
               doc.setFontSize(9);
               doc.setFont("helvetica", "bold");
