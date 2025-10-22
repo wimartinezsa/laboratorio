@@ -137,6 +137,7 @@ moment.defineLocale('es', {
 
           const examenes = element.examen;
           let texto_area = '';
+          let auxiliar_cups= ''; 
 
           for (const examen of examenes) {
             y += 5;
@@ -147,13 +148,11 @@ moment.defineLocale('es', {
 
             const pageWidth = 210;
             const areaText = examen.procedimiento.area.nombre.toUpperCase();
-            const cupsText = examen.procedimiento.cups.nombre.toUpperCase();
+           
 
             if (areaText !== texto_area) {
 
               
-              
-
               texto_area = areaText;
               const fontSize = 12;
               const textWidth = (doc.getStringUnitWidth(areaText) * fontSize) / doc.internal.scaleFactor;
@@ -168,12 +167,7 @@ moment.defineLocale('es', {
               doc.setFontSize(fontSize);
               doc.text(centeredX, y, areaText);
 
-              y += 7;
-              doc.setFont("helvetica", "bold");
-              doc.setFontSize(11);
-              doc.setTextColor(0, 0, 0);
-              doc.text(3, y, cupsText);
-              //console.log(cupsText);
+            
            
 
               y += 5;
@@ -185,10 +179,27 @@ moment.defineLocale('es', {
               doc.text(110, y, 'UNIDADES');
               doc.text(135, y, 'VALOR DE REFERENCIA');
               doc.text(180, y, 'METODO');
+             
+              y += 7;
+            }
+
+
+             const cupsText = examen.procedimiento.cups.nombre.toUpperCase();
+           
+
+             if (auxiliar_cups !== cupsText) {
+              auxiliar_cups=cupsText;
+              doc.setFont("helvetica", "bold");
+              doc.setFontSize(10);
+              doc.setTextColor(0, 0, 0);
+              doc.text(3, y, cupsText);
+              //console.log(cupsText);
+              y += 4;
+             }
+               
+
               doc.setFont("helvetica", "normal");
               doc.setFontSize(8);
-              y += 5;
-            }
 
             const resultados = examen.resultado;
             let tipo_parametro = '';
