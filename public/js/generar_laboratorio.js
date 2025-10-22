@@ -190,7 +190,7 @@ moment.defineLocale('es', {
              if (auxiliar_cups !== cupsText) {
               auxiliar_cups=cupsText;
               doc.setFont("helvetica", "bold");
-              doc.setFontSize(10);
+              doc.setFontSize(9);
               doc.setTextColor(0, 0, 0);
               doc.text(3, y, cupsText);
               //console.log(cupsText);
