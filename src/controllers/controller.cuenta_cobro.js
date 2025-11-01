@@ -8,33 +8,53 @@ export  const listarCuentasPendientePago=async(req,resp)=>{
         let id_contrato = Number(req.params.id_contrato);
         let fecha_inicio = new Date(req.params.fecha_inicio);
         let fecha_fin = new Date(req.params.fecha_fin);
+        
+        if (!id_contrato || isNaN(id_contrato)) {
+            return resp.status(400).json({ status: 400, message: 'ID de contrato inválido' });
+        }
+        
+        if (!(fecha_inicio instanceof Date && !isNaN(fecha_inicio)) || 
+            !(fecha_fin instanceof Date && !isNaN(fecha_fin))) {
+            return resp.status(400).json({ status: 400, message: 'Fechas inválidas' });
+        }
 
-        const cuentaPorCobrar = await prisma.Examen.findMany({
-            where: {
-                estado_pago:'Pendiente_Pago',
-                factura: {
-                    contratoId: id_contrato,
-                    fecha: {
-                        gte: fecha_inicio, // Mayor o igual a fecha_inicio
-                        lte: fecha_fin     // Menor o igual a fecha_fin
-                    }
-                }
-            },
-            include: {
-                factura: {
-                    include: {
-                        paciente: true,
-                        contrato: true
-                    }
-                },
-                procedimiento: {
-                    include: {
-                        cups: true,
-                        acuerdo: true
-                    }
-                }
-            }
-        });
+        const cuentaPorCobrar = await prisma.$queryRaw`
+            SELECT 
+                pa.identificacion,
+                pa.nombres,
+                pa.fecha_nacimiento,
+                pa.telefono,
+                cu.codigo,
+                cu.nombre AS examen,
+                ex.precio,
+                ex.id_examen,
+                ex.estado_pago,
+                fact.id_factura,
+                date(fact.fecha) AS fecha,
+                fact.autorizacion,
+              
+                cont.nombre AS contrato,
+                em.nombre AS empresa,
+                em.nit,
+                se.nombre as sede,
+                ex.cantidad,
+                cu.nombre AS cups_nombre
+            FROM facturas fact
+            JOIN sedes se ON se.id_sede = fact.sedeId
+            JOIN contratos cont ON cont.id_contrato = fact.contratoId
+            JOIN empresas em ON em.id_empresa = cont.empresaId
+            JOIN examenes ex ON ex.facturaId = fact.id_factura
+            JOIN procedimientos proc ON proc.id_procedimiento = ex.procedimientoId
+            JOIN cups cu ON cu.id_cups = proc.cupsId
+            JOIN pacientes pa ON pa.id_paciente = fact.pacienteId
+            WHERE date(fact.fecha) BETWEEN date(${fecha_inicio}) AND date(${fecha_fin})
+            AND cont.id_contrato = ${id_contrato}
+            AND ex.estado_pago = 'Pendiente_Pago'
+            ORDER BY pa.nombres ASC
+        `;
+
+        // console.log(cuentaPorCobrar);
+
 
         return resp.status(200).json(cuentaPorCobrar);
       
@@ -45,91 +65,129 @@ export  const listarCuentasPendientePago=async(req,resp)=>{
     }
 }
 
-
+// estado_pago:'Cobro', cuentaPorCobrar
 export  const listarCuentasCobradas=async(req,resp)=>{
     try{
 
         let id_contrato = Number(req.params.id_contrato);
         let fecha_inicio = new Date(req.params.fecha_inicio);
         let fecha_fin = new Date(req.params.fecha_fin);
+        
+        if (!id_contrato || isNaN(id_contrato)) {
+            return resp.status(400).json({ status: 400, message: 'ID de contrato inválido' });
+        }
+        
+        if (!(fecha_inicio instanceof Date && !isNaN(fecha_inicio)) || 
+            !(fecha_fin instanceof Date && !isNaN(fecha_fin))) {
+            return resp.status(400).json({ status: 400, message: 'Fechas inválidas' });
+        }
 
-        const cuentaPorCobrar = await prisma.Examen.findMany({
-            where: {
-                estado_pago:'Cobro',
-                factura: {
-                    contratoId: id_contrato,
-                    fecha: {
-                        gte: fecha_inicio, // Mayor o igual a fecha_inicio
-                        lte: fecha_fin     // Menor o igual a fecha_fin
-                    }
-                }
-            },
-            include: {
-                factura: {
-                    include: {
-                        paciente: true,
-                        contrato: true
-                    }
-                },
-                procedimiento: {
-                    include: {
-                        cups: true,
-                        acuerdo: true
-                    }
-                }
-            }
-        });
+        const cuentasCobradas = await prisma.$queryRaw`
+            SELECT 
+                pa.identificacion,
+                pa.nombres,
+                pa.fecha_nacimiento,
+                pa.telefono,
+                cu.codigo,
+                cu.nombre AS examen,
+                ex.precio,
+                ex.id_examen,
+                ex.estado_pago,
+                fact.id_factura,
+                date(fact.fecha) AS fecha,
+                fact.autorizacion,
+              
+                cont.nombre AS contrato,
+                em.nombre AS empresa,
+                em.nit,
+                se.nombre as sede,
+                ex.cantidad,
+                cu.nombre AS cups_nombre
+            FROM facturas fact
+            JOIN sedes se ON se.id_sede = fact.sedeId
+            JOIN contratos cont ON cont.id_contrato = fact.contratoId
+            JOIN empresas em ON em.id_empresa = cont.empresaId
+            JOIN examenes ex ON ex.facturaId = fact.id_factura
+            JOIN procedimientos proc ON proc.id_procedimiento = ex.procedimientoId
+            JOIN cups cu ON cu.id_cups = proc.cupsId
+            JOIN pacientes pa ON pa.id_paciente = fact.pacienteId
+            WHERE date(fact.fecha) BETWEEN date(${fecha_inicio}) AND date(${fecha_fin})
+            AND cont.id_contrato = ${id_contrato}
+            AND ex.estado_pago = 'Cobro'
+            ORDER BY pa.nombres ASC
+        `;
 
-        return resp.status(200).json(cuentaPorCobrar);
+      
+
+
+        return resp.status(200).json(cuentasCobradas);
       
        
     }catch(error){
         console.log("Error en controller.cuenta_cobro.js :"+error);
-        resp.status(500).json({ "status":500,"message":'Error al listar cuentas por cobrar' });
+        resp.status(500).json({ "status":500,"message":'Error al listar cuentas cobradas' });
     }
 }
 
-
+//estado_pago:'Pagado',
 export  const listarCuentasPagadas=async(req,resp)=>{
     try{
 
         let id_contrato = Number(req.params.id_contrato);
         let fecha_inicio = new Date(req.params.fecha_inicio);
         let fecha_fin = new Date(req.params.fecha_fin);
+        
+        if (!id_contrato || isNaN(id_contrato)) {
+            return resp.status(400).json({ status: 400, message: 'ID de contrato inválido' });
+        }
+        
+        if (!(fecha_inicio instanceof Date && !isNaN(fecha_inicio)) || 
+            !(fecha_fin instanceof Date && !isNaN(fecha_fin))) {
+            return resp.status(400).json({ status: 400, message: 'Fechas inválidas' });
+        }
 
-        const cuentaPorCobrar = await prisma.Examen.findMany({
-            where: {
-                estado_pago:'Pagado',
-                factura: {
-                    contratoId: id_contrato,
-                    fecha: {
-                        gte: fecha_inicio, // Mayor o igual a fecha_inicio
-                        lte: fecha_fin     // Menor o igual a fecha_fin
-                    }
-                }
-            },
-            include: {
-                factura: {
-                    include: {
-                        paciente: true,
-                        contrato: true
-                    }
-                },
-                procedimiento: {
-                    include: {
-                        cups: true,
-                        acuerdo: true
-                    }
-                }
-            }
-        });
+        const cuentasPagadas = await prisma.$queryRaw`
+            SELECT 
+                pa.identificacion,
+                pa.nombres,
+                pa.fecha_nacimiento,
+                pa.telefono,
+                cu.codigo,
+                cu.nombre AS examen,
+                ex.precio,
+                ex.id_examen,
+                ex.estado_pago,
+                fact.id_factura,
+                date(fact.fecha) AS fecha,
+                fact.autorizacion,
+                cont.nombre AS contrato,
+                em.nombre AS empresa,
+                em.nit,
+                se.nombre as sede,
+                ex.cantidad,
+                cu.nombre AS cups_nombre
+            FROM facturas fact
+            JOIN sedes se ON se.id_sede = fact.sedeId
+            JOIN contratos cont ON cont.id_contrato = fact.contratoId
+            JOIN empresas em ON em.id_empresa = cont.empresaId
+            JOIN examenes ex ON ex.facturaId = fact.id_factura
+            JOIN procedimientos proc ON proc.id_procedimiento = ex.procedimientoId
+            JOIN cups cu ON cu.id_cups = proc.cupsId
+            JOIN pacientes pa ON pa.id_paciente = fact.pacienteId
+            WHERE date(fact.fecha) BETWEEN date(${fecha_inicio}) AND date(${fecha_fin})
+            AND cont.id_contrato = ${id_contrato}
+            AND ex.estado_pago = 'Pagado'
+            ORDER BY pa.nombres ASC
+        `;
+           
 
-        return resp.status(200).json(cuentaPorCobrar);
+
+        return resp.status(200).json(cuentasPagadas);
       
        
     }catch(error){
         console.log("Error en controller.cuenta_cobro.js :"+error);
-        resp.status(500).json({ "status":500,"message":'Error al listar cuentas cobradas' });
+        resp.status(500).json({ "status":500,"message":'Error al listar cuentas pagadas' });
     }
 }
 

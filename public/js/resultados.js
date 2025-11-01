@@ -179,6 +179,7 @@ else{
         autoriazacion:`<span class="badge badge-pill badge-success" style="font-size: 0.8rem;">${  element.factura.autorizacion}</span>`,
         area :element.procedimiento.area.nombre.toUpperCase(),
         sede:element.factura.sedeId===1? 'Principal':'Isnos',
+        contrato:element.factura.contrato.nombre,
         estado :accionBTN ,
                         }
                         arrayDatos.push(dato)
@@ -203,6 +204,7 @@ else{
                            {"data": "resultado"},
                            {"data": "area"},
                            {"data": "sede"},
+                           {"data": "contrato"},
                            {"data": "estado"}    
                        ]
                         });

@@ -98,36 +98,48 @@ function listarCuentasPendientePago(){
 
        
         
-
-          
-        data.forEach(element => {
+        // Asegurarse de que data sea un array
+        const examenes = Array.isArray(data) ? data : data.examenes || [];
+        
+        examenes.forEach(element => {
         accionBTN =` <a class="btn btn-primary" href="javascript:editarEmpresa(${element.id_examen})" title='Editar Empresa'><i class='fas fa-edit'></i></a>`;
 
-            //moment(element.fecha).format('DD-MM-YYYY HH:mm:ss')
+          
 
-        let edad= calcularEdad(element.factura.paciente.fecha_nacimiento);
+        let edad= calcularEdad(element.fecha_nacimiento);
         let dato = {
         id : element.id_examen,
-        identificacion : element.factura.paciente.identificacion,
-        nombre : element.factura.paciente.nombres,
-        fecha_nacimiento : moment(element.factura.paciente.fecha_nacimiento).format('DD-MM-YYYY'),
+        identificacion : element.identificacion,
+        nombre : element.nombres,
+        fecha_nacimiento : moment(element.fecha_nacimiento).format('DD-MM-YYYY'),
         edad :`${edad.años} Años, ${edad.meses} Meses`,
-        telefono : element.factura.paciente.telefono,
-        identificacion : element.factura.paciente.identificacion,
-        examen : element.procedimiento.cups.nombre,
-        contrato : element.factura.contrato.nombre,
-        precio : element.procedimiento.acuerdo[0].precio,
-        autorizacion : element.factura.autorizacion,
-        sede:element.factura.sedeId===1? 'Principal':'Isnos',
-        fecha :moment(element.factura.fecha).format('DD-MM-YYYY'),
+        telefono : element.telefono,
+        examen : element.examen,
+        contrato : element.contrato,
+        precio : element.precio,
+        autorizacion : element.autorizacion,
+        sede:element.sedeId===1? 'Principal':'Isnos',
+        fecha :moment(element.fecha).format('DD-MM-YYYY'),
         estado: element.estado_pago,
         Accion :accionBTN
                         }
                         arrayDatos.push(dato)
                         });
    
-             table1 = $('#tabla_cuenta_pendiente').DataTable({
+            table1 = $('#tabla_cuenta_pendiente').DataTable({
+               dom: 'Bfrtip',
                "bInfo" : false,
+               buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
+                        className: 'btn btn-info', // Clase CSS opcional
+                        title: 'Reporte de Cuentas', // Título del archivo
+                        exportOptions: {
+                            columns: ':visible' // Exporta solo columnas visibles
+                        }
+                    }
+                ],
                searching: true,
                paging: true,
                autoWidth: false,
@@ -288,27 +300,28 @@ function listarCuentasCobradas(){
     .then(data => {
         let accionBTN='';
         let arrayDatos=[];
-          
-        data.forEach(element => {
+            // Asegurarse de que data sea un array
+        const examenes = Array.isArray(data) ? data : data.examenes || [];
+
+        examenes.forEach(element => {
         accionBTN =` <a class="btn btn-primary" href="javascript:editarEmpresa(${element.id_examen})" title='Editar Empresa'><i class='fas fa-edit'></i></a>`;
 
-            //moment(element.fecha).format('DD-MM-YYYY HH:mm:ss')
+          
 
-        let edad= calcularEdad(element.factura.paciente.fecha_nacimiento);
+        let edad= calcularEdad(element.fecha_nacimiento);
         let dato = {
         id : element.id_examen,
-        identificacion : element.factura.paciente.identificacion,
-        nombre : element.factura.paciente.nombres,
-        fecha_nacimiento : moment(element.factura.paciente.fecha_nacimiento).format('DD-MM-YYYY'),
+        identificacion : element.identificacion,
+        nombre : element.nombres,
+        fecha_nacimiento : moment(element.fecha_nacimiento).format('DD-MM-YYYY'),
         edad :`${edad.años} Años, ${edad.meses} Meses`,
-        telefono : element.factura.paciente.telefono,
-        identificacion : element.factura.paciente.identificacion,
-        examen : element.procedimiento.cups.nombre,
-        contrato : element.factura.contrato.nombre,
-        precio : element.procedimiento.acuerdo[0].precio,
-        autorizacion : element.factura.autorizacion,
-        sede:element.factura.sedeId===1? 'Principal':'Isnos',
-        fecha :moment(element.factura.fecha).format('DD-MM-YYYY'),
+        telefono : element.telefono,
+        examen : element.examen,
+        contrato : element.contrato,
+        precio : element.precio,
+        autorizacion : element.autorizacion,
+        sede:element.sedeId===1? 'Principal':'Isnos',
+        fecha :moment(element.fecha).format('DD-MM-YYYY'),
         estado: element.estado_pago,
         Accion :accionBTN
                         }
@@ -328,7 +341,7 @@ function listarCuentasCobradas(){
                         }
                     }
                 ],
-               "bInfo" : false,
+                "bInfo" : false,
                searching: true,
                paging: true,
                autoWidth: false,
@@ -336,7 +349,7 @@ function listarCuentasCobradas(){
                responsive: true,
                data: arrayDatos,
                columns: [
-                           {"data": "id"},
+                          {"data": "id"},
                            {"data": "identificacion"},
                            {"data": "nombre"},
                            {"data": "fecha_nacimiento"},
@@ -347,8 +360,8 @@ function listarCuentasCobradas(){
                            {"data": "contrato"},
                            {"data": "precio"},
                            {"data": "autorizacion"}, 
-                           {"data": "sede"}, 
-                           {"data": "estado"},
+                            {"data": "sede"}, 
+                           {"data": "estado"}, 
                            { 
                             "data": null, 
                             "render": function(data, type, row) {
@@ -494,21 +507,20 @@ function listarCuentasPagadas(){
 
             //moment(element.fecha).format('DD-MM-YYYY HH:mm:ss')
 
-        let edad= calcularEdad(element.factura.paciente.fecha_nacimiento);
+         let edad= calcularEdad(element.fecha_nacimiento);
         let dato = {
         id : element.id_examen,
-        identificacion : element.factura.paciente.identificacion,
-        nombre : element.factura.paciente.nombres,
-        fecha_nacimiento : moment(element.factura.paciente.fecha_nacimiento).format('DD-MM-YYYY'),
+        identificacion : element.identificacion,
+        nombre : element.nombres,
+        fecha_nacimiento : moment(element.fecha_nacimiento).format('DD-MM-YYYY'),
         edad :`${edad.años} Años, ${edad.meses} Meses`,
-        telefono : element.factura.paciente.telefono,
-        identificacion : element.factura.paciente.identificacion,
-        examen : element.procedimiento.cups.nombre,
-        contrato : element.factura.contrato.nombre,
-        precio : element.procedimiento.acuerdo[0].precio,
-        autorizacion : element.factura.autorizacion,
-        sede:element.factura.sedeId===1? 'Principal':'Isnos',
-        fecha :moment(element.factura.fecha).format('DD-MM-YYYY'),
+        telefono : element.telefono,
+        examen : element.examen,
+        contrato : element.contrato,
+        precio : element.precio,
+        autorizacion : element.autorizacion,
+        sede:element.sedeId===1? 'Principal':'Isnos',
+        fecha :moment(element.fecha).format('DD-MM-YYYY'),
         estado: element.estado_pago,
         Accion :accionBTN
                         }

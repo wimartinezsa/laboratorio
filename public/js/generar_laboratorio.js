@@ -103,7 +103,7 @@ moment.defineLocale('es', {
   .then(res => res.json())
   .then(data => {
     if (data) {
-     // console.log(data);
+     console.log(data);
       const doc = new jsPDF();
 
       const imgUrlLogo = `/img/logo.jpg`;
@@ -335,7 +335,7 @@ moment.defineLocale('es', {
           const centeredX = (pageWidth - textWidth) / 2;
           doc.text(centeredX, pageHeight - 15, footerText);
 
-          doc.save(`${data[0].autorizacion}.pdf`);
+          doc.save(`${data[0].autorizacion}-${data[0].paciente.nombres}.pdf`);
         });
       };
     }
@@ -376,35 +376,38 @@ function dibujarEncabezado(doc, element, yInicial = 10) {
   //primera fila del encabezado
   doc.text(10, y, 'Identificación :');
   doc.text(35, y, element.paciente.identificacion);
-  doc.text(80, y, 'Email :');
-  doc.text(95, y, element.paciente.email.slice(0, 23));
+  doc.text(80, y, 'Edad :');
+  let edad = calcularEdad(element.paciente.fecha_nacimiento);
+  doc.text(95, y, `${edad.años} Años, ${edad.meses} Meses`);
   doc.text(150, y, 'Fecha :');
   doc.text(170, y, moment(element.fecha).format('DD-MM-YYYY HH:mm:ss'));
   y += 5;
   //segunda fila del encabezado
+ 
   doc.text(10, y, 'Nombres :');
-  doc.text(35, y, element.paciente.nombres.slice(0, 22));
-  doc.text(80, y, 'Edad :');
-  let edad = calcularEdad(element.paciente.fecha_nacimiento);
-  doc.text(95, y, `${edad.años} Años, ${edad.meses} Meses`);
+  doc.setFontSize(7);
+  doc.text(35, y, element.paciente.nombres.slice(0,28));
+  doc.setFontSize(9);
+  doc.text(80, y, 'Sexo :');
+  doc.text(95, y,element.paciente.sexo );
   doc.text(150, y, 'Empresa :');
   doc.text(170, y, element.contrato.empresa.nombre);
   y += 5;
   //tercera fila del encabezado
   doc.text(10, y, 'Telefono :');
   doc.text(35, y, element.paciente.telefono);
-  doc.text(80, y, 'Sexo :');
-  doc.text(95, y, element.paciente.sexo);
+  doc.text(80, y, 'Eps :');
+  doc.text(95, y, element.paciente.eps.nombre);
   doc.text(150, y, 'Contrato :');
   doc.text(170, y, element.contrato.nombre);
   y += 5;
   //cuarta fila del encabezado
   doc.text(10, y, 'Dirección :');
   doc.text(35, y, element.paciente.direccion.slice(0, 22));
-  doc.text(80, y, 'Eps :');
-  doc.text(95, y, element.paciente.eps.nombre);
-  doc.text(150, y, 'Tipo :');
-  doc.text(170, y, element.paciente.tipo_paciente.replace(/_/g, " "));
+  doc.text(80, y, 'Tipo :');
+  doc.text(95, y,element.paciente.tipo_paciente.replace(/_/g, " ") );
+ // doc.text(150, y, 'Tipo :');
+  //doc.text(170, y, );
   // Línea horizontal de lado a lado después de 'Tipo'
   doc.setDrawColor(60, 60, 60);
   doc.setLineWidth(0.5);

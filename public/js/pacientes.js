@@ -140,7 +140,7 @@ async function listarPaises(){
              
               let html=`<option value='' disabled='true' selected='true'>Seleccione una Pais</option>`;
                data.forEach(element => {
-               html+=`<option value='${element.id_pais}'> ${element.nombre}</option>`;
+               html+=`<option value='${element.id_pais}' > ${element.nombre}</option>`;
                });   
                document.getElementById('paises').innerHTML = html;  
                document.getElementById('pais_origen').innerHTML = html; 

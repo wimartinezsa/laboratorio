@@ -91,8 +91,13 @@
       </nav>
       <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+           <div class="col-12 text-center">
+              <h4>Cuentas Pendiente por Cobrar</h4>
+            </div>
           <div class="row m-3">
-          <div class="col-12">
+          <div class="col-8">
+            </div><!-- /.col -->
+            <div class="col-4">
             <div class="d-flex justify-content-between">
 
               <button type="button" id="btnCuentaCobro" class="btn btn-danger" onclick="confirmarRegistroCuentaCobro();">
@@ -106,9 +111,7 @@
           
           
           <div class="row">
-            <div class="col-12 text-center">
-              <h4>Cuentas Pendiente por Cobrar</h4>
-            </div>
+           
             
             <div class="col-12">
               <table class="table table-striped" id="tabla_cuenta_pendiente" style="font-size: 12px;">
@@ -145,18 +148,16 @@
             <div class="col-12 text-center">
               <h4>Cuentas Cobradas</h4>
             </div>
-            <div class="col-12">
-            <div class="d-flex justify-content-between">
-
-            
-
-              <button type="button" id="btnCuentaPagada" class="btn btn-danger" onclick="confirmarRegistroCuentaPago();">
-                Registrar Cuenta Pagadas
-              </button>
-              <button id="btn_seleccionar_pagos" class="btn btn-primary">Seleccionar Todos</button>
-          </div>
-
-        </div>
+            <div class="col-8">
+               </div>
+             <div class="col-4">
+              <div class="d-flex justify-content-between">
+                <button type="button" id="btnCuentaPagada" class="btn btn-danger" onclick="confirmarRegistroCuentaPago();">
+                  Registrar Cuenta Pagadas
+                </button>
+                <button id="btn_seleccionar_pagos" class="btn btn-primary">Seleccionar Todos</button>
+             </div>
+            </div>
            
             <div class="col-12">
               <table class="table table-striped mt-3" id="tabla_cuenta_cobradas" style="font-size: 12px;">

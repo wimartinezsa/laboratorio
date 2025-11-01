@@ -71,7 +71,8 @@ export  const listarExamenesPorArea=async(req,resp)=>{
             include: {
                 factura: {
                     include: {
-                        paciente: true
+                        paciente: true,
+                        contrato:true
                     }
                 },
                 resultado: {
