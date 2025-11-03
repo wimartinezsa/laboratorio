@@ -8,9 +8,14 @@ const route = Router();
 
 
 route.get('/',(req,resp)=>{
-    
+    resp.render("pages/index.ejs");
+});
+
+
+route.get('/login',(req,resp)=>{
     resp.render("pages/login.ejs");
 });
+
 
 route.get('/home',(req,resp)=>{
     resp.render("pages/home.ejs");

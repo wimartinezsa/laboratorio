@@ -1,0 +1,215 @@
+
+
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0"></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row h-100">
+                <div class="col-12 d-flex align-items-center justify-content-center">
+                    <div class="cards-container">
+                        <!-- Tarjeta 1 -->
+                        <div class="card-wrapper">
+                            <div class="card shadow-sm hover-card">
+                                <a href="/login" class="text-decoration-none">
+                                    <img src="/img/laboratorio.jpg" class="card-img-top dashboard-img" alt="Laboratorio">
+                                    <div class="card-body text-center py-2">
+                                        <h4 class="card-title text-primary mb-1">LABORATORIO</h4>
+                                        <p class="card-text text-muted small mb-0">Gestión de exámenes y resultados</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 2 -->
+                        <div class="card-wrapper">
+                            <div class="card shadow-sm hover-card">
+                                <a href="#" class="text-decoration-none">
+                                    <img src="/img/diagnosticas.jpg" class="card-img-top dashboard-img" alt="Facturación">
+                                    <div class="card-body text-center py-2">
+                                        <h4 class="card-title text-primary mb-1">IMAGENES DIAGNOSTICAS</h4>
+                                        <p class="card-text text-muted small mb-0">Sistema de gestión de imágenes diagnósticas</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 3 -->
+                        <div class="card-wrapper">
+                            <div class="card shadow-sm hover-card">
+                                <a href="#" class="text-decoration-none">
+                                    <img src="/img/historia_clinica.jpg" class="card-img-top dashboard-img" alt="Reportes">
+                                    <div class="card-body text-center py-2">
+                                        <h4 class="card-title text-primary mb-1">HISTORIAS CLINICAS</h4>
+                                        <p class="card-text text-muted small mb-0">Estadísticas e informes de pacientes</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+.content-wrapper {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+    min-height: calc(100vh - 60px); /* Ajustado para considerar el header */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: linear-gradient(to bottom right, #ffffff20, #ffffff05);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 85%);
+    pointer-events: none;
+}
+
+.cards-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem;
+    position: relative;
+    flex-wrap: nowrap;
+    margin: auto 0; /* Centra verticalmente en el espacio disponible */
+}
+
+.card-wrapper {
+    flex: 0 0 auto;
+    width: 340px;
+}
+
+.dashboard-img {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.hover-card {
+    transition: all 0.3s ease;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+}
+
+.hover-card:hover .dashboard-img {
+    transform: scale(1.05);
+}
+
+.card {
+    border-radius: 15px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.card-body {
+    background: transparent;
+    padding: 1rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+    font-weight: 600;
+    text-align: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 2.5rem;
+}
+
+.card-text {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: #5a6c7d;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .content-wrapper::before {
+        height: 150px;
+    }
+
+    .cards-container {
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+        margin: 2rem auto;
+    }
+
+    .card-wrapper {
+        width: 100%;
+        max-width: 340px;
+    }
+
+    .dashboard-img {
+        height: 180px;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+}
+
+/* Asegurar centrado en pantallas más grandes */
+@media (min-width: 769px) {
+    .cards-container {
+        min-height: 400px; /* Altura mínima para centrado vertical */
+        margin: auto;
+    }
+}
+
+/* Ajustes para pantallas muy grandes */
+@media (min-width: 1200px) {
+    .cards-container {
+        gap: 2rem; /* Más espacio entre tarjetas en pantallas grandes */
+    }
+    
+    .card-wrapper {
+        width: 360px; /* Tarjetas ligeramente más grandes en pantallas grandes */
+    }
+    
+    .dashboard-img {
+        height: 220px; /* Imágenes más grandes en pantallas grandes */
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-img {
+        height: 160px;
+    }
+}
+</style>
+
