@@ -24,7 +24,7 @@ function Facturar(id_factura){
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
   
-    fetch('/generarFactura/'+id_factura,{
+    fetch('/imprimirFactura/'+id_factura,{
         method:'get',
             headers: {
                 'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
@@ -38,7 +38,7 @@ function Facturar(id_factura){
         if (contentType && contentType.includes('application/json')) {
             return response.json();
         } else {
-            window.location.href = "/";
+           // window.location.href = "/";
         }
     })
         .then(data=>{

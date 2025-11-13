@@ -7,7 +7,7 @@ export  const agregarExamenesFactura=async(req,resp)=>{
         const datos= await req.body;
 
 
-          //console.log(datos);
+        //console.log(datos);
         const examen = await prisma.Examen.create(
             {
                 data: {

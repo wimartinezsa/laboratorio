@@ -13,7 +13,7 @@ const route = Router();
 
 route.get('/contrato',validarToken,listarContratos);
 
-route.get('/contratosActivos/:id_empresa',validarToken,listarContratosActivos);
+route.get('/contratosActivos',validarToken,listarContratosActivos);
 
 route.post('/contrato',validarToken,registrarContrato);
 route.put('/contrato/:id_contrato',validarToken,actualizarContratoId);

@@ -29,14 +29,14 @@ export  const listarContratos=async(req,resp)=>{
 
 export  const listarContratosActivos=async(req,resp)=>{
     try{
-        let id_empresa= req.params.id_empresa;
+        
         
         const contratos = await prisma.$queryRaw`SELECT 
         co.id_contrato,
         co.estado,
         co.nombre
         FROM contratos co 
-        WHERE co.empresaId=${id_empresa} AND co.estado='Activo'
+        WHERE  co.estado='Activo'
         `;
         return resp.status(200).json(contratos);
     }catch(error){

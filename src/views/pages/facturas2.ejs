@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Software Laboratorio Clinico</title>
+
+  
+
+
+  <%- include ('../parts/script_superior.ejs')%>
+
+ <!-- DataTables -->
+ <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+ <link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+ <link rel="stylesheet" href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+ <!-- Theme style -->
+ <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+
+  <link rel="stylesheet" href="/plugins/choice/choices.min.css">
+
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+  </div>
+
+  <!-- Navbar -->
+  <%- include ('../parts/navbar.ejs')%>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+ 
+  <%- include ('../parts/menu.ejs')%>
+
+
+
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-8">
+            <div class="row"> 
+              <div class="col-5">
+                <select id="empresas"  class="form-control" onchange="listarContratos()"> 
+                </select>
+              </div>
+              <div class="col-5">
+                <select id="contratos"  class="form-control" onchange="listarFacturasContrato()"> 
+                </select>
+              </div>
+              <div class="col-2">
+                <button type="button" id="btn_gestion_paciente" class="btn btn-primary" onclick="gestionarPaciente()">Facturar</button>
+              </div>
+            </div>
+
+          </div><!-- /.col -->
+          <div class="col-sm-4">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+              <li class="breadcrumb-item active">Examenes</li>
+              <li class="breadcrumb-item active">Facturar</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+
+          <div class="row mb-2">
+
+         
+            <input type="number" id='id_factura' hidden="true" readonly="true" >
+          <input type="number" id='cod_autorizacion' hidden="true" readonly="true"  >
+
+          <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Factura</button>
+              <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Examenes</button>
+            </div>
+          </nav>
+
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+              <div class="row">
+                <div class="col-12">
+                  <div id="tabla_factura" style=" max-height: 300px; overflow-y: auto;"></div>
+                </div>
+            </div>
+
+
+            </div>
+            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+
+              <div class="row mt-3">
+                <div class="col-3">
+                    <select id="servicios" class="form-control" onchange="listarProcedimientoContratados()"></select>
+                </div>
+      
+                <div class="col-3"> 
+                  <select id="procedimiento_acordados" class="form-control select2bs4" style="width: 100%;" onchange="obtenerPrecio()"></select>
+                </div>
+                <div class="col-4">
+                  <input type="number" id='precio' class="form-control" placeholder="Digíte el precio">
+                </div>
+      
+                <div class="col-2">
+                  <button type="button" id="btn_agregar_prestacion" class="btn btn-primary" onclick="agregarExamenFactura()">Agregar</button>
+                </div>
+              </div>
+          <hr>
+          
+              <div class="row">
+                <table class="table table-bordered" id="tabla_examenes_factura">
+                  <thead>
+                    <tr>
+                      <th scope="col">Código</th>
+                      <th scope="col">Servicio</th>
+                      <th scope="col">Cups</th>
+                      <th scope="col">Procedimiento</th>
+                      <th scope="col">Cantidad</th>
+                      <th scope="col">Valor</th>
+                      <th scope="col">Contrato</th>
+                      <th scope="col">Estado</th>
+                      <th scope="col">Admin</th>
+                    </tr>
+                  </thead>
+                
+                </table>
+               
+              </div>
+
+
+            </div>
+            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+          </div>
+               
+
+
+          </div>
+
+
+
+
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+   
+   
+
+      
+
+
+    </div>
+
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+
+
+  <div class="modal fade" id="Frm_factura">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Iniciar Proceso de Facturación</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="number" id='id_paciente' readonly="true" hidden="true" >
+      
+          <div class="row">
+            <div class="col-10">
+
+                  <input type="text" class="form-control" id='identificacion'
+                  style="border: 1px solid rgb(208, 205, 205)"
+                  placeholder="Digite la identificacion">    
+            </div>
+
+            <div class="col-2">
+              <button class="btn btn-primary" onclick="buscarPacienteId()">Buscar</button>
+            </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div id="tabla_busqueda"></div>
+          </div>
+      </div>
+      
+               
+        </div>
+        <div class="modal-footer justify-content-center">
+      
+          <button type="button" id="btn_registrar" class="btn btn-primary" onclick="registrarFactura()">Iniciar Proceso de Facturación</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+
+  <div class="modal fade" id="Frm_Prestacion">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Agregar Examenes a la Factura</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" id="btn_agregarPrestacionFactura" class="btn btn-primary" onclick="emitirFactura()">Finalizar Factura</button>
+       </div>
+
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+
+  <div class="modal fade" id="Frm_estado_prestacion">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Estado de la Muestra</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="number" id='id_prestacion' readonly="true" hidden="true">
+      
+          <div class="row">
+            <div class="col-12">
+              <label for="message-text" class="col-form-label">Fecha de Muestra:</label>
+              <input type="datetime-local" id="fecha_muestra" class="form-control"/>
+          </div>  
+    </div>
+          <div class="row">
+              <div class="col-12">
+                <label for="message-text" class="col-form-label">Observación:</label>
+                <textarea  name="w3review" rows="4" id="observacion" cols="35" placeholder="Digitar una Observación"></textarea>
+            </div>  
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <label for="message-text" class="col-form-label">Estado de la Muestra:</label>
+            <select class="form-control" id="estado_muestra">
+              <option value="" disabled="true" selected="true">Seleccione un estado</option>
+              <option value="Solicitado">Solicitado</option>
+              <option value="En_Toma_de_Muestra">En Toma de Muestra</option>
+              <option value="En_Proceso_de_Analisis">En Proceso de Analisis</option>
+            </select>
+        </div>  
+    </div>
+
+
+
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" id="btn_registrar" class="btn btn-primary" onclick="confirmarCambiarEstadoExamen()">Registrar</button>
+
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+
+
+
+
+
+  <%- include ('../parts/footer.ejs')%>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<%- include ('../parts/script_inferior.ejs')%>
+
+
+
+<script src="/plugins/jspdf/jspdf.debug.js"></script>
+<script src="/plugins/moment/moment.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="/plugins/sweetalert2/sweetalert2@11.js"></script>
+
+<!-- DataTables  & Plugins -->
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="/plugins/jszip/jszip.min.js"></script>
+<script src="/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+
+
+<script src="/plugins/choice/choices.min.js"></script>
+
+
+<script src="/js/generar_factura.js"></script>
+<script src="/js/facturas.js"></script>
+</body>
+</html>

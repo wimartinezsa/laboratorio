@@ -27,58 +27,6 @@ export  const listarFacturas=async(req,resp)=>{
 
 
 
-export  const buscarFactura=async(req,resp)=>{
-    try{
-       
-        let id_factura=req.params.id_factura;
-        const factura = await prisma.Factura.findMany( 
-                {
-                    where:{
-                            id_factura:Number(id_factura)
-                        },
-                    include:{
-                        paciente:{
-                            include:{
-                                eps:true,
-                                municipio:true
-                            }
-                        }
-
-                    }
-            }
-        );
-        return resp.status(200).json(factura);
-    }catch(error){
-        console.log("Error en controller.facturas.js :"+error);
-        resp.status(500).json({ error: 'Error al listar  las facturas' });
-    }
-}
-
-
-
-export  const actualizarFactura=async(req,resp)=>{
-    try{
-        const datos= await req.body;
-        const id_factura=await req.params.id_factura;
-        const factura = await prisma.Factura.update(
-            {    where:{id_factura:Number(id_factura)},
-                data: {
-                    via_ingreso:datos.via_ingreso,
-                    autorizacion:datos.autorizacion 
-                }
-            } 
-        );
-
-        return resp.status(200).json({"status":200,"message":"Factura actualizada en el sistema"});
-    }catch(error){
-        console.log("Error en controller.factura.js :"+error);
-        resp.status(500).json({ "status":500,"message": 'Error al actualizar la factura' });
-    }  
-}
-
-
-
-
 
 export  const listarFacturasContratos=async(req,resp)=>{
     try{
@@ -122,152 +70,7 @@ export  const listarFacturasContratos=async(req,resp)=>{
 }
 
 
-export  const registrarFactura=async(req,resp)=>{
-    try{
-        const datos= await req.body;
 
-        //console.log(req.user);
-
-     const factura = await prisma.Factura.create(
-            {
-                data: {
-                
-                    fecha:new Date(),
-                    pacienteId:Number(datos.pacienteId),
-                    contratoId:Number(datos.id_contrato),
-                    via_ingreso:datos.via_ingreso,
-                    autorizacion:datos.autorizacion,
-                    total:0,
-                    estado:'Pendiente_Emision',
-                    sedeId:req.user.sede
-                  
-                }
-            }  
-        );
-       // console.log(factura);
-        // se actualiza la autorización 
-        if (factura){
-            // se crea una nueva autorización solo para los particulares
-           // if(datos.id_empresa ==='1'){
-               
-                const factura2 = await prisma.Factura.update(
-                    {    where:{id_factura:factura.id_factura},
-                        data: {
-                            autorizacion:String(String(datos.id_empresa)+String(factura.id_factura))
-                        }
-                    } 
-                );
-
-
-         //   }
-
-            //se crear el usuario con rol de invitado
-            // se consulta en la tabla de pacientes los datos
-
-            const Paciente = await prisma.Paciente.findFirst({
-                where:{
-                    id_paciente: factura.pacienteId
-                }
-            });
-            if(Paciente) {
-                
-                // se consulta en la tabla usuario si existe
-                const Usuario = await prisma.Usuario.findFirst({
-                    where:{
-                        identificacion: Paciente.identificacion
-                    }
-                });
-                
-                const encriptPassword = bcrypt.hashSync(String(Paciente.identificacion), 12)
-                if(Usuario) console.log('Ya existe');
-                else{
-                    // se crea el usuario con rol de invitado
-                    const new_user=await  prisma.Usuario.create({
-                        data: {
-                            identificacion:Paciente.identificacion,
-                            tipo_identificacion: Paciente.tipo_identificacion,
-                            nombre: Paciente.nombres,
-                            email: Paciente.email,
-                            password: encriptPassword,
-                            rol: 'Invitado',
-                            cargo:'Invitado',
-                            autoriza: 'No'
-
-                        }
-                    })
-                }
-            }
-            else{
-                console.log(usuario_invitado);
-        }
-            
-    }
-
-
-
-
-        return resp.status(200).json({"status":200,"message":"Factura registrado en el sistema"});
-    }catch(error){
-        console.log("Error en controller.factura.js :"+error);
-        resp.status(500).json({ "status":500,"message": 'Error al registrar la factura' });
-    }  
-}
-
-
-export  const emitirFactura=async(req,resp)=>{
-    try{
-        const id_factura= await req.params.id_factura;
-        let estado_pago='';
-
-        const tipo_empresa = await prisma.Factura.findFirst(
-            { 
-                where:{id_factura:Number(id_factura)},
-                include: {
-                        contrato:{
-                          include:{empresa:true}  
-                        }
-                }
-            } 
-        );
-
-        if(tipo_empresa.contrato.empresa.tipo=='Particular'){
-            estado_pago='Pagado';
-        }else{
-            estado_pago='Pendiente_Pago';
-        }
-
-        const total_factura = await prisma.examen.aggregate(
-                { 
-                    where:{facturaId:Number(id_factura)},
-                    _sum:{
-                        precio: true
-                    }
-                } 
-        );
-
-    
-
-        const factura = await prisma.Factura.update(
-            { 
-                where:{id_factura:Number(id_factura)},
-                data: {
-                        estado:estado_pago,
-                        total: total_factura._sum.precio
-                }
-            } 
-        );
-
-        if(factura){
-            return resp.status(200).json({"status":200,"message":"Factura Emitida en el Sistema"});
-        }else{
-            return resp.status(404).json({"status":404,"message":"No se Emitio la Factura en el sistema"});
-        }
-       
-    }catch(error){
-        console.log("Error en controller.factura.js :"+error);
-        resp.status(500).json({ "status":500,"message": 'Error al emitir la factura' });
-    }  
-}
 
 // Se listan los ervicios contratados
 export  const listarServiciosContrato=async(req,resp)=>{
@@ -292,7 +95,7 @@ export  const listarServiciosContrato=async(req,resp)=>{
 // se listan los procedimientos de los servicios contratados
 export  const listarProcedimientoContratados=async(req,resp)=>{
     try{
-       let id_servicio=req.params.id_servicio;
+     
        let id_contrato=req.params.id_contrato;
 
         const contratos = await prisma.$queryRaw`
@@ -301,7 +104,7 @@ export  const listarProcedimientoContratados=async(req,resp)=>{
         FROM acuerdos ac
         JOIN procedimientos pro ON pro.id_procedimiento= ac.procedimientoId
         JOIN cups cu ON cu.id_cups = pro.cupsId
-        WHERE pro.servicioId =${id_servicio} and ac.contratoId=${id_contrato} and ac.estado='Activo' ORDER BY cu.nombre ASC;
+        WHERE  ac.contratoId=${id_contrato} and ac.estado='Activo' ORDER BY cu.nombre ASC;
         `;
         
         return resp.status(200).json(contratos);
@@ -312,7 +115,229 @@ export  const listarProcedimientoContratados=async(req,resp)=>{
 }
 
 
+
+//revisarr
+export  const emitirFactura=async(req,resp)=>{
+    try{
+        const id_factura= await req.params.id_factura;
+        const autorization= await req.body.autorizacion;    
+        let estado_pago='';
+
+        const tipo_empresa = await prisma.Factura.findFirst(
+            { 
+                where:{id_factura:Number(id_factura)},
+                include: {
+                        contrato:{
+                          include:{empresa:true}  
+                        }
+                }
+            } 
+        );
+
+        if(tipo_empresa.contrato.empresa.tipo=='Particular'){
+            estado_pago='Pagado';
+            
+    }else{
+            estado_pago='Pendiente_Pago';
+        }
+
+        const total_factura = await prisma.examen.aggregate(
+                { 
+                    where:{facturaId:Number(id_factura)},
+                    _sum:{
+                        precio: true
+                    }
+                } 
+        );
+
+    
+
+        const factura = await prisma.Factura.update(
+            { 
+                where:{id_factura:Number(id_factura)},
+                data: {
+                        estado:estado_pago,
+                        total: total_factura._sum.precio,
+                        autorizacion:autorization
+                }
+            } 
+        );
+
+        if(factura){
+            return resp.status(200).json({"status":200,"message":"Factura Emitida en el Sistema"});
+        }else{
+            return resp.status(404).json({"status":404,"message":"No se Emitio la Factura en el sistema"});
+        }
+       
+    }catch(error){
+        console.log("Error en controller.factura.js :"+error);
+        resp.status(500).json({ "status":500,"message": 'Error al emitir la factura' });
+    }  
+}
+
+
+
+
+
+export const buscarFactura = async (req, resp) => {
+    try {
+        const id_factura = req.params.id_factura;
+
+        const existencia = await prisma.Factura.findFirst({
+            where: {
+                id_factura: Number(id_factura)
+            },
+            include: {
+                paciente: true,
+                contrato: {
+                    include: { empresa: true }
+                }
+            }
+        });
+
+        return resp.status(200).json({ status: 200, message: 'Factura encontrada', factura: existencia });
+    } catch (error) {
+        console.log('Error en controller.factura.js :' + error);
+        resp.status(500).json({ status: 500, message: 'Error al encontrar la factura' });
+    }
+};
+
+
+
+
+
+
+
+
+
+
+const buscarExistenciaFactura=async(id_contrato)=>{
+    try{
+        
+        const existencia = await prisma.Factura.findFirst({
+            where: {
+                contratoId: Number(id_contrato),
+                estado: 'Pendiente_Emision'
+            },
+            include: {
+                paciente: true,
+                contrato: {
+                    include: { empresa: true }
+                }
+            }
+        });
+       
+            return existencia;
+    }catch(error){
+        console.log("Error en controller.facturas.js :"+error);
+        
+    }
+}
+
+
+
+
+
+//genrar factura
 export  const generarFactura=async(req,resp)=>{
+
+
+    try{
+
+        const id_contrato= await req.params.id_contrato;
+        const id_paciente= await req.params.id_paciente;
+        const existencia_factura= await buscarExistenciaFactura(id_contrato);
+
+        if(existencia_factura){
+
+                const factura = await prisma.Factura.update(
+                                { 
+                                    where:{id_factura:Number(existencia_factura.id_factura)},
+                                    data: {
+                                        pacienteId: Number(id_paciente)     
+                                    }
+                                } 
+                                );
+
+            const existencia_factura2= await buscarExistenciaFactura(id_contrato);
+            return resp.status(200).json({"status":200,"message":"Factura existente","factura":existencia_factura2});
+
+        }else{
+    // se crea la factura
+    const nueva_factura = await prisma.Factura.create(
+        {
+            data: {
+                contratoId: Number(id_contrato),
+                pacienteId: Number(id_paciente),
+                fecha: new Date(),
+                via_ingreso: "DEMANDA_ESPONTANEA",
+                autorizacion: "0",
+                total: 0,
+                estado: 'Pendiente_Emision',
+                sedeId: req.user.sede
+                 
+            }
+        });
+
+
+        if (nueva_factura){
+        
+                const factura2 = await prisma.factura.update(
+                    {    where:{id_factura:nueva_factura.id_factura},
+                        data: {
+                            autorizacion:String(String(id_contrato)+String(nueva_factura.id_factura))
+                        }
+                    } 
+                );
+
+            } 
+
+
+         
+
+
+
+
+
+        const existencia_nueva= await buscarExistenciaFactura(id_contrato);
+        return resp.status(200).json({"status":200,"message":"Factura creada","factura":existencia_nueva});
+    }
+    }catch(error){
+        console.log("Error en controller.factura.js :"+error);
+        resp.status(500).json({ "status":500,"message": 'Error al generar la factura' });
+    }
+
+    
+}
+
+//revisarr
+export  const anularFactura=async(req,resp)=>{
+    try{
+        const id_factura= await req.params.id_factura;
+      
+        const factura = await prisma.Factura.update(
+            { 
+                where:{id_factura:Number(id_factura)},
+                data: {
+                        estado:'Anulado'
+                }
+            } 
+        );
+
+        if(factura){
+            return resp.status(200).json({"status":200,"message":"Factura Anulada en el Sistema"});
+        }else{
+            return resp.status(404).json({"status":404,"message":"No se Anuló la Factura"});
+        }
+       
+    }catch(error){
+        console.log("Error en controller.factura.js :"+error);
+        resp.status(500).json({ "status":500,"message": 'Error al anular la factura' });
+    }  
+}
+
+
+export  const imprimirFactura=async(req,resp)=>{
     try{
        
         const id_factura= await req.params.id_factura;
@@ -344,30 +369,4 @@ export  const generarFactura=async(req,resp)=>{
         console.log("Error en controller.facturas.js :"+error);
         resp.status(500).json({ error: 'Error al listar  las facturas' });
     }
-}
-
-
-export  const anularFactura=async(req,resp)=>{
-    try{
-        const id_factura= await req.params.id_factura;
-      
-        const factura = await prisma.Factura.update(
-            { 
-                where:{id_factura:Number(id_factura)},
-                data: {
-                        estado:'Anulado'
-                }
-            } 
-        );
-
-        if(factura){
-            return resp.status(200).json({"status":200,"message":"Factura Anulada en el Sistema"});
-        }else{
-            return resp.status(404).json({"status":404,"message":"No se Anuló la Factura"});
-        }
-       
-    }catch(error){
-        console.log("Error en controller.factura.js :"+error);
-        resp.status(500).json({ "status":500,"message": 'Error al anular la factura' });
-    }  
 }
