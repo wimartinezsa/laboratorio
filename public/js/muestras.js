@@ -43,7 +43,7 @@ var Frm_muestras = new bootstrap.Modal(document.getElementById('Frm_muestras'), 
 
 
 
-
+var table1;
 // se listan los laboratoriospor Area
 function listarExamenesTomaMuestra(){
 
@@ -81,8 +81,8 @@ function listarExamenesTomaMuestra(){
 
           if (element.estado==='En_Toma_de_Muestra'){
            accionBTN =`<a class="badge badge-pill badge-danger" style="font-size: 0.8rem;" 
-           href="javascript:gestionarMuestras(${element.id_examen},'${element.observacion}')" title='Finalizar Análisis'>${element.estado.replace(/_/g," ")}
-           </a>`;
+           href="javascript:gestionarMuestras(${element.id_examen},'${element.observacion}')" title='Finalizar Análisis'>Confirmar Toma de Muestra  </a>`;
+         
 
           }
  
@@ -104,7 +104,7 @@ function listarExamenesTomaMuestra(){
                         arrayDatos.push(dato)
                         });
    
-              var table = $('#tabla_examenes_toma_muestra').DataTable({
+               table1 = $('#tabla_examenes_toma_muestra').DataTable({
                "bInfo" : false,
                searching: true,
                paging: true,
@@ -123,13 +123,20 @@ function listarExamenesTomaMuestra(){
                            {"data": "autoriazacion"},  
                            {"data": "area"},
                            {"data": "sede"},
-                           {"data": "estado"}    
+                           {"data": "estado"},
+                              { 
+                            "data": null, 
+                            "render": function(data, type, row) {
+                                    return '<input type="checkbox" class="checkbox-examen">';                                  
+                            },
+                            "orderable": false // Evita que la columna del checkbox sea ordenable
+                        }   
                        ]
                         });
 
 
-                        table.on('search.dt', function() {
-                          var searchValue = table.search(); // Obtiene el valor actual del campo de búsqueda
+                        table1.on('search.dt', function() {
+                          var searchValue = table1.search(); // Obtiene el valor actual del campo de búsqueda
                         // document.getElementById('busqueda').value=searchValue;
                       });
                      
@@ -147,82 +154,23 @@ function listarExamenesTomaMuestra(){
 
 
 
-
-
-
-/*
-function listarExamenesConfirmadas(){
-
-    const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
-
-    fetch('/listarExamenesConfirmados', {
-        method:'get',
-        headers: {
-            'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
-            'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
-        }
-    })
-    .then(response => {
-        // Verificar si la respuesta es JSON
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-            return response.json();
-        } else {
-            window.location.href = "/";
-        }
-    })
-    .then(data => {
-
-       
-        let accionBTN='';
-        let arrayDatos=[];
-
-        if(data.status==403){window.location.href = "/";}
-        if(data.status==200){
-
-        data.examenes.forEach(element => {
-        accionBTN =` <a class="btn btn-primary" href="javascript:gestionarMuestras(${element.id_examen},'${element.observacion}')" title='Regitrar Muestras'><i class='fas fa-vial'></i></a>`;
-        let dato = {
-        codigo : element.id_examen,
-        identificacion : element.identificacion,
-        nombres :element.nombres.toUpperCase(),
-        autorizacion :element.autorizacion,
-        cups :element.cups,
-        observacion :element.observacion,
-        estado :element.estado.replace(/_/g, " ").toUpperCase(),
-        Accion :accionBTN
-                        }
-                        arrayDatos.push(dato)
-                        });
-   
-                        var table = $('#tabla_prestaciones_confirmadas').DataTable({
-               "bInfo" : false,
-               searching: true,
-               paging: true,
-               autoWidth: false,
-               destroy: true,
-               responsive: true,
-               data: arrayDatos,
-               columns: [
-                           {"data": "codigo"},
-                           {"data": "identificacion"},
-                           {"data": "nombres"},
-                           {"data": "autorizacion"},
-                           {"data": "cups"},
-                           {"data": "observacion"},  
-                           {"data": "estado"},                     
-                           {"data": "Accion"}
-                       ]
-      
-                        });
-        }
-        if(data.status==404){ Mensaje.fire({icon: 'warning',title: data.message})}
-        if(data.status==500){ Mensaje.fire({icon: 'error',title: data.message})} 
-        
+function obtenerExamenesSeleccionados() {
+    var seleccionados = [];
+    let fecha_muestra = document.getElementById('fecha_muestra').value;
+    let observacion = document.getElementById('observacion').value;
+    
+    $('#tabla_examenes_toma_muestra tbody .checkbox-examen:checked').each(function() {
+        var row = table1.row($(this).closest('tr')).data();
+        // Agregar fecha_muestra y observacion al objeto
+        row.fecha_muestra = fecha_muestra;
+        row.observacion = observacion;
+        seleccionados.push(row);
     });
-   
+    return seleccionados;
 }
-*/
+
+
+
 
 
 function gestionarMuestras(id_prestacion,observacion){
@@ -238,7 +186,7 @@ function gestionarMuestras(id_prestacion,observacion){
 
 }
 
-
+/*
 function gestionarTomaMuestra(){
     Swal.fire({
         title: 'Se Realizó la Toma de Muestra, ¿desea que continue al area de resultados?',
@@ -254,26 +202,23 @@ function gestionarTomaMuestra(){
     })
 
 }
-
+*/
 
 function confirmarTomaMuestra(){
 
-    let id_prestacion= document.getElementById('id_prestacion').value;
-  
-    let datos= new URLSearchParams();
-    datos.append('fecha',document.getElementById('fecha_muestra').value);
-    datos.append('observacion',document.getElementById('observacion').value);
-  
+   
+    let muestras = obtenerExamenesSeleccionados();
     const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
 
+    
         fetch(`/confirmarTomaMuestra/${id_prestacion}`,
             {
-                method: 'PUT',
-                body:datos,
+               method:'put',
+               body: JSON.stringify(muestras),
                 headers: {
-                    'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
-                    'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
-                }
+                            'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+                            'Content-Type': 'application/json' // Especifica el tipo de contenido
+        }
             })
             .then(response => {
                 // Verificar si la respuesta es JSON
@@ -301,6 +246,8 @@ function confirmarTomaMuestra(){
             if(data.status==500){Mensaje.fire({icon: 'error',title: data.message});}
           
         });
+
+    
 
 }
 

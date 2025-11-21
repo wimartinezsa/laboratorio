@@ -225,7 +225,7 @@ export  const listarContratosActivos=async(req,resp)=>{
 export const registrarCuentaCobro = async (req, resp) => {
     try {
         let json_cuenta = req.body;
-        console.log(json_cuenta);
+        //console.log(json_cuenta);
        
         let actualizado=0;
        
@@ -263,6 +263,10 @@ export const registrarCuentaCobro = async (req, resp) => {
         } else {
             return resp.status(400).json({ message: "No se seleccionó ningun examen" });
         }
+
+
+
+        
     } catch (error) {
         console.error("Error en controller.resultado.js:", error);
         resp.status(500).json({ status: 500, message: "Error al actualizar el resultado al examen" });

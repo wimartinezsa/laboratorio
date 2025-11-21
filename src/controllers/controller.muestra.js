@@ -126,34 +126,40 @@ export  const listarExamenesConfirmados=async(req,resp)=>{
 
 export  const confirmarTomaMuestra=async(req,resp)=>{
     try{
-        const id= await req.params.id_prestacion;
-        const datos= await req.body;
-        const existencia = await prisma.Examen.findUnique({
-            where: { id_examen: Number(id)}
-          });
+        let json_examenes = await req.body;
 
-          if (!existencia) {
-            return resp.status(404).json({"status":404,"message":"No existe examen en la factura"});
-          }
-          else{
-            // se 
-            const prestacion = await prisma.Examen.update(
-                {
-                    where:{id_examen: Number(id)},
-                    data:{
-                        fecha_muestra: new  Date(datos.fecha),
-                        observacion: datos.observacion,
-                        estado:"Analisis_Completo"                     
-                    }
-                }  
-            );
-            return resp.status(200).json({"status":200,"message":"Se confirmo la toma de la muestra"});
+        // Asegúrate de que json_resultados sea un array
+        if (!Array.isArray(json_examenes)) {
+            return resp.status(400).json({ message: "No Seleccionó ningun examen" });
         }
 
-       
+        // Procesar los datos si hay elementos
+        if (json_examenes.length > 0) {
+         
+        //console.log("Resultados encontrados desde completos:",json_resultados);
+
+            for (const element of json_examenes) {
+                       const resultado_act= await prisma.Examen.updateMany({
+                            where: {
+                                id_examen: Number(element.examen)  
+                            },
+                            data: {
+                                fecha_muestra: element.fecha,
+                                observacion: element.observacion,
+                                estado:"Analisis_Completo" 
+                            }
+                        });
+            }// fin del for que recorre el json
+            
+
+            resp.status(200).json({ status: 200, message: "Se actualizaron los exmenes a estado Analisis Completo"});
+        } else {
+            return resp.status(400).json({ message: "No se seleccionó ningun examen" });
+        }
+
     }catch(error){
-        console.log("Error en controller.factura.js :"+error);
-        resp.status(500).json({ "status":500,"message":'Error al cambiar de estado el examen de la Factura' });
+        console.log("Error en controller.muestra.js :"+error);
+        resp.status(500).json({ "status":500,"message":'Error al cambiar de estado de los examenes' });
     }  
 }
 
