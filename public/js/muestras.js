@@ -81,7 +81,7 @@ function listarExamenesTomaMuestra(){
 
           if (element.estado==='En_Toma_de_Muestra'){
            accionBTN =`<a class="badge badge-pill badge-danger" style="font-size: 0.8rem;" 
-           href="javascript:gestionarMuestras(${element.id_examen},'${element.observacion}')" title='Finalizar Análisis'>Confirmar Toma de Muestra  </a>`;
+           href="javascript:gestionarMuestras(${element.id_examen},'${element.observacion}')" title='Finalizar Análisis'>Confirmar</a>`;
          
 
           }
