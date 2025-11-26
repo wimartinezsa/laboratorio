@@ -177,9 +177,20 @@ if(rol==='Administrador'){
               <li class="nav-item">
                 <a href="/reporteAtendidos" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Usuarios Atendidos</p>
+                  <p>Atendidos x Sedes</p>
                 </a>
               </li>
+
+
+               <li class="nav-item">
+                <a href="/reporteAtendidosFechas" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Atendidos x Fechas</p>
+                </a>
+              </li>
+
+
+
             </ul>
           </li>
 

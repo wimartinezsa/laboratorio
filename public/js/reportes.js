@@ -149,7 +149,19 @@ function reporteUsuariosAtendidos(){
 
    
            var table = $('#tabla_reporte_etendidos').DataTable({
-            
+               // Enable Buttons extension to export to Excel
+               dom: 'Bfrtip',
+               buttons: [
+                   {
+                       extend: 'excelHtml5',
+                       text: '<i class="fas fa-file-excel"></i> Excel',
+                       titleAttr: 'Exportar a Excel',
+                       filename: 'reporte_usuarios_atendidos_' + moment().format('YYYYMMDD'),
+                       exportOptions: {
+                           columns: ':visible'
+                       }
+                   }
+               ],
                "bInfo" : false,
                searching: true,
                paging: true,
@@ -167,13 +179,8 @@ function reporteUsuariosAtendidos(){
                            {"data": "precio"},
                            {"data": "autorizacion"},
                            {"data": "sede"}
-                          
-                          
-                          
-                          
                        ]
-      
-                                   });
+           });
 
       
                                 
@@ -181,6 +188,106 @@ function reporteUsuariosAtendidos(){
    
     
 }
+
+
+
+
+
+function reporteAtendidosFechas(){
+
+    const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado con la clave correcta
+
+    let fecha_inicio = document.getElementById('fecha_inicio').value;
+    let fecha_fin = document.getElementById('fecha_fin').value;
+   
+
+    fetch(`/reporteAtendidosFechas/${fecha_inicio}/${fecha_fin}`, {
+        method:'get',
+        headers: {
+            'Authorization': `Bearer ${token}`, // Envía el token en el encabezado de autorización
+            'Content-Type': 'application/x-www-form-urlencoded' // Especifica el tipo de contenido
+        }
+    })
+    .then(response => {
+        // Verificar si la respuesta es JSON
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return response.json();
+        } else {
+          //  window.location.href = "/";
+        }
+    })
+    .then(data => {
+
+    let arrayDatos=[];
+   
+    data = Array.isArray(data) ? data : [data];
+    data.forEach(element => {
+      
+    let dato = {
+       identificacion :element.identificacion,
+       nombres : element.nombres,
+       examen :element.examen,
+       fecha :moment.utc(element.fecha).format("YYYY-MM-DD"),
+       autorizacion :element.autorizacion,
+       precio :element.precio,
+       contrato :element.contrato,
+       empresa :element.empresa,
+       sede: element.sede
+        }
+       arrayDatos.push(dato)
+       });
+       
+
+   
+           var table = $('#tabla_reporte_etendidos').DataTable({
+               // Enable Buttons extension to export to Excel
+               dom: 'Bfrtip',
+               buttons: [
+                   {
+                       extend: 'excelHtml5',
+                       text: '<i class="fas fa-file-excel"></i> Excel',
+                       titleAttr: 'Exportar a Excel',
+                       filename: 'reporte_atendidos_' + moment().format('YYYYMMDD'),
+                       exportOptions: {
+                           columns: ':visible'
+                       }
+                   }
+               ],
+               "bInfo" : false,
+               searching: true,
+               paging: true,
+               autoWidth: false,
+               destroy: true,
+               responsive: true,
+               data: arrayDatos,
+               columns: [
+                           {"data": "identificacion"},
+                           {"data": "nombres"},
+                           {"data": "examen"},
+                           {"data": "fecha"},
+                           {"data": "empresa"},
+                           {"data": "contrato"},
+                           {"data": "precio"},
+                           {"data": "autorizacion"},
+                           {"data": "sede"}
+                       ]
+           });
+
+      
+                                
+    });
+   
+    
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -283,6 +390,16 @@ function reporteUsuariosAtendidosImprimir() {
         };
     });
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

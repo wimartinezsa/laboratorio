@@ -85,6 +85,10 @@ route.get('/reporteAtendidos',(req,resp)=>{
 });
 
 
+route.get('/reporteAtendidosFechas',(req,resp)=>{
+    resp.render("pages/reportes/reporte_atendidos_fechas.ejs");
+});
+
 
 
 

@@ -99,9 +99,12 @@ function listarExamenesPorArea(){
         
    
      // let resultados = element.resultado;
-     let tabla='';
+    
    //  console.log(element.procedimiento);
    // si el laboratorio se desea generar automatico
+
+   /*
+    let tabla='';
      if(element.procedimiento.resultado_laboratorio==='Automatico'){
 
        tabla=`<table style="border-collapse: collapse; width: 100%;">
@@ -137,16 +140,7 @@ function listarExamenesPorArea(){
                   btn_parametro=`<a class="btn btn-success" href="javascript:cambiarEstadoResultado(${item.id_resultado},'${item.estado}')" title='Resultado Pendiente'> <i class='fas fa-thumbs-up'></i></a>`;
                 
                 }
-                
-
-                /*
-                if(item.parametro.metodo==='Automatico'){
-                  estado_parametro=`<span class="badge badge-pill badge-danger" style="font-size: 0.8rem;">${item.id_resultado}</span>`;
-                }
-                else{
-                  estado_parametro=`<span class="badge badge-pill badge-secondary" style="font-size: 0.8rem;">${item.id_resultado}</span>`
-                }
-                */
+              
               
                 tabla+=`
                   <tr>
@@ -166,7 +160,7 @@ function listarExamenesPorArea(){
 else{
   tabla=`Recuerde adjuntar el archivo`;
 }
-     
+     */
 
         let dato = {
         examen:element.id_examen,
@@ -174,7 +168,7 @@ else{
         identificacion : element.factura.paciente.identificacion,
         nombres :element.factura.paciente.nombres.toUpperCase(),
         cups :element.procedimiento.cups.nombre,
-        resultado :tabla,
+        resultado :'',
         observacion:element.observacion,
         autoriazacion:`<span class="badge badge-pill badge-success" style="font-size: 0.8rem;">${  element.factura.autorizacion}</span>`,
         area :element.procedimiento.area.nombre.toUpperCase(),
@@ -319,7 +313,7 @@ function registrarFormularioAutomaticos(resultados){
        if(data.status==403){window.location.href = "/";}
        
         if(data.status===200){
-          Frm_resultados.hide();
+          //Frm_resultados.hide();
           Mensaje.fire({icon: 'success',title: data.message}
           );
       
@@ -366,7 +360,7 @@ function registrarResulatadosAutomaticos(resultados){
        if(data.status==403){window.location.href = "/";}
        
         if(data.status===200){
-          Frm_resultados.hide();
+         Frm_resultados.hide();
           Mensaje.fire({icon: 'success',title: data.message}
           );
       
@@ -524,8 +518,28 @@ async function pintarFormulario(data) {
     input.name = item.id_resultado; // Asignar el nombre del parámetro
     input.value = item.resultado;
 
-    input.classList.add("form-control", "mb-3");
-    div.appendChild(input);
+    input.classList.add("form-control");
+
+    // Contenedor flex para input + boton
+    const contInline = document.createElement('div');
+    contInline.classList.add('d-flex','align-items-center','gap-2');
+
+    // Botón para cambiar estado del resultado
+    const btnEstadoAuto = document.createElement('button');
+    btnEstadoAuto.type = 'button';
+    // color verde si Finalizado, rojo si Pendiente
+    const claseAuto = item.estado === 'Finalizado' ? 'btn-success' : 'btn-danger';
+    btnEstadoAuto.classList.add('btn','btn-sm', claseAuto);
+    btnEstadoAuto.innerHTML = item.estado === 'Finalizado' ? '<i class="fas fa-thumbs-up"></i>' : '<i class="fas fa-thumbs-down"></i>';
+    btnEstadoAuto.title = 'Cambiar estado del resultado';
+    btnEstadoAuto.addEventListener('click', () =>{cambiarEstadoResultado(item.id_resultado, item.estado);} );
+
+    // Hacer que el input ocupe el espacio disponible
+    input.classList.add('flex-grow-1');
+
+    contInline.appendChild(input);
+    contInline.appendChild(btnEstadoAuto);
+    div.appendChild(contInline);
 
   }
 
@@ -537,7 +551,7 @@ async function pintarFormulario(data) {
         const select = document.createElement("select");
         select.id = `parametro-${item.id_resultado}`; // Asignar un id único al select
         select.name = item.id_resultado; // Asignar el nombre del parámetro
-        select.classList.add("form-control", "mb-3");
+        select.classList.add("form-control");
         // Opciones de ejemplo (puedes cambiar esto dinámicamente)
         
         item.parametro.tipo_resultado.forEach(opcion => {
@@ -547,7 +561,24 @@ async function pintarFormulario(data) {
           select.appendChild(option);
       });
       select.value=item.resultado;
-          div.appendChild(select);
+
+      // Contenedor flex para select + boton
+      const contInlineSel = document.createElement('div');
+      contInlineSel.classList.add('d-flex','align-items-center','gap-2');
+
+      const btnEstadoSelect = document.createElement('button');
+      btnEstadoSelect.type = 'button';
+      // color verde si Finalizado, rojo si Pendiente
+      const claseSelect = item.estado === 'Finalizado' ? 'btn-success' : 'btn-danger';
+      btnEstadoSelect.classList.add('btn','btn-sm', claseSelect);
+      btnEstadoSelect.innerHTML = item.estado === 'Finalizado' ? '<i class="fas fa-thumbs-up"></i>' : '<i class="fas fa-thumbs-down"></i>';
+      btnEstadoSelect.title = 'Cambiar estado del resultado';
+      btnEstadoSelect.addEventListener('click', () => cambiarEstadoResultado(item.id_resultado, item.estado));
+
+      select.classList.add('flex-grow-1');
+      contInlineSel.appendChild(select);
+      contInlineSel.appendChild(btnEstadoSelect);
+      div.appendChild(contInlineSel);
     }else{
 
         // Crear un campo de entrada
@@ -558,8 +589,25 @@ async function pintarFormulario(data) {
     input.placeholder = 'Digite ' + item.parametro.nombre;
     input.name = item.id_resultado; // Asignar el nombre del parámetro
     input.value = item.resultado;
-    input.classList.add("form-control", "mb-3");
-    div.appendChild(input);
+    input.classList.add("form-control");
+
+    const contInlineInput = document.createElement('div');
+    contInlineInput.classList.add('d-flex','align-items-center','gap-2');
+
+      // Botón para cambiar estado del resultado (manual input)
+      const btnEstadoInput = document.createElement('button');
+      btnEstadoInput.type = 'button';
+      // color verde si Finalizado, rojo si Pendiente
+      const claseInput = item.estado === 'Finalizado' ? 'btn-success' : 'btn-danger';
+      btnEstadoInput.classList.add('btn','btn-sm', claseInput);
+      btnEstadoInput.innerHTML = item.estado === 'Finalizado' ? '<i class="fas fa-thumbs-up"></i>' : '<i class="fas fa-thumbs-down"></i>';
+      btnEstadoInput.title = 'Cambiar estado del resultado';
+      btnEstadoInput.addEventListener('click', () => cambiarEstadoResultado(item.id_resultado, item.estado));
+
+      input.classList.add('flex-grow-1');
+      contInlineInput.appendChild(input);
+      contInlineInput.appendChild(btnEstadoInput);
+      div.appendChild(contInlineInput);
     }
 
 
@@ -688,18 +736,31 @@ function cambiarEstadoResultado(id_resultado,estado){
         window.location.href = "/";
     }
   })
+  
   .then(data => {
 
-       if(data.status==403){window.location.href = "/";}
-       
-        if(data.status==200){Mensaje.fire({icon: 'success',title: data.message});
-      
-        listarExamenesPorArea();
-        }
+        if(data.status==403){window.location.href = "/";}
+        
+         if(data.status==200){
+           Mensaje.fire({icon: 'success',title: data.message});
+           // refrescar listado principal
+           //listarExamenesPorArea();
 
-       if(data.status==500){Mensaje.fire({icon: 'warning',title: data.message});}
-       
-  });
+           // Si el modal de resultados está abierto, volver a pintar el formulario dinámico
+           try{
+             const modalEl = document.getElementById('Frm_resultados');
+             const id_examen = document.getElementById('id_resultado_examen') ? document.getElementById('id_resultado_examen').value : null;
+             if(id_examen && modalEl && modalEl.classList.contains('show')){
+               crearFormularioDinamico(id_examen);
+             }
+           }catch(err){
+             console.error('Error refrescando formulario dinámico:', err);
+           }
+         }
+
+        if(data.status==500){Mensaje.fire({icon: 'warning',title: data.message});}
+        
+   });
 
 }
 
