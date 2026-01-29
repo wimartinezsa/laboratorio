@@ -187,84 +187,103 @@
 
               <div class="col-4">
                 <label for="message-text" class="col-form-label">Zona:</label>
-                <select class="form-control" id='zona' required>
-                  <option value=''  disabled='true' selected='true'>Seleccione una opción</option>
+                <select class="form-control" id='zona' required disabled>
                   <option value="Rural">Rural</option>
-                  <option value="Urbano">Urbano</option>
+                  <option value="Urbano" selected>Urbano</option>
                 </select>
                 
             </div>
 
+
             </div>
+
+
 
             <div class="row">
 
                   <div class="col-4">
                     <label for="message-text" class="col-form-label">Pais de Residencia:</label>
-                    <select class="form-control" id='paises' required onchange="listarDepartamentos(this.value)" >
+                    <select class="form-control" id='paises' required disabled>
+                    <option value="1" selected>Colombia</option>
                     </select>
                   </div>
                   <div class="col-4">
                     <label for="message-text" class="col-form-label">Departamento de Residencia:</label>
-                    <select class="form-control" id='departamentos' required onchange="listarMunicipios(this.value)">
+                    <select class="form-control" id='departamentos' required disabled >
+                    <option value="1" selected>Huila</option>
                     </select>
                   </div>
                   <div class="col-4">
                     <label for="message-text" class="col-form-label">Municipio de Residencia:</label>
-                    <select class="form-control" id='municipios' required >
+                    <select class="form-control" id='municipios' required disabled >
+                      <option value="1" selected>Pitalito</option>
                     </select>
                   </div>
             </div>
 
+
+
             <div class="row">
               <div class="col-4">
                 <label for="message-text" class="col-form-label">Pais de Origien:</label>
-                <select class="form-control" id='pais_origen' required >
+                <select class="form-control" id='pais_origen' required disabled >
+                  <option value="1" selected>Colombia</option>
                 </select>
               </div>
-              <div class="col-4">
-                <label for="message-text" class="col-form-label">Tipo de Paciente:</label>
-                <select value='' class="form-control" id='tipo_paciente' required >
-                    <option  disabled='true' selected='true'>Seleccione un tipo de Paciente</option>
-                    <option value='Contributivo_Cotizante'>Contributivo Cotizante</option>
-                    <option value='Contributivo_Beneficiario'>Contributivo Beneficiario</option>
-                    <option value='Contributivo_Adicional'>Contributivo Adicional</option>
-                    <option value='Subsidiado'>Subsidiado</option>
-                    <option value='No_Afiliado'>No Afiliado</option>
-                    <option value='Especial_o_Excepcion_Cotizante'>No Especial o Excepcion Cotizante</option>
-                    <option value='Especial_o_Excepcion_Beneficiario'>Especial o Excepcion Beneficiario</option>
-                    <option value='Personas_privadas_de_la_libertad_a_cargo_del_Fondo_Nacional_de_Salud'>Personas privadas de la libertad a cargo del Fondo Nacional de Salud</option>
-                    <option value='Tomador_Amparado_ARL'>Tomador Amparado ARL</option>
-                    <option value='Tomador_Amparado_SOAT'>Tomador Amparado SOAT</option>
-                    <option value='Tomador_Amparado_Planes_voluntarios_de_salud'>Tomador Amparado Planes voluntarios de salud</option>
-                    <option value='Particular'>Particular</option>
-                    <option value='Especial_o_Exepcion_no_cotizante_Ley_352_de_1997'>Especial o Exepcion no cotizante Ley 352 de 1997</option>
-                </select>
-            </div> 
+             <div class="col-4">
+        <label class="col-form-label">Tipo de Paciente:</label>
+        <select class="form-control" id="tipo_paciente" required disabled>
+          <option value="Contributivo_Cotizante">Contributivo Cotizante</option>
+          <option value="Contributivo_Beneficiario">Contributivo Beneficiario</option>
+          <option value="Contributivo_Adicional">Contributivo Adicional</option>
+          <option value="Subsidiado">Subsidiado</option>
+          <option value="No_Afiliado">No Afiliado</option>
+          <option value="Especial_o_Excepcion_Cotizante">Especial o Excepcion Cotizante</option>
+          <option value="Especial_o_Excepcion_Beneficiario">Especial o Excepcion Beneficiario</option>
+          <option value="Personas_privadas_de_la_libertad_a_cargo_del_Fondo_Nacional_de_Salud">
+            Personas privadas de la libertad a cargo del Fondo Nacional de Salud
+          </option>
+          <option value="Tomador_Amparado_ARL">Tomador Amparado ARL</option>
+          <option value="Tomador_Amparado_SOAT">Tomador Amparado SOAT</option>
+          <option value="Tomador_Amparado_Planes_voluntarios_de_salud">
+            Tomador Amparado Planes voluntarios de salud
+          </option>
+          <option value="Particular">Particular</option>
+          <option value="Especial_o_Exepcion_no_cotizante_Ley_352_de_1997">
+            Especial o Exepcion no cotizante Ley 352 de 1997
+          </option>
+        </select>
+</div>
 
               <div class="col-4">
                 <label for="message-text" class="col-form-label">Eps:</label>
-                <select class="form-control" id='eps' required >
+                <select class="form-control" id='eps' required disabled >
+                   <option value='1' selected>No Aplica</option>
                 </select>
             </div>
               
 
               
             </div>
+
+
 
             <div class="row">
             <div class="col-4">
               <label for="message-text" class="col-form-label">Incapacidad:</label>
-              <select  class ="form-control" id='incapacidad' required >
+              <select  class ="form-control" id='incapacidad' required disabled >
                 <option value='' selected disabled>Seleccione una opción</option>
                 <option value='SI'>SI</option>
-                <option value='NO'>NO</option>
+                <option value='NO' selected>NO</option>
 
               </select>
           </div>
 
 
             </div>
+
+
+
       </div>
 
 

@@ -112,9 +112,9 @@ function gestionarPaciente(){
     document.getElementById('id_paciente').value=0;
     document.getElementById('btn_registrar').style.display = 'block';
     document.getElementById('btn_actualizar').style.display = 'none';
-   limpiarFormularioPaciente();
-   listarPaises();
-   listarEps();
+   //limpiarFormularioPaciente();
+   //listarPaises();
+  // listarEps();
    Frm_pacientes.show();
    }
 
