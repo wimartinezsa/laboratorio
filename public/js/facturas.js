@@ -1,8 +1,8 @@
 
 
 
+listarContratos();
 
-listarPacientes();
 
 
 
@@ -250,6 +250,7 @@ function listarFacturasContrato(){
 }
 
 async function seleccionarContrato(){
+    await listarPacientes();
     await listarFacturasContrato();
     await listarProcedimientoContratados();
     
