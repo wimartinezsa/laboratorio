@@ -24,6 +24,7 @@ export  const listarExamenesTomaMuestra=async(req,resp)=>{
                         include:{
                             paciente:true,
                             contrato:true
+                           
                         }
                     },
                     resultado:{

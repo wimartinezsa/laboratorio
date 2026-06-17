@@ -162,11 +162,12 @@ else{
 }
      */
 
-        let dato = {
+        let dato = {          
         examen:element.id_examen,
        
         identificacion : element.factura.paciente.identificacion,
         nombres :element.factura.paciente.nombres.toUpperCase(),
+        fecha:moment(element.factura.fecha).format("YYYY-MM-DD"),
         cups :element.procedimiento.cups.nombre,
         resultado :'',
         observacion:element.observacion,
@@ -192,6 +193,7 @@ else{
                            {"data": "examen"},                         
                            {"data": "identificacion"},
                            {"data": "nombres"},
+                            {"data": "fecha"},
                            {"data": "cups"},
                            {"data": "observacion"},
                            {"data": "autoriazacion"},  
